@@ -21,16 +21,16 @@ jobs:
           target: "/var/www/html/Roomie"  # or the folder on your server
           overwrite: true
 
-#      - name: Run remote SSH commands
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.EC2_HOST }}
-#          username: ${{ secrets.EC2_USER }}
-#          key: ${{ secrets.EC2_SSH_KEY }}
-#          script: |
-#            cd /var/www/html/Roomie
+      - name: Run remote SSH commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /var/www/html/Roomie
             # e.g. install dependencies or run build steps
             # For example:
             # npm install
             # npm run build
-#            sudo systemctl restart httpd
+            sudo systemctl daemon-reload
