@@ -18,8 +18,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "."
-          target: "/var/www/html/Roomie"  # or the folder on your server
+          target: "/var/www/html/Roomie"
           overwrite: true
+          tar_exclude: ".git"
 
       - name: Run remote SSH commands
         uses: appleboy/ssh-action@master
