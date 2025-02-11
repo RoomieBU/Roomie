@@ -20,6 +20,7 @@ jobs:
           source: "."
           target: "/var/www/html/Roomie"  # or the folder on your server
           overwrite: true
+          tar_exclude: ".git"  # <-- This line excludes .git
 
 #      - name: Run remote SSH commands
 #        uses: appleboy/ssh-action@master
