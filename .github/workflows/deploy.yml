@@ -11,9 +11,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
         
-# Add this if Ubuntu is never the user committing changes.
-#      - name: Remove .git folder
-#        run: rm -rf .git
+      - name: Remove .git folder
+        run: rm -rf .git
 
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
