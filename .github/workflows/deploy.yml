@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -20,8 +21,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "."
-          target: "/var/www/html/Roomie"
+          source: "roomie-webapp/*"
+          target: "/var/www/html/"
           overwrite: true
 
       - name: Run remote SSH commands
