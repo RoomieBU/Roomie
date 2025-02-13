@@ -24,6 +24,7 @@ jobs:
           source: "roomie-webapp/*"
           target: "/var/www/html/"
           overwrite: true
+          strip_components: 1           # Remove the first directory level
 
       - name: Create directory with sudo
         uses: appleboy/ssh-action@master
