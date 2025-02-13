@@ -44,6 +44,7 @@ jobs:
           source: "roomiebackend"
           target: "/opt/roomiebackend"            
           overwrite: true
+          strip_components: 1           # Remove the first directory level
 
       - name: Run remote SSH commands
         uses: appleboy/ssh-action@master
