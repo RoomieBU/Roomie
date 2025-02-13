@@ -69,11 +69,23 @@ public class Server {
         String method = sections[0]; // POST or GET
         String path = sections[1];
 
+        if (path.equals("/favicon.ico")) {
+            if (VERBOSE_OUTPUT) System.out.println("[Alert] favicon request... terminating" +
+                    " connection.");
+            connections --;
+            return;
+        }
+
         if (VERBOSE_OUTPUT) {
             System.out.println("[Info] " + client.getInetAddress() + " Responded with: " +
                     "\n\tMethod:\t" + method + "\n\tPath:\t" + path);
         }
 
+
+        /**
+         * Authentication logic will be store in Auth
+         * Parsing form data logic will be stored in Utils
+         */
         if (method.equals("POST") && path.equals("/auth/login")) {
             /**
              * Log in logic
