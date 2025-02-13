@@ -81,6 +81,42 @@ public class Server {
                     "\n\tMethod:\t" + method + "\n\tPath:\t" + path);
         }
 
+        /**
+         * Need to parse request form
+         * Format of POST request
+         *
+         *
+         * POST /test HTTP/1.1
+         * Host: example.com
+         * Content-Type: application/x-www-form-urlencoded
+         * Content-Length: 27
+         *
+         * field1=value1&field2=value2
+         */
+        int requestLength = 0;
+        String line;
+        while (!(line = in.readLine()).isEmpty()) {
+            if (line.startsWith("Content-Length:")) {
+                requestLength = Integer.parseInt(line.split(":")[1].trim());
+            }
+        }
+
+        /**
+         * ChatGPT helped me out with this one
+         * Read in the rest of the request into a StringBuilder (actual form data)
+         */
+        StringBuilder body = new StringBuilder();
+        if ((method.equals("POST")) && requestLength > 0) {
+            char[] buffer = new char[requestLength];
+            in.read(buffer, 0, requestLength);
+            body.append(buffer);
+        }
+
+        if (VERBOSE_OUTPUT) {
+            System.out.println("[Info] Form data: " + body);
+        }
+
+        String[] attribs = body.toString().split("&");
 
         /**
          * Authentication logic will be store in Auth
