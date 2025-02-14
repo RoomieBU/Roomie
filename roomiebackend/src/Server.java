@@ -101,10 +101,7 @@ public class Server {
             }
         }
 
-        /**
-         * ChatGPT helped me out with this one
-         * Read in the rest of the request into a StringBuilder (actual form data)
-         */
+        // Read in the rest of the request
         StringBuilder body = new StringBuilder();
         if ((method.equals("POST")) && requestLength > 0) {
             char[] buffer = new char[requestLength];
@@ -112,16 +109,14 @@ public class Server {
             body.append(buffer);
         }
 
+        // For testing only, this should be removed eventually
         if (VERBOSE_OUTPUT) {
             System.out.println("[Info] Form data: " + body);
         }
 
         String[] attribs = body.toString().split("&");
+        
 
-        /**
-         * Authentication logic will be store in Auth
-         * Parsing form data logic will be stored in Utils
-         */
         if (method.equals("POST") && path.equals("/auth/login")) {
             /**
              * Log in logic
