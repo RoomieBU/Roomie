@@ -12,7 +12,7 @@ public class MySQLConnect {
         String user = "database"; // Replace with your username
         String password = "Roomie"; // Replace with your password
 
-        String query = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM Users WHERE username = ? AND hashed_password = ?";
 
         try (Connection conn = DriverManager.getConnection(url, user, password);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
