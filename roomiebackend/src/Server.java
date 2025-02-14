@@ -27,7 +27,7 @@ public class Server {
                             handleClient(client);
                             connections++;
                             System.out.println("[Notice] Incoming connection from " + client.getInetAddress());
-                        } catch (IOException e) {
+                        } catch (IOException | ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     }).start();
@@ -43,7 +43,7 @@ public class Server {
         }
     }
 
-    public static void handleClient(Socket client) throws IOException {
+    public static void handleClient(Socket client) throws IOException, ClassNotFoundException {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         OutputStream out = client.getOutputStream();
 
