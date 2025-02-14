@@ -102,10 +102,12 @@ public class Server {
             String user = attribs[0].split("=")[1];
             String pass = attribs[1].split("=")[1];
 
-            // Check username & password against database
+            if (MySQLConnect.login(user, pass) != null) {
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
+            } else {
+                httpResponse = Utils.assembleHTTPResponse(400, "{\"message\": \"Login Unsuccessful\"}");
+            }
 
-
-            httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
         }
 
         if (method.equals("POST") && path.equals("/auth/logout") && attribs.length == 1) {
