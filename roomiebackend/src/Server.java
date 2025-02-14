@@ -103,11 +103,10 @@ public class Server {
             String pass = attribs[1].split("=")[1];
 
             if (MySQLConnect.login(user, pass) != null) {
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\", \"token\": \"" + Auth.getToken(user) + "\"}");
             } else {
-                httpResponse = Utils.assembleHTTPResponse(400, "{\"message\": \"Login Unsuccessful\"}");
+                httpResponse = Utils.assembleHTTPResponse(400, "{\"message\": \"Login Unsuccessful\", \"token\": \"\"}");
             }
-
         }
 
         if (method.equals("POST") && path.equals("/auth/logout") && attribs.length == 1) {
@@ -121,11 +120,17 @@ public class Server {
         if (method.equals("POST") && path.equals("/auth/register")) {
             String user = attribs[0].split("=")[1];
             String pass = attribs[1].split("=")[1];
+            String email = attribs[1].split("=")[1];
+            String fname = attribs[1].split("=")[1];
+            String lname = attribs[1].split("=")[1];
+            String aboutme = attribs[1].split("=")[1];
+            String dob = attribs[1].split("=")[1];
 
-            // Check if username already exists
-            // Add username and password to DB
-
-            httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Successfully Registered\"}");
+            if (MySQLConnect.registerUser(user, pass, email, fname, lname, aboutme, dob) != null) {
+                httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Successfully Registered\", \"token\": \"" + Auth.getToken(user) + "\"}");
+            } else {
+                httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Username taken\", \"token\": \"\"}");
+            }
         }
 
         if (method.equals("POST") && path.equals("/auth/verify-session")) {
