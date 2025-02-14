@@ -8,13 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * This is the main server class for the backend of Roomie.
- *
- * Connections are kept alive for a minimal amount of time, and the server won't
- * exceed 10 open connections at the same time (for development, anyway).
- *
- * Utils (will) contain methods for more intricate processes, like assembling HTTP responses,
- * logic for authentication, etc.
- *
  */
 public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
@@ -56,7 +49,7 @@ public class Server {
 
         // Recieve HTTP request as text
         String request = in.readLine();
-        if (request == null) {// Invalid HTTP request
+        if (request == null) { // Invalid HTTP request
             connections--;
             return;
         }
@@ -81,18 +74,6 @@ public class Server {
                     "\n\tMethod:\t" + method + "\n\tPath:\t" + path);
         }
 
-        /**
-         * Need to parse request form
-         * Format of POST request
-         *
-         *
-         * POST /test HTTP/1.1
-         * Host: example.com
-         * Content-Type: application/x-www-form-urlencoded
-         * Content-Length: 27
-         *
-         * field1=value1&field2=value2
-         */
         int requestLength = 0;
         String line;
         while (!(line = in.readLine()).isEmpty()) {
@@ -115,62 +96,52 @@ public class Server {
         }
 
         String[] attribs = body.toString().split("&");
-        
+        String httpResponse = "";
 
-        if (method.equals("POST") && path.equals("/auth/login")) {
-            /**
-             * Log in logic
-             *
-             * Parse form data (new method for this)
-             *      - Accepts only username and password fields
-             * Open database and compare credentials
-             *
-             * Returns 200 or 401
-             */
+        if (method.equals("POST") && path.equals("/auth/login") && attribs.length == 2) {
+            String user = attribs[0].split("=")[1];
+            String pass = attribs[1].split("=")[1];
+
+            // Check username & password against database
+
+            httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
         }
 
-        if (method.equals("POST") && path.equals("/auth/logout")) {
-            /**
-             * Get auth token
-             * Invalidate token
-             *
-             * Returns 200, or 400 (if token bad)
-             */
+        if (method.equals("POST") && path.equals("/auth/logout") && attribs.length == 1) {
+            String token = attribs[0].split("=")[1];
+
+            Auth.invalidateToken(token);
+
+            httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Logout Successful\"}");
         }
 
         if (method.equals("POST") && path.equals("/auth/register")) {
-            /**
-             * Get username and password form data
-             * Check if username already exists
-             * Hash password
-             * Insert username and hash into DB
-             *
-             * Return 201 or 400
-             */
+            String user = attribs[0].split("=")[1];
+            String pass = attribs[1].split("=")[1];
+
+            // Check if username already exists
+            // Add username and password to DB
+
+            httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Successfully Registered\"}");
         }
 
         if (method.equals("POST") && path.equals("/auth/verify-session")) {
-            /**
-             * Get token and check if it's valid
-             *
-             * Return 200 or 401
-             */
+            String token = attribs[0].split("=")[1];
+            if (Auth.isValidToken(token)) {
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Session Verified\"}");
+            } else {
+                httpResponse = Utils.assembleHTTPResponse(401, "{\"message\": \"Invalid Session\"}");
+            }
         }
 
-        // This is actually really bad
         if (method.equals("POST") && path.equals("/auth/reset-password")) {
-            /**
-             * Get form username and password data
-             * Check if username exists in db
-             * Overwrite with new hashed password
-             *
-             * Return 200 or 400
-             */
+            String user = attribs[0].split("=")[1];
+            String pass = attribs[1].split("=")[1];
+
+            // Check if username is good and overwrite password
+
+            httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Password Reset\"}");
         }
-
-        String httpResponse = Utils.assembleHTTPResponse(200, "This is where" +
-                " you WOULD see JSON data, but unfortunately, you aren't");
-
 
         out.write(httpResponse.getBytes());
         out.flush();
