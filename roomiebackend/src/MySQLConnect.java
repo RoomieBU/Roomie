@@ -5,7 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLConnect {
-    public static String login(String formUser, String formPass) {
+    public static String login(String formUser, String formPass) throws ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
         // Database credentials
         String url = "jdbc:mysql://localhost:3306/Roomie"; // Replace with your database name
         String user = "database"; // Replace with your username
