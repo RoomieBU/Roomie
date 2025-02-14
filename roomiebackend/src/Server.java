@@ -104,6 +104,7 @@ public class Server {
 
             // Check username & password against database
 
+
             httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
         }
 
