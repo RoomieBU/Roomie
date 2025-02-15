@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * User Data Access Object
  *  interface for the User Table
+ *
+ *  Work in progress, add methods as needed
  */
 public class UserDao {
     private Connection connection;
@@ -36,7 +38,7 @@ public class UserDao {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error creating user: " + e.getMessage());
+            System.err.println("Error creating user: " + e.getMessage());
             e.printStackTrace();
         }
     }

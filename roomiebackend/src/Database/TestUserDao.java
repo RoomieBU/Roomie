@@ -29,7 +29,7 @@ public class TestUserDao {
                 System.out.println();
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
