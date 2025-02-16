@@ -109,6 +109,8 @@ public class UserDao {
     public boolean isUserLogin(String username, String password) {
         String query = "SELECT user_id FROM Users WHERE username = ? AND hashed_password = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);  // <-- Set first parameter
+            stmt.setString(2, password);  // <-- Set second parameter
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return true;
