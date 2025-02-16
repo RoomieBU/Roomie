@@ -1,8 +1,17 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Useful methods that support server operations and produce easier to read code.
+ */
 public class Utils {
 
+    /**
+     * Creates a string that follows a specific format to be used as an HTTP response.
+     * @param code
+     * @param r
+     * @return
+     */
     public static String assembleHTTPResponse(int code, String r) {
 
         String status = switch (code) {
@@ -22,6 +31,11 @@ public class Utils {
                 r;
     }
 
+    /**
+     * Hashed a given string with the SHA256 algorithm.
+     * @param input
+     * @return
+     */
     public static String hashSHA256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
