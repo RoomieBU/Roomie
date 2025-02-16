@@ -55,6 +55,7 @@ public class Server {
         }
     }
 
+
     /**
      * Handles specific requests from single clients.
      * @param client Connected client object
@@ -141,13 +142,7 @@ public class Server {
         }
 
         if (method.equals("POST") && path.equals("/auth/register")) {
-            String user = attribs[0].split("=")[1];
-            String pass = attribs[1].split("=")[1];
-
-            // Check if username already exists
-            // Add username and password to DB
-
-            httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Successfully Registered\"}");
+            
         }
 
         if (method.equals("POST") && path.equals("/auth/verify-session")) {
