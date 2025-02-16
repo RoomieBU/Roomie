@@ -1,9 +1,15 @@
+import Database.SQLConnection;
+import Database.User;
+import Database.UserDao;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,6 +20,12 @@ public class Server {
     static private final int MAX_CONNECTIONS = 10;
     static private int connections = 0;
 
+    /**
+     * Main entry point for the server, and is responsible for spawning threads for new
+     * connections.
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         int port = 8080;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -27,7 +39,7 @@ public class Server {
                             handleClient(client);
                             connections++;
                             System.out.println("[Notice] Incoming connection from " + client.getInetAddress());
-                        } catch (IOException e) {
+                        } catch (IOException | SQLException | ClassNotFoundException e) {
                             throw new RuntimeException(e);
                         }
                     }).start();
@@ -43,7 +55,14 @@ public class Server {
         }
     }
 
-    public static void handleClient(Socket client) throws IOException {
+    /**
+     * Handles specific requests from single clients.
+     * @param client Connected client object
+     * @throws IOException
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public static void handleClient(Socket client) throws IOException, SQLException, ClassNotFoundException {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         OutputStream out = client.getOutputStream();
 
@@ -102,10 +121,15 @@ public class Server {
             String user = attribs[0].split("=")[1];
             String pass = attribs[1].split("=")[1];
 
-            // Check username & password against database
+            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+            //if (DBUser.isUserLogin(user, Utils.hashSHA256(pass))) {
+            if (DBUser.isUserLogin(user, pass)) { // Note: Plain text password
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
+            } else {
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Unsuccessful\"}");
+            }
 
-
-            httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
+            DBUser.closeConnection();
         }
 
         if (method.equals("POST") && path.equals("/auth/logout") && attribs.length == 1) {

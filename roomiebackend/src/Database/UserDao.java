@@ -99,4 +99,29 @@ public class UserDao {
 
         return user;
     }
+
+    /**
+     * Checks if the given credentials are valid.
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean isUserLogin(String username, String password) {
+        String query = "SELECT user_id FROM Users WHERE username = ? AND hashed_password = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error querying for user", e);
+        }
+    }
+
+    public void closeConnection() throws SQLException {
+        connection.close();
+    }
 }

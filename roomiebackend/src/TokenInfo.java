@@ -1,3 +1,6 @@
+/**
+ * Basic information to be associated with a token.
+ */
 public class TokenInfo {
     String username;
     double expirationTime;
