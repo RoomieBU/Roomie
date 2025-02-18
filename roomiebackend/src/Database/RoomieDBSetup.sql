@@ -6,12 +6,13 @@ USE Roomie;
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NULL UNIQUE,
     hashed_password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NULL,
+    last_name VARCHAR(50) NULL,
     about_me TEXT,
     date_of_birth DATE,
+    profile_picture_url VARCHAR(255) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -86,5 +87,14 @@ CREATE TABLE UserChatGroupMembers (
     user_id INT,
     PRIMARY KEY (group_id, user_id),
     FOREIGN KEY (group_id) REFERENCES UserChatGroups(group_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+);
+
+-- User Images Table (For User Galleries, separate from Profile Picture)
+CREATE TABLE UserImages (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
