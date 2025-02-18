@@ -23,6 +23,7 @@ public class Server {
     /**
      * Main entry point for the server, and is responsible for spawning threads for new
      * connections.
+     *
      * @param args
      * @throws IOException
      */
@@ -58,6 +59,7 @@ public class Server {
 
     /**
      * Handles specific requests from single clients.
+     *
      * @param client Connected client object
      * @throws IOException
      * @throws SQLException
@@ -83,9 +85,10 @@ public class Server {
         String path = sections[1];
 
         if (path.equals("/favicon.ico")) {
-            if (VERBOSE_OUTPUT) System.out.println("[Alert] favicon request... terminating" +
-                    " connection.");
-            connections --;
+            if (VERBOSE_OUTPUT)
+                System.out.println("[Alert] favicon request... terminating" +
+                        " connection.");
+            connections--;
             return;
         }
 
@@ -123,13 +126,12 @@ public class Server {
             String pass = attribs[1].split("=")[1];
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            //if (DBUser.isUserLogin(user, Utils.hashSHA256(pass))) {
-            if (DBUser.isUserLogin(user, pass)) { // Note: Plain text password
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Successful\"}");
+            if (DBUser.isUserLogin(user, Utils.hashSHA256(pass))) {
+                //if (DBUser.isUserLogin(user, pass)) { // Note: Plain text password
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
             } else {
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Login Unsuccessful\"}");
+                httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
             }
-
             DBUser.closeConnection();
         }
 
@@ -142,7 +144,16 @@ public class Server {
         }
 
         if (method.equals("POST") && path.equals("/auth/register")) {
-            
+            String user = attribs[0].split("=")[1];
+            String pass = attribs[0].split("=")[2];
+
+            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+            if (DBUser.createUser(user, Utils.hashSHA256(pass))) {
+                httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
+            } else {
+                httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
+            }
+            DBUser.closeConnection();
         }
 
         if (method.equals("POST") && path.equals("/auth/verify-session")) {

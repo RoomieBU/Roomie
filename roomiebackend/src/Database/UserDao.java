@@ -20,7 +20,6 @@ public class UserDao {
 
     /**
      * Creates a user from the given params
-     * doesn't hash password here yet
      */
     public void createUser(String username, String email, String hashedPassword, String firstName, String lastName, String aboutMe, Date dob) {
         String query = "INSERT INTO Users (username, email, hashed_password, first_name, last_name, about_me, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -39,6 +38,26 @@ public class UserDao {
             System.out.println("Error creating user: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Inserts a new user into the database with just username and email.
+     * @param username
+     * @param email
+     * @param hashedPassword
+     */
+    public boolean createUser(String username, String hashedPassword) {
+        String query = "INSERT INTO Users (username, hashed_password) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, username);
+            stmt.setString(2, hashedPassword);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
