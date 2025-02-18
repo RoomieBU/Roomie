@@ -145,7 +145,7 @@ public class Server {
 
         if (method.equals("POST") && path.equals("/auth/register")) {
             String user = attribs[0].split("=")[1];
-            String pass = attribs[0].split("=")[2];
+            String pass = attribs[0].split("=")[1];
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.createUser(user, Utils.hashSHA256(pass))) {
