@@ -26,7 +26,10 @@ public class Utils {
 
         return "HTTP/1.1 " + status + "\r\n" +
                 "Content-Type: application/json\r\n" +
-                "Content-Length: " + r.length() + "\r\n" +
+                "Content-Length: " + r.getBytes().length + "\r\n" +  // Fix here
+                "Access-Control-Allow-Origin: *\r\n" +  // Allow frontend to access backend
+                "Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n" +
+                "Access-Control-Allow-Headers: Content-Type\r\n" +
                 "\r\n" +
                 r;
     }
