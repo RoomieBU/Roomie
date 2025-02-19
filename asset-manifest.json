@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/%20//RoomieBU.github.io/Roomie/static/css/main.223491a5.css",
+    "main.js": "/%20//RoomieBU.github.io/Roomie/static/js/main.f3bbd6c4.js",
+    "index.html": "/%20//RoomieBU.github.io/Roomie/index.html",
+    "main.223491a5.css.map": "/%20//RoomieBU.github.io/Roomie/static/css/main.223491a5.css.map",
+    "main.f3bbd6c4.js.map": "/%20//RoomieBU.github.io/Roomie/static/js/main.f3bbd6c4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.223491a5.css",
+    "static/js/main.f3bbd6c4.js"
+  ]
+}
