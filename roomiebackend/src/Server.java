@@ -126,7 +126,7 @@ public class Server {
             String pass = attribs[1].split("=")[1];
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(user, Utils.hashSHA256(pass))) {
+            if (DBUser.isUserLogin(user, pass)) {
                 //if (DBUser.isUserLogin(user, pass)) { // Note: Plain text password
                 httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
             } else {
@@ -148,7 +148,7 @@ public class Server {
             String pass = attribs[0].split("=")[1];
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.createUser(user, Utils.hashSHA256(pass))) {
+            if (DBUser.createUser(user, pass)) {
                 httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
             } else {
                 httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
