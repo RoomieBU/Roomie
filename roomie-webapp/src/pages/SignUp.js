@@ -12,20 +12,35 @@ function SignUp() {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
-        let users = JSON.parse(localStorage.getItem("users")) || [];
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch("http://localhost:8080/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    username: data.email, // Assuming email is used as username
+                    password: data.password,
+                }),
+            });
 
-        if (users.some(user => user.email === data.email)) {
-            alert("User already exists. Please log in.");
-            navigate("/");
-            return;
+            if (!response.ok) {
+                throw new Error("User already exists or registration failed.");
+            }
+
+            const responseData = await response.json();
+            alert("Account created successfully!");
+
+            // Save token to local storage (optional)
+            localStorage.setItem("token", responseData.token);
+
+            navigate("/"); // Redirect to login page after success
+        } catch (error) {
+            alert(error.message);
         }
-
-        users.push(data);
-        localStorage.setItem("users", JSON.stringify(users));
-        alert("Account created successfully!");
-        navigate("/");
     };
+
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">

@@ -7,16 +7,35 @@ function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loginError, setLoginError] = useState("");
 
-    const onSubmit = (data) => {
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        const user = users.find(u => u.email === data.email && u.password === data.password);
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch("http://localhost:8080/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    username: data.email, // Assuming email is used as username
+                    password: data.password,
+                }),
+            });
 
-        if (user) {
+            if (!response.ok) {
+                throw new Error("Invalid login credentials");
+            }
+
+            const responseData = await response.json();
             alert("Login successful!");
-        } else {
-            setLoginError("Invalid email or password.");
+
+            // Save token to local storage or context for authentication
+            localStorage.setItem("token", responseData.token);
+            navigate("/dashboard"); // Redirect after successful login
+
+        } catch (error) {
+            setLoginError(error.message);
         }
     };
+
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
