@@ -9,6 +9,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-app.listen(port, '0.0.0.0', () => {
+app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
