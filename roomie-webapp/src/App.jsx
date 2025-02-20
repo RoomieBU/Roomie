@@ -1,22 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./Login"; // Import the Login component
-import SignUp from "./SignUp"; // Import the SignUp component
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./Login";
+import Signup from "./SignUp";
+import Home from "./Home";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<h1>Hello World</h1>} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>
   );
 }
 
-export default App
+export default App;
