@@ -15,6 +15,17 @@ jobs:
       - name: Remove .git folder
         run: rm -rf .git
 
+      - name: Clean up existing files on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo rm -rf /var/www/html/*
+            sudo mkdir -p /var/www/html
+            sudo chown $USER:$USER /var/www/html
+
       - name: Copy front-end files to EC2
         uses: appleboy/scp-action@master
         with:

@@ -1,71 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Roomie – Under Construction</title>
-  <!-- Google Font -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      /* Subtle background gradient */
-      background: linear-gradient(135deg, #f0f0f0, #f9f9f9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #333;
-    }
-    .container {
-      text-align: center;
-      padding: 2rem;
-      background: #fff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      max-width: 600px;
-    }
-    h1 {
-      font-weight: 600;
-      margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-    p {
-      font-weight: 400;
-      line-height: 1.6;
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-    }
-    .notice {
-      font-style: italic;
-      font-size: 0.9rem;
-      color: #777;
-    }
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #999;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Roomie</h1>
-    <p>We’re working on something amazing for you. Please check back soon!</p>
-    <p class="notice">In the meantime, stay safe and have a great day!</p>
-    <div class="footer">© <span id="year"></span> Roomie. All rights reserved.</div>
-  </div>
-
-  <script>
-    // Auto-fill current year in the footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

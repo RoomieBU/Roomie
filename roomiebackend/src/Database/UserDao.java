@@ -22,7 +22,6 @@ public class UserDao {
 
     /**
      * Creates a user from the given params
-     * doesn't hash password here yet
      */
     public void createUser(String username, String email, String hashedPassword, String firstName, String lastName, String aboutMe, Date dob) {
         String query = "INSERT INTO Users (username, email, hashed_password, first_name, last_name, about_me, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -41,6 +40,25 @@ public class UserDao {
             System.err.println("Error creating user: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Inserts a new user into the database with just username and email.
+     * @param username
+     * @param hashedPassword
+     */
+    public boolean createUser(String username, String hashedPassword) {
+        String query = "INSERT INTO Users (username, hashed_password) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, username);
+            stmt.setString(2, hashedPassword);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -100,5 +118,32 @@ public class UserDao {
         }
 
         return user;
+    }
+
+    /**
+     * Checks if the given credentials are valid.
+     * @param username
+     * @param password
+     * @return
+     */
+    public boolean isUserLogin(String username, String password) {
+        String query = "SELECT user_id FROM Users WHERE username = ? AND hashed_password = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);  // <-- Set first parameter
+            stmt.setString(2, password);  // <-- Set second parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error querying for user", e);
+        }
+    }
+
+    public void closeConnection() throws SQLException {
+        connection.close();
     }
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+    <h2>Register</h2>
+    <form id="registerForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <h3>Response:</h3>
+    <p id="responseMessage"></p>
+
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const formData = new URLSearchParams();
+            formData.append("username", username);
+            formData.append("password", password);
+
+            try {
+                const response = await fetch("http://3.142.132.244:8080/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: formData.toString()
+                });
+
+                const responseData = await response.json();
+
+                if (response.ok && responseData.token) {
+                    document.getElementById("responseMessage").textContent = "Registration successful! Token: " + responseData.token;
+                } else {
+                    document.getElementById("responseMessage").textContent = "Registration failed! Username might be taken.";
+                }
+            } catch (error) {
+                document.getElementById("responseMessage").textContent = "Error: " + error.message;
+            }
+        });
+    </script>
+</body>
+
+</html>
