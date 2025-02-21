@@ -32,6 +32,9 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("[Notice] Server is running on port " + port);
 
+            // Spawn console thread
+            new Thread(Console::start).start();
+
             while (true) {
                 if (connections <= MAX_CONNECTIONS) {
                     Socket client = serverSocket.accept();
