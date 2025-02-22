@@ -14,7 +14,7 @@ function SignUp() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://localhost:8080/auth/register", {
+            const response = await fetch("http://18.116.38.166:8080/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -35,7 +35,7 @@ function SignUp() {
             // Save token to local storage (optional)
             localStorage.setItem("token", responseData.token);
 
-            navigate("/"); // Redirect to login page after success
+            navigate("/login"); // Redirect to login page after success
         } catch (error) {
             alert(error.message);
         }
@@ -74,7 +74,7 @@ function SignUp() {
                 </button>
                 <p>
                     Already have an account?{" "}
-                    <a href="login" onClick={() => navigate("/")}>
+                    <a href="login" onClick={() => navigate("/login")}>
                         Sign in!
                     </a>
                 </p>

@@ -9,7 +9,7 @@ function Login() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://localhost:8080/auth/login", {
+            const response = await fetch("http://18.116.38.166:8080/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
