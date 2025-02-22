@@ -12,9 +12,9 @@ function Login() {
             const response = await fetch("http://18.116.38.166:8080/auth/login", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     username: data.email, // Assuming email is used as username
                     password: data.password,
                 }),

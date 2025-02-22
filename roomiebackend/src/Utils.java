@@ -1,5 +1,7 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Useful methods that support server operations and produce easier to read code.
@@ -52,6 +54,24 @@ public class Utils {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
         }
+    }
+
+    public static Map<String, String> parse(String json) {
+        Map<String, String> map = new HashMap<>();
+
+        // Remove braces and whitespace
+        json = json.trim().replaceAll("[{}\"]", "");
+
+        // Split into key-value pairs
+        String[] pairs = json.split(",");
+
+        for (String pair : pairs) {
+            String[] entry = pair.split(":");
+            if (entry.length == 2) {
+                map.put(entry[0].trim(), entry[1].trim());
+            }
+        }
+        return map;
     }
 
 }
