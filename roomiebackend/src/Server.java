@@ -1,7 +1,6 @@
 import Database.SQLConnection;
 import Database.User;
 import Database.UserDao;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +31,9 @@ public class Server {
         int port = 8080;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("[Notice] Server is running on port " + port);
+
+            // Spawn console thread
+            new Thread(Console::start).start();
 
             while (true) {
                 if (connections <= MAX_CONNECTIONS) {
@@ -119,11 +122,14 @@ public class Server {
         }
 
         String[] attribs = body.toString().split("&");
+
+        Map<String, String> data = Utils.parse(body.toString());
+
         String httpResponse = "";
 
-        if (method.equals("POST") && path.equals("/auth/login") && attribs.length == 2) {
-            String user = attribs[0].split("=")[1];
-            String pass = attribs[1].split("=")[1];
+        if (method.equals("POST") && path.equals("/auth/login") && data.containsKey("username") && data.containsKey("password")) {
+            String user = data.get("username");
+            String pass = data.get("password");
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.isUserLogin(user, pass)) {
@@ -143,9 +149,9 @@ public class Server {
             httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Logout Successful\"}");
         }
 
-        if (method.equals("POST") && path.equals("/auth/register")) {
-            String user = attribs[0].split("=")[1];
-            String pass = attribs[0].split("=")[1];
+        if (method.equals("POST") && path.equals("/auth/register") && data.containsKey("username") && data.containsKey("password")) {
+            String user = data.get("username");
+            String pass = data.get("password");
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.createUser(user, pass)) {
