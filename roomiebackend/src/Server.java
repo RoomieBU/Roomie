@@ -17,8 +17,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
+    static private final boolean DEV_CONSOLE = true;
     static private final int MAX_CONNECTIONS = 10;
-    static private int connections = 0;
+    static public int connections = 0;
 
     /**
      * Main entry point for the server, and is responsible for spawning threads for new
@@ -32,8 +33,13 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("[Notice] Server is running on port " + port);
 
-            // Spawn console thread
-            new Thread(Console::start).start();
+            if (DEV_CONSOLE) {
+                System.out.println("[Notice] Development console is active. Type 'help' for commands list");
+                new Thread(() -> {
+                    Console c = new Console();
+                    c.start();
+                }).start();
+            }
 
             while (true) {
                 if (connections <= MAX_CONNECTIONS) {
