@@ -16,6 +16,7 @@ public class Console {
         commands.put("hash", this::hash);
         commands.put("totalconnetions", this::totalConnections);
         commands.put("printusers", this::printUsers);
+        commands.put("updateusers", this::updateUser);
     }
 
     public void start() {
