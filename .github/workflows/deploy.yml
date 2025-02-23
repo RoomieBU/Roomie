@@ -65,9 +65,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /var/www/html/Roomie
-            # e.g. install dependencies or run build steps
-            # For example:
-            # npm install
-            # npm run build
+            cd /var/www/html/
+            install dependencies or run build steps
+            sudo npm install
+            sudo npm run build
             sudo systemctl daemon-reload
