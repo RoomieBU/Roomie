@@ -61,6 +61,24 @@ public class UserDao {
         return true;
     }
 
+    public boolean updateUserInfo(String username, String email, String first_name, String last_name, String about_me, String DOB) {
+        String query = "UPDATE Users SET email = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ? WHERE username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, first_name);
+            stmt.setString(3, last_name);
+            stmt.setString(4, about_me);
+            stmt.setString(5, DOB);
+            stmt.setString(6, username);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Returns a list of all users from the database
      */
@@ -140,6 +158,17 @@ public class UserDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error querying for user", e);
+        }
+    }
+
+    public void removeUser(String username) {
+        String query = "DELETE FROM Users WHERE username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, username);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error removing user (Does user exist?)", e);
         }
     }
 

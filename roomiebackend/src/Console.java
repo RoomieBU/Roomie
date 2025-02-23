@@ -1,7 +1,9 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import Database.SQLConnection;
+import Database.User;
+import Database.UserDao;
+
+import java.sql.SQLException;
+import java.util.*;
 
 public class Console {
 
@@ -12,15 +14,15 @@ public class Console {
         commands.put("removeuser", this::removeUser);
         commands.put("help", this::help);
         commands.put("hash", this::hash);
+        commands.put("totalconnetions", this::totalConnections);
+        commands.put("printusers", this::printUsers);
     }
 
-    static void start() {
-
+    public void start() {
         String input;
         while (true) { // not sure about this
             System.out.print(">> ");
             input = scan.nextLine().trim();
-            System.out.println(input);
 
             for (String command : commands.keySet()) {
                 if (input.equals(command)) {
@@ -32,17 +34,80 @@ public class Console {
         }
     }
 
+    private void printUsers() {
+        try {
+            UserDao ud = new UserDao(SQLConnection.getConnection());
+
+            List<User> usersList = ud.getAllUsers();
+
+            System.out.println("User ID\tUsername");
+            for (User u : usersList) {
+                System.out.println(u.getUserId() + "\t" + u.getUsername());
+            }
+            ud.closeConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Console] Unable to establish SQL connection");
+        }
+    }
+
     private void createUser() {
+        try {
+            UserDao ud = new UserDao(SQLConnection.getConnection());
+
+            System.out.print("[Console] Enter username: ");
+            String user = scan.nextLine().trim();
+            System.out.print("[Console] Enter password: ");
+            String pass = scan.nextLine().trim();
+            ud.createUser(user, pass);
+            System.out.println("[Console] Created new entry for user " + user);
+            ud.closeConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Console] Unable to establish SQL connection");
+        }
 
     }
 
     private void removeUser() {
+        try {
+            UserDao ud = new UserDao(SQLConnection.getConnection());
 
+            String user = scan.nextLine().trim();
+            ud.removeUser(user);
+            System.out.print("[Console] Enter username: ");
+            ud.closeConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Console] Unable to establish SQL connection");
+        }
+    }
+
+    private void updateUser() {
+        try {
+            UserDao ud = new UserDao(SQLConnection.getConnection());
+
+            System.out.print("[Console] Enter username: ");
+            String username = scan.nextLine().trim();
+            System.out.print("[Console] Enter email: ");
+            String email = scan.nextLine().trim();
+            System.out.print("[Console] Enter first name: ");
+            String fName = scan.nextLine().trim();
+            System.out.print("[Console] Enter last name: ");
+            String lName = scan.nextLine().trim();
+            System.out.print("[Console] Enter about me: ");
+            String about_me = scan.nextLine().trim();
+            System.out.print("[Console] Enter DOB (YYYY-MM-DD): ");
+            String dob = scan.nextLine().trim();
+
+            ud.updateUserInfo(username, email, fName, lName, about_me, dob);
+            System.out.println("[Console] Updated record for user " + username);
+            ud.closeConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Console] Unable to establish SQL connection");
+        }
     }
 
     private void hash() {
+        System.out.print("[Console] Enter string to be hashed: ");
         String in = scan.nextLine().trim();
-
         System.out.println("[Console] SHA256 Output: " + Utils.hashSHA256(in));
     }
 
@@ -51,6 +116,10 @@ public class Console {
         for (String command : commands.keySet()) {
             System.out.print(command + ", ");
         }
+        System.out.print("\n");
     }
 
+    private void totalConnections() {
+        System.out.println("[Console] Total active connections: " + Server.connections);
+    }
 }
