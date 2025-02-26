@@ -49,8 +49,8 @@ public class Auth {
     }
 
 
-    public static String getUserfromToken(String token) {
+    public static String getEmailfromToken(String token) {
         TokenInfo t = tokenStore.get(token);
-        return t.username;
+        return t.email;
     }
 }

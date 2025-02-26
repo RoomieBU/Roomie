@@ -44,14 +44,14 @@ public class UserDao {
 
     /**
      * Inserts a new user into the database with just username and email.
-     * @param username
+     * @param email
      * @param hashedPassword
      */
-    public boolean createUser(String username, String hashedPassword) {
+    public boolean createUser(String email, String hashedPassword) {
         String query = "INSERT INTO Users (username, hashed_password) VALUES (?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, username);
+            stmt.setString(1, email);
             stmt.setString(2, hashedPassword);
 
             stmt.executeUpdate();
@@ -112,15 +112,21 @@ public class UserDao {
     /*
      * Returns if a user is registered or not, for redirection
      */
-    public boolean isRegistered(String username) {
-        boolean val;
+    public boolean isRegistered(String email) {
+        boolean val = false;
         String query = "SELECT registered FROM Users WHERE username = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-                val = rs.getBoolean("registered");
-             } catch (SQLException e) {
-                throw new RuntimeException("Error retrieving users", e);
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    val = rs.getBoolean("registered");
+                }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding user", e);
+        }
+
         return val;
     }
 
