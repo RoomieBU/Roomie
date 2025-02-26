@@ -15,7 +15,7 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username: data.email, // Assuming email is used as username
+                    email: data.email,
                     password: data.password,
                 }),
             });
@@ -38,14 +38,14 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    token : localStorage.getItem("token")
+                    token: localStorage.getItem("token")
                 }),
             });
 
             if (!response2.ok) {
                 throw new Error("SEND TO REGISTERATION PAGE");
             }
-            else{
+            else {
                 throw new Error("SEND TO DASHBOARD");
             }
 

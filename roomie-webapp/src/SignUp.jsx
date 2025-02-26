@@ -20,7 +20,7 @@ function SignUp() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username: data.email, // Assuming email is used as username
+                    email: data.email,
                     password: data.password,
                 }),
             });
