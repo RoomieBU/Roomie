@@ -48,7 +48,7 @@ public class UserDao {
      * @param hashedPassword
      */
     public boolean createUser(String email, String hashedPassword) {
-        String query = "INSERT INTO Users (username, hashed_password) VALUES (?, ?)";
+        String query = "INSERT INTO Users (email, hashed_password) VALUES (?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, email);
@@ -62,15 +62,15 @@ public class UserDao {
     }
 
     public boolean updateUserInfo(String username, String email, String first_name, String last_name, String about_me, String DOB) {
-        String query = "UPDATE Users SET email = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ? WHERE username = ?";
+        String query = "UPDATE Users SET username = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ? WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
+            stmt.setString(1, username);
             stmt.setString(2, first_name);
             stmt.setString(3, last_name);
             stmt.setString(4, about_me);
             stmt.setString(5, DOB);
-            stmt.setString(6, username);
+            stmt.setString(6, email);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -114,7 +114,7 @@ public class UserDao {
      */
     public boolean isRegistered(String email) {
         boolean val = false;
-        String query = "SELECT registered FROM Users WHERE username = ?";
+        String query = "SELECT registered FROM Users WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
@@ -163,14 +163,14 @@ public class UserDao {
 
     /**
      * Checks if the given credentials are valid.
-     * @param username
+     * @param email
      * @param password
      * @return
      */
-    public boolean isUserLogin(String username, String password) {
-        String query = "SELECT user_id FROM Users WHERE username = ? AND hashed_password = ?";
+    public boolean isUserLogin(String email, String password) {
+        String query = "SELECT user_id FROM Users WHERE email = ? AND hashed_password = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);  // <-- Set first parameter
+            stmt.setString(1, email);  // <-- Set first parameter
             stmt.setString(2, password);  // <-- Set second parameter
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -184,11 +184,11 @@ public class UserDao {
         }
     }
 
-    public void removeUser(String username) {
-        String query = "DELETE FROM Users WHERE username = ?";
+    public void removeUser(String email) {
+        String query = "DELETE FROM Users WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
+            stmt.setString(1, email);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error removing user (Does user exist?)", e);
