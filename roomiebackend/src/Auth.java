@@ -48,4 +48,9 @@ public class Auth {
         tokenStore.remove(token);
     }
 
+
+    public static String getUserfromToken(String token) {
+        TokenInfo t = tokenStore.get(token);
+        return t.username;
+    }
 }
