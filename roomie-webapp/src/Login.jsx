@@ -29,6 +29,26 @@ function Login() {
 
             // Save token to local storage or context for authentication
             localStorage.setItem("token", responseData.token);
+
+
+            // Check if user is registered and redirect on response
+            const response2 = await fetch("http://roomie.ddns.net:8080/auth/isregistered", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token : localStorage.getItem("token")
+                }),
+            });
+
+            if (!response2.ok) {
+                throw new Error("SEND TO REGISTERATION PAGE");
+            }
+            else{
+                throw new Error("SEND TO DASHBOARD");
+            }
+
             navigate("/dashboard"); // Redirect after successful login
 
         } catch (error) {
