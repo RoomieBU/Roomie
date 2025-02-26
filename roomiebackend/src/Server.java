@@ -143,7 +143,7 @@ public class Server {
         router.addRoute("/auth/logout", AuthController::logout);
         router.addRoute("/auth/register", AuthController::register);
         router.addRoute("/auth/verify", AuthController::verify);
-
+        router.addRoute("/auth/isregistered", AuthController::isRegistered);
 
         String httpResponse = router.handleRequest(path, data, method);
 

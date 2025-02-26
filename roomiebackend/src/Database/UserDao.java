@@ -97,7 +97,8 @@ public class UserDao {
                         rs.getString("last_name"),
                         rs.getString("about_me"),
                         rs.getDate("date_of_birth"),
-                        rs.getTimestamp("created_at")
+                        rs.getTimestamp("created_at"),
+                        rs.getBoolean("registered")
                 );
                 users.add(user);
             }
@@ -106,6 +107,21 @@ public class UserDao {
         }
 
         return users;
+    }
+
+    /*
+     * Returns if a user is registered or not, for redirection
+     */
+    public boolean isRegistered(String username) {
+        boolean val;
+        String query = "SELECT registered FROM Users WHERE username = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+                val = rs.getBoolean("registered");
+             } catch (SQLException e) {
+                throw new RuntimeException("Error retrieving users", e);
+            }
+        return val;
     }
 
     /**
@@ -127,7 +143,8 @@ public class UserDao {
                             rs.getString("last_name"),
                             rs.getString("about_me"),
                             rs.getDate("date_of_birth"),
-                            rs.getTimestamp("created_at")
+                            rs.getTimestamp("created_at"),
+                            rs.getBoolean("registered")
                     );
                 }
             }

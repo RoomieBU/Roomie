@@ -70,4 +70,26 @@ public class AuthController {
             return Utils.assembleHTTPResponse(400, "{\"message\": \"Token is not valid\"}");
         }
     }
+
+    public static String isRegistered(Map<String, String> data, String method) {
+        if (!method.equals("POST")) {
+            return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
+        }
+
+        String token = data.get("token");
+
+        String user = Auth.getUserfromToken(token);
+
+        try {
+            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+            if (DBUser.isRegistered(user)) {
+                return Utils.assembleHTTPResponse(200, "{\"message\": \"User registered\"}");
+            } else {
+                return Utils.assembleHTTPResponse(400, "{\"message\": \"User not registered\"}");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Auth Controller] Unable to connect to MySQL.");
+            return Utils.assembleHTTPResponse(500, "{\"token\": \"\"}");
+        }
+    }
 }
