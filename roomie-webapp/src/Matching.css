@@ -1,0 +1,36 @@
+
+.hold-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.potential-roomate {
+    height: 400px;
+    width: 350px;
+    background-image: url("src/assets/transparent.jpg");
+    background-size: 130% 100%;
+    margin-bottom: 20px;
+    justify-items: center;
+    border-radius: 15px;
+    border-color: purple; /* This can be changed to color scheme
+                            or maybe will be chosen based on user picture?? */
+    border-width: 1px;
+    border-style: solid;
+
+}
+
+.user_info {
+    height: max-content;
+    width: max-content;
+    text-align: left;
+    margin-top: 97%;
+    margin-left: 5%;
+}
+
+.match-button-cluster {
+    width: 250px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
