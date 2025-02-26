@@ -78,8 +78,8 @@ public class Server {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         OutputStream out = client.getOutputStream();
 
-        // Recieve HTTP request as text
         String request = in.readLine();
+        System.out.println(request);
         if (request == null) { // Invalid HTTP request
             connections--;
             return;
@@ -92,6 +92,20 @@ public class Server {
         }
         String method = sections[0]; // POST or GET
         String path = sections[1];
+
+
+        if (method.equals("OPTIONS")) {
+            String corsResponse = "HTTP/1.1 204 No Content\r\n" +
+                    "Access-Control-Allow-Origin: *\r\n" +
+                    "Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n" +
+                    "Access-Control-Allow-Headers: Content-Type\r\n" +
+                    "Content-Length: 0\r\n\r\n";
+            out.write(corsResponse.getBytes());
+            out.flush();
+            client.close();
+            return;
+        }
+
 
         if (path.equals("/favicon.ico")) {
             if (VERBOSE_OUTPUT)
@@ -139,7 +153,6 @@ public class Server {
 
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.isUserLogin(user, pass)) {
-                //if (DBUser.isUserLogin(user, pass)) { // Note: Plain text password
                 httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
             } else {
                 httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");

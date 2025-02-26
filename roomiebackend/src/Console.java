@@ -14,7 +14,7 @@ public class Console {
         commands.put("removeuser", this::removeUser);
         commands.put("help", this::help);
         commands.put("hash", this::hash);
-        commands.put("totalconnetions", this::totalConnections);
+        commands.put("totalconnections", this::totalConnections);
         commands.put("printusers", this::printUsers);
         commands.put("updateusers", this::updateUser);
     }
