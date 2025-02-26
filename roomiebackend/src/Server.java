@@ -1,6 +1,3 @@
-import Database.SQLConnection;
-import Database.User;
-import Database.UserDao;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +5,6 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -26,9 +22,8 @@ public class Server {
      * connections.
      *
      * @param args
-     * @throws IOException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         int port = 8080;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("[Notice] Server is running on port " + port);
@@ -78,20 +73,24 @@ public class Server {
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         OutputStream out = client.getOutputStream();
 
+        // This first section is just parsing the http header
         String request = in.readLine();
-        System.out.println(request);
-        if (request == null) { // Invalid HTTP request
+        String[] sections = request.split(" ");
+
+        if (sections.length < 2) {
             connections--;
             return;
         }
 
-        String[] sections = request.split(" ");
-        if (sections.length < 2) { // Invalid HTTP request
-            connections--;
+        String method = sections[0];
+        String path = sections[1];
+
+        if (method.equals("OPTIONS")) {
+            out.write(Utils.corsResponse.getBytes());
+            out.flush();
+            client.close();
             return;
         }
-        String method = sections[0]; // POST or GET
-        String path = sections[1];
 
 
         if (method.equals("OPTIONS")) {
@@ -136,68 +135,17 @@ public class Server {
             body.append(buffer);
         }
 
-        // For testing only, this should be removed eventually
-        if (VERBOSE_OUTPUT) {
-            System.out.println("[Info] Form data: " + body);
-        }
-
-        String[] attribs = body.toString().split("&");
-
         Map<String, String> data = Utils.parse(body.toString());
 
-        String httpResponse = "";
 
-        if (method.equals("POST") && path.equals("/auth/login") && data.containsKey("username") && data.containsKey("password")) {
-            String user = data.get("username");
-            String pass = data.get("password");
+        Router router = new Router();
+        router.addRoute("/auth/login", AuthController::login);
+        router.addRoute("/auth/logout", AuthController::logout);
+        router.addRoute("/auth/register", AuthController::register);
+        router.addRoute("/auth/verify", AuthController::verify);
 
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(user, pass)) {
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
-            } else {
-                httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
-            }
-            DBUser.closeConnection();
-        }
 
-        if (method.equals("POST") && path.equals("/auth/logout") && attribs.length == 1) {
-            String token = attribs[0].split("=")[1];
-
-            Auth.invalidateToken(token);
-
-            httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Logout Successful\"}");
-        }
-
-        if (method.equals("POST") && path.equals("/auth/register") && data.containsKey("username") && data.containsKey("password")) {
-            String user = data.get("username");
-            String pass = data.get("password");
-
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.createUser(user, pass)) {
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
-            } else {
-                httpResponse = Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
-            }
-            DBUser.closeConnection();
-        }
-
-        if (method.equals("POST") && path.equals("/auth/verify-session")) {
-            String token = attribs[0].split("=")[1];
-            if (Auth.isValidToken(token)) {
-                httpResponse = Utils.assembleHTTPResponse(200, "{\"message\": \"Session Verified\"}");
-            } else {
-                httpResponse = Utils.assembleHTTPResponse(401, "{\"message\": \"Invalid Session\"}");
-            }
-        }
-
-        if (method.equals("POST") && path.equals("/auth/reset-password")) {
-            String user = attribs[0].split("=")[1];
-            String pass = attribs[1].split("=")[1];
-
-            // Check if username is good and overwrite password
-
-            httpResponse = Utils.assembleHTTPResponse(201, "{\"message\": \"Password Reset\"}");
-        }
+        String httpResponse = router.handleRequest(path, data, method);
 
         out.write(httpResponse.getBytes());
         out.flush();

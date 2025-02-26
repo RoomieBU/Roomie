@@ -98,7 +98,7 @@ public class Console {
             System.out.print("[Console] Enter DOB (YYYY-MM-DD): ");
             String dob = scan.nextLine().trim();
 
-            ud.updateUserInfo(username, email, fName, lName, about_me, dob);
+            //ud.updateUserInfo(username, email, fName, lName, about_me, dob);
             System.out.println("[Console] Updated record for user " + username);
             ud.closeConnection();
         } catch (SQLException | ClassNotFoundException e) {
