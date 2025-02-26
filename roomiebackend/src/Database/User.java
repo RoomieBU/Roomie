@@ -19,8 +19,9 @@ public class User {
     private String aboutMe;
     private Date dateOfBirth;
     private Timestamp createdAt;
+    private Boolean registered;
 
-    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt) {
+    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -29,6 +30,7 @@ public class User {
         this.aboutMe = aboutMe;
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
+        this.registered = registered;
     }
 
     // Getters
@@ -40,6 +42,7 @@ public class User {
     public String getAboutMe() { return aboutMe; }
     public Date getDateOfBirth() { return dateOfBirth; }
     public Timestamp getCreatedAt() { return createdAt; }
+    public Boolean getRegistered() { return registered; }
 
     @Override
     public String toString() {
@@ -52,6 +55,7 @@ public class User {
                 ", aboutMe='" + aboutMe + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", createdAt=" + createdAt +
+                ", registered =" + registered +
                 '}';
     }
 
