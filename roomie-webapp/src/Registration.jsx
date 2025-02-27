@@ -8,33 +8,34 @@ function Registration() {
     const [registrationError, setRegistrationError] = useState("");
 
     const onSubmit = async (data) => {
-        try {
-            
-            const formData = new FormData();
-            formData.append("token", localStorage.getItem("token"));
-            formData.append("first_name", data.first_name);
-            formData.append("last_name", data.last_name);
-            formData.append("about_me", data.about_me);
-            formData.append("date_of_birth", data.date_of_birth);
-
-            const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
-                method: "POST",
-                headers: {
+      try {
+          const formData = JSON.stringify({
+              token: localStorage.getItem("token"),
+              first_name: data.first_name,
+              last_name: data.last_name,
+              about_me: data.about_me,
+              date_of_birth: data.date_of_birth
+          });
+  
+          const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
+              method: "POST",
+              headers: {
                   "Content-Type": "application/json",
               },
-                body: formData, // Use FormData to handle file uploads
-            });
-
-            if (!response.ok) {
-                throw new Error("Registration failed. Please try again.");
-            }
-
-            alert("Registration successful!");
-            navigate("/dashboard");
-        } catch (error) {
-            setRegistrationError(error.message);
-        }
-    };
+              body: formData, 
+          });
+  
+          if (!response.ok) {
+              throw new Error("Registration failed. Please try again.");
+          }
+  
+          alert("Registration successful!");
+          navigate("/dashboard");
+      } catch (error) {
+          setRegistrationError(error.message);
+      }
+  };
+  
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
