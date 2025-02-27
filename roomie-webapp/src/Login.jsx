@@ -43,13 +43,12 @@ function Login() {
             });
 
             if (!response2.ok) {
-                throw new Error("SEND TO REGISTERATION PAGE");
+                navigate("/registration"); // Redirect to registration page
             }
-            else {
-                throw new Error("SEND TO DASHBOARD");
-            }
+            else{
+                navigate("/dashboard"); // Redirect to dashboard
 
-            navigate("/dashboard"); // Redirect after successful login
+            }
 
         } catch (error) {
             setLoginError(error.message);
