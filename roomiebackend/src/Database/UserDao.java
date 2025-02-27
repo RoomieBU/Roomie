@@ -62,7 +62,7 @@ public class UserDao {
     }
 
     public boolean updateUserInfo(String username, String email, String first_name, String last_name, String about_me, String DOB) {
-        String query = "UPDATE Users SET username = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ? WHERE email = ?";
+        String query = "UPDATE Users SET username = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ?, registered = '1' WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, username);
