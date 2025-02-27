@@ -16,7 +16,6 @@ function Registration() {
             formData.append("last_name", data.last_name);
             formData.append("about_me", data.about_me);
             formData.append("date_of_birth", data.date_of_birth);
-            formData.append("profile_picture", data.profile_picture[0]);
 
             const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
                 method: "POST",
@@ -84,17 +83,6 @@ function Registration() {
                         {...register("date_of_birth", { required: "Date of birth is required" })}
                     />
                     {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
-                </div>
-
-                <div className="mb-3">
-                    <label className="form-label">Profile Picture</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        accept="image/*"
-                        {...register("profile_picture", { required: "Profile picture is required" })}
-                    />
-                    {errors.profile_picture && <div className="invalid-feedback">{errors.profile_picture.message}</div>}
                 </div>
 
                 {registrationError && <div className="text-danger mb-3">{registrationError}</div>}
