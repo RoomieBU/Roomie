@@ -89,22 +89,9 @@ public class Server {
             out.write(Utils.corsResponse.getBytes());
             out.flush();
             client.close();
+            connections--;
             return;
         }
-
-
-        if (method.equals("OPTIONS")) {
-            String corsResponse = "HTTP/1.1 204 No Content\r\n" +
-                    "Access-Control-Allow-Origin: *\r\n" +
-                    "Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n" +
-                    "Access-Control-Allow-Headers: Content-Type\r\n" +
-                    "Content-Length: 0\r\n\r\n";
-            out.write(corsResponse.getBytes());
-            out.flush();
-            client.close();
-            return;
-        }
-
 
         if (path.equals("/favicon.ico")) {
             if (VERBOSE_OUTPUT)

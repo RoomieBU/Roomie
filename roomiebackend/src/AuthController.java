@@ -10,13 +10,13 @@ public class AuthController {
             return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
         }
 
-        String user = data.get("username");
+        String email = data.get("email");
         String pass = data.get("password");
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(user,pass)) {
-                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
+            if (DBUser.isUserLogin(email,pass)) {
+                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(email) + "\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
             }
@@ -31,13 +31,13 @@ public class AuthController {
             return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
         }
 
-        String user = data.get("username");
+        String email = data.get("email");
         String pass = data.get("password");
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.createUser(user, pass)) {
-                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
+            if (DBUser.createUser(email, pass)) {
+                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(email) + "\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
             }
@@ -78,11 +78,11 @@ public class AuthController {
 
         String token = data.get("token");
 
-        String user = Auth.getUserfromToken(token);
+        String userEmail = Auth.getEmailfromToken(token);
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isRegistered(user)) {
+            if (DBUser.isRegistered(userEmail)) {
                 return Utils.assembleHTTPResponse(200, "{\"message\": \"User registered\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"message\": \"User not registered\"}");

@@ -2,11 +2,11 @@
  * Basic information to be associated with a token.
  */
 public class TokenInfo {
-    String username;
+    String email;
     double expirationTime;
 
-    TokenInfo(String username, double expirationTime) {
-        this.username = username;
+    TokenInfo(String email, double expirationTime) {
+        this.email = email;
         this.expirationTime = expirationTime;
     }
 }

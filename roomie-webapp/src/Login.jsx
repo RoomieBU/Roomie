@@ -15,7 +15,7 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    username: data.email, // Assuming email is used as username
+                    email: data.email,
                     password: data.password,
                 }),
             });
@@ -38,7 +38,7 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    token : localStorage.getItem("token")
+                    token: localStorage.getItem("token")
                 }),
             });
 
@@ -47,6 +47,7 @@ function Login() {
             }
             else{
                 navigate("/dashboard"); // Redirect to dashboard
+
             }
 
         } catch (error) {
