@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./Login";
 import Signup from "./SignUp";
 import Registration from "./Registration";
+import Dashboard from "./Dashboard";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/registration" element={<Registration />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>
