@@ -100,7 +100,7 @@ public class AuthController {
 
         // Get the user from the token value
         String token = data.get("token");
-        String user = Auth.getUserfromToken(token);
+        String user = Auth.getEmailfromToken(token);
 
         // Get the form data to be assigned to user
         String first_name = data.get("first_name");
