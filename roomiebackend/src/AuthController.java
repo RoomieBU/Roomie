@@ -92,4 +92,38 @@ public class AuthController {
             return Utils.assembleHTTPResponse(500, "{\"token\": \"\"}");
         }
     }
+
+    public static String sendRegistration(Map<String, String> data, String method) {
+        if (!method.equals("POST")) {
+            return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
+        }
+
+        // Get the user from the token value
+        String token = data.get("token");
+        String user = Auth.getUserfromToken(token);
+
+        // Get the form data to be assigned to user
+        String first_name = data.get("first_name");
+        String last_name = data.get("last_name");
+        String about_me = data.get("about_me");
+        String date_of_birth = data.get("date_of_birth");
+
+        // (FUCTIONALITY MISSING)
+        // Functionality for accepting profile pictures needs to happen...
+        // profile_picture = data.get("profile_picture");
+
+        try {
+            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+            if (DBUser.updateUserInfo(user, user, first_name, last_name, about_me, date_of_birth)) {
+                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
+            } else {
+                return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Auth Controller] Unable to connect to MySQL.");
+            return Utils.assembleHTTPResponse(500, "{\"token\": \"\"}");
+        }
+    }
+
+    
 }
