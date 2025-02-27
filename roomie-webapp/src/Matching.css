@@ -5,7 +5,7 @@
     align-items: center;
 }
 
-.potential-roomate {
+.potential-roomate-front {
     height: 400px;
     width: 350px;
     background-image: url("src/assets/transparent.jpg");
@@ -17,7 +17,28 @@
                             or maybe will be chosen based on user picture?? */
     border-width: 1px;
     border-style: solid;
+    display: block;
+}
 
+.potential-roomate-back {
+    height: 400px;
+    width: 350px;
+    background-color: lightgray;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-left: 20px;
+    padding-top:10px;
+    border-radius: 15px;
+    border-color: purple; /* This can be changed to color scheme
+                            or maybe will be chosen based on user picture?? */
+    border-width: 1px;
+    border-style: solid; 
+    display: none;
+}
+
+.more-user-info {
+    display: flex;
+    flex-direction: column;
 }
 
 .user_info {
