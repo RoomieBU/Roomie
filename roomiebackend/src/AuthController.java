@@ -2,7 +2,7 @@ import Database.SQLConnection;
 import Database.UserDao;
 
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.*;
 
 public class AuthController {
     public static String login(Map<String, String> data, String method) {
@@ -71,59 +71,70 @@ public class AuthController {
         }
     }
 
+
     public static String isRegistered(Map<String, String> data, String method) {
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
         if (!method.equals("POST")) {
-            return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
+            response.put("message", "Method not allowed!");
         }
 
         String token = data.get("token");
-
         String userEmail = Auth.getEmailfromToken(token);
-
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isRegistered(userEmail)) {
-                return Utils.assembleHTTPResponse(200, "{\"message\": \"User registered\"}");
+
+            ArrayList<String> columns = new ArrayList<>();
+            columns.add("registered");
+
+            if (DBUser.getData(columns, userEmail).get("registered").equals("1")) {
+                response.put("message", "User Registered");
+                code = 200;
             } else {
-                return Utils.assembleHTTPResponse(400, "{\"message\": \"User not registered\"}");
+                response.put("message", "User not registered");
+                code = 400;
             }
+
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Auth Controller] Unable to connect to MySQL.");
-            return Utils.assembleHTTPResponse(500, "{\"token\": \"\"}");
         }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 
     public static String sendRegistration(Map<String, String> data, String method) {
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
         if (!method.equals("POST")) {
-            return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
+            response.put("message", "Method not allowed!");
         }
 
         // Get the user from the token value
         String token = data.get("token");
-        String user = Auth.getEmailfromToken(token);
-
-        // Get the form data to be assigned to user
-        String first_name = data.get("first_name");
-        String last_name = data.get("last_name");
-        String about_me = data.get("about_me");
-        String date_of_birth = data.get("date_of_birth");
+        String email = Auth.getEmailfromToken(token);
 
         // (FUCTIONALITY MISSING)
         // Functionality for accepting profile pictures needs to happen...
         // profile_picture = data.get("profile_picture");
 
+        Map<String, String> formData = new HashMap<>();
+        formData.put("first_name", data.get("first_name"));
+        formData.put("last_name", data.get("last_name"));
+        formData.put("about_me", data.get("about_name"));
+        formData.put("date_of_birth", data.get("date_of_birth"));
+
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.updateUserInfo(user, user, first_name, last_name, about_me, date_of_birth)) {
-                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(user) + "\"}");
+            if (DBUser.setData(formData, email)) {
+                response.put("message", "Set user data for " + email);
+                code = 200;
             } else {
-                return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
+                response.put("message", "Unable to set user data for " + email);
             }
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Auth Controller] Unable to connect to MySQL.");
-            return Utils.assembleHTTPResponse(500, "{\"token\": \"\"}");
+            code = 500;
+            response.put("token", "");
         }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
-
-    
 }
