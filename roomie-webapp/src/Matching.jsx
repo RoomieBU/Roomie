@@ -1,4 +1,7 @@
 import "./Matching.css"
+import "bootstrap-icons/font/bootstrap-icons.min.css";
+
+
 
 function Matching() {
 
@@ -8,10 +11,13 @@ function Matching() {
     const name = "John"
     const age = "19"
     const university = "Bloomsburg University"
+
+    const bio = "This is a bio about the life of John"
+
     const major = "Computer Science"
-    const housingPreference = "MOA"
-    const sleepingHabits = "early"
-    const interests = "football, video games, and reading"
+    // const housingPreference = "MOA"
+    // const sleepingHabits = "early"
+    // const interests = "football, video games, and reading"
 
     function swapSides() {
         const front = document.getElementById("front")
@@ -43,6 +49,13 @@ function Matching() {
                 <div className= "more-user-info">
                     <h3>More about {name}</h3>
                     <dl>
+                        <dt>Major</dt>
+                        <dd>{major}</dd>
+                        <dt>Bio:</dt>
+                        <dd>{bio}</dd>
+                    </dl>
+
+                    {/* <dl>
                         <dt>Major:</dt>
                         <dd>{major}</dd>
                         <dt>Housing Preference:</dt>
@@ -51,17 +64,17 @@ function Matching() {
                         <dd>{name} likes to goes to bed {sleepingHabits}.</dd>
                         <dt>Interests:</dt>
                         <dd>{name} likes {interests}</dd>
-                    </dl>
+                    </dl> */}
                 </div>
             </div>
             
             <div className="match-button-cluster">
-                <button>
-                    X
+                <button className="deny-icon">
+                    
                 </button>
                     
-                <button>
-                    M
+                <button className="match-icon">
+                    <i className="bi bi-check-lg"></i>
                 </button>
             </div>
         </div>

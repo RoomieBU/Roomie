@@ -5,11 +5,15 @@
     align-items: center;
 }
 
+text {
+    font-weight: bold;
+}
+
 .potential-roomate-front {
     height: 400px;
     width: 350px;
     background-image: url("src/assets/transparent.jpg");
-    background-size: 130% 100%;
+    background-size: 189% 100%;
     margin-bottom: 20px;
     justify-items: center;
     border-radius: 15px;
@@ -50,8 +54,39 @@
 }
 
 .match-button-cluster {
-    width: 250px;
+    width: 420px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+.match-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: rgb(33, 223, 33);
+    background-color: transparent;
+    transition: background-color .1s ease-in-out;
+}
+
+.match-icon:hover {
+    border-color: green;
+    background-color: rgb(33, 223, 33);
+    transition: background-color .1s ease-in-out;
+}
+
+.deny-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: red;
+    background-color: transparent;
+    color: black;
+    transition: background-color .1s ease-in-out;
+}
+
+.deny-icon:hover {
+    border-color: crimson;
+    background-color: red;
+    transition: background-color .1s ease-out;
 }
