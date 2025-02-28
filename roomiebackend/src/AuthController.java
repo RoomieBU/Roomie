@@ -116,9 +116,15 @@ public class AuthController {
         // Functionality for accepting profile pictures needs to happen...
         // profile_picture = data.get("profile_picture");
 
+        Map<String, String> formData = new HashMap<>();
+        formData.put("first_name", data.get("first_name"));
+        formData.put("last_name", data.get("last_name"));
+        formData.put("about_me", data.get("about_name"));
+        formData.put("date_of_birth", data.get("date_of_birth"));
+
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.setData(data, email)) {
+            if (DBUser.setData(formData, email)) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
             } else {
