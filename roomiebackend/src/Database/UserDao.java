@@ -44,14 +44,14 @@ public class UserDao {
 
     /**
      * Inserts a new user into the database with just username and email.
-     * @param username
+     * @param email
      * @param hashedPassword
      */
-    public boolean createUser(String username, String hashedPassword) {
-        String query = "INSERT INTO Users (username, hashed_password) VALUES (?, ?)";
+    public boolean createUser(String email, String hashedPassword) {
+        String query = "INSERT INTO Users (email, hashed_password) VALUES (?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, username);
+            stmt.setString(1, email);
             stmt.setString(2, hashedPassword);
 
             stmt.executeUpdate();
@@ -62,15 +62,15 @@ public class UserDao {
     }
 
     public boolean updateUserInfo(String username, String email, String first_name, String last_name, String about_me, String DOB) {
-        String query = "UPDATE Users SET email = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ? WHERE username = ?";
+        String query = "UPDATE Users SET username = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ?, registered = 1 WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
+            stmt.setString(1, username);
             stmt.setString(2, first_name);
             stmt.setString(3, last_name);
             stmt.setString(4, about_me);
             stmt.setString(5, DOB);
-            stmt.setString(6, username);
+            stmt.setString(6, email);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class UserDao {
      */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at FROM Users";
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered FROM Users";
 
         try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
@@ -97,7 +97,8 @@ public class UserDao {
                         rs.getString("last_name"),
                         rs.getString("about_me"),
                         rs.getDate("date_of_birth"),
-                        rs.getTimestamp("created_at")
+                        rs.getTimestamp("created_at"),
+                        rs.getBoolean("registered")
                 );
                 users.add(user);
             }
@@ -106,6 +107,27 @@ public class UserDao {
         }
 
         return users;
+    }
+
+    /*
+     * Returns if a user is registered or not, for redirection
+     */
+    public boolean isRegistered(String email) {
+        boolean val = false;
+        String query = "SELECT registered FROM Users WHERE email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    val = rs.getBoolean("registered");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding user", e);
+        }
+
+        return val;
     }
 
     /**
@@ -127,7 +149,8 @@ public class UserDao {
                             rs.getString("last_name"),
                             rs.getString("about_me"),
                             rs.getDate("date_of_birth"),
-                            rs.getTimestamp("created_at")
+                            rs.getTimestamp("created_at"),
+                            rs.getBoolean("registered")
                     );
                 }
             }
@@ -140,14 +163,14 @@ public class UserDao {
 
     /**
      * Checks if the given credentials are valid.
-     * @param username
+     * @param email
      * @param password
      * @return
      */
-    public boolean isUserLogin(String username, String password) {
-        String query = "SELECT user_id FROM Users WHERE username = ? AND hashed_password = ?";
+    public boolean isUserLogin(String email, String password) {
+        String query = "SELECT user_id FROM Users WHERE email = ? AND hashed_password = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);  // <-- Set first parameter
+            stmt.setString(1, email);  // <-- Set first parameter
             stmt.setString(2, password);  // <-- Set second parameter
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -161,11 +184,11 @@ public class UserDao {
         }
     }
 
-    public void removeUser(String username) {
-        String query = "DELETE FROM Users WHERE username = ?";
+    public void removeUser(String email) {
+        String query = "DELETE FROM Users WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
+            stmt.setString(1, email);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error removing user (Does user exist?)", e);

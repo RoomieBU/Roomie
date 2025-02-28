@@ -48,4 +48,9 @@ public class Auth {
         tokenStore.remove(token);
     }
 
+
+    public static String getEmailfromToken(String token) {
+        TokenInfo t = tokenStore.get(token);
+        return t.email;
+    }
 }

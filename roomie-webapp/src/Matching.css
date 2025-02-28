@@ -5,7 +5,8 @@
     align-items: center;
 }
 
-text {
+p {
+    
     font-weight: bold;
 }
 
@@ -67,12 +68,18 @@ text {
     border-color: rgb(33, 223, 33);
     background-color: transparent;
     transition: background-color .1s ease-in-out;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color:rgb(33, 223, 33);
+    font-size: large;
 }
 
 .match-icon:hover {
     border-color: green;
     background-color: rgb(33, 223, 33);
     transition: background-color .1s ease-in-out;
+    color: white
 }
 
 .deny-icon {
@@ -81,12 +88,17 @@ text {
     border-radius: 50%;
     border-color: red;
     background-color: transparent;
-    color: black;
     transition: background-color .1s ease-in-out;
+    justify-content: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: red;
 }
 
 .deny-icon:hover {
-    border-color: crimson;
+    border-color: rgb(141, 0, 28);
     background-color: red;
     transition: background-color .1s ease-out;
+    color: white;
 }

@@ -14,7 +14,7 @@ public class Console {
         commands.put("removeuser", this::removeUser);
         commands.put("help", this::help);
         commands.put("hash", this::hash);
-        commands.put("totalconnetions", this::totalConnections);
+        commands.put("totalconnections", this::totalConnections);
         commands.put("printusers", this::printUsers);
         commands.put("updateusers", this::updateUser);
     }
@@ -98,7 +98,7 @@ public class Console {
             System.out.print("[Console] Enter DOB (YYYY-MM-DD): ");
             String dob = scan.nextLine().trim();
 
-            ud.updateUserInfo(username, email, fName, lName, about_me, dob);
+            //ud.updateUserInfo(username, email, fName, lName, about_me, dob);
             System.out.println("[Console] Updated record for user " + username);
             ud.closeConnection();
         } catch (SQLException | ClassNotFoundException e) {
