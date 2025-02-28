@@ -17,6 +17,8 @@ public class Server {
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
 
+    static Router router = new Router();
+
     /**
      * Main entry point for the server, and is responsible for spawning threads for new
      * connections.
@@ -27,6 +29,14 @@ public class Server {
         int port = 8080;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("[Notice] Server is running on port " + port);
+
+            // Authentication routes
+            router.addRoute("/auth/login", AuthController::login);
+            router.addRoute("/auth/logout", AuthController::logout);
+            router.addRoute("/auth/register", AuthController::register);
+            router.addRoute("/auth/verify", AuthController::verify);
+            router.addRoute("/auth/isregistered", AuthController::isRegistered);
+            router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
@@ -122,16 +132,7 @@ public class Server {
             body.append(buffer);
         }
 
-        Map<String, String> data = Utils.parse(body.toString());
-
-
-        Router router = new Router();
-        router.addRoute("/auth/login", AuthController::login);
-        router.addRoute("/auth/logout", AuthController::logout);
-        router.addRoute("/auth/register", AuthController::register);
-        router.addRoute("/auth/verify", AuthController::verify);
-        router.addRoute("/auth/isregistered", AuthController::isRegistered);
-        router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
+        Map<String, String> data = Utils.parseJson(body.toString());
 
         String httpResponse = router.handleRequest(path, data, method);
 

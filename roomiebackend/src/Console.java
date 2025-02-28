@@ -41,9 +41,9 @@ public class Console {
 
             List<User> usersList = ud.getAllUsers();
 
-            System.out.println("User ID\tUsername");
+            System.out.println("User ID\tEmail");
             for (User u : usersList) {
-                System.out.println(u.getUserId() + "\t" + u.getUsername());
+                System.out.println(u.getUserId() + "\t" + u.getEmail());
             }
             ud.closeConnection();
         } catch (SQLException | ClassNotFoundException e) {
@@ -99,7 +99,7 @@ public class Console {
             String dob = scan.nextLine().trim();
 
             //ud.updateUserInfo(username, email, fName, lName, about_me, dob);
-            System.out.println("[Console] Updated record for user " + username);
+            System.out.println("[Console] Updated record for user " + email);
             ud.closeConnection();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Console] Unable to establish SQL connection");

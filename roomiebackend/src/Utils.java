@@ -62,7 +62,7 @@ public class Utils {
         }
     }
 
-    public static Map<String, String> parse(String json) {
+    public static Map<String, String> parseJson(String json) {
         Map<String, String> map = new HashMap<>();
 
         // Remove braces and whitespace
@@ -80,4 +80,24 @@ public class Utils {
         return map;
     }
 
+    public static String assembleJson(Map<String, String> data) {
+        StringBuilder json = new StringBuilder("{");
+
+        int count = 0;
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            json.append("\"").append(entry.getKey()).append("\": ");
+
+            if (entry.getValue() == null) {
+                json.append("null");
+            } else {
+                json.append("\"").append(entry.getValue().replace("\"", "\\\"")).append("\"");
+            }
+
+            if (++count < data.size()) {
+                json.append(", ");
+            }
+        }
+        json.append("}");
+        return json.toString();
+    }
 }

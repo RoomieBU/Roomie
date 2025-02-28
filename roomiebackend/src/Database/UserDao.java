@@ -2,7 +2,9 @@ package Database;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Data Access Object
@@ -109,26 +111,6 @@ public class UserDao {
         return users;
     }
 
-    /*
-     * Returns if a user is registered or not, for redirection
-     */
-    public boolean isRegistered(String email) {
-        boolean val = false;
-        String query = "SELECT registered FROM Users WHERE email = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    val = rs.getBoolean("registered");
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding user", e);
-        }
-
-        return val;
-    }
 
     /**
      * Returns a user from the database based on their user_id
@@ -161,6 +143,68 @@ public class UserDao {
         return user;
     }
 
+    public boolean setData(Map<String, String> data, String email) {
+        if (data.isEmpty()) return false;
+
+        StringBuilder query = new StringBuilder("UPDATE Users SET ");
+        int count = 0;
+
+        for (String key : data.keySet()) {
+            query.append(key).append(" = ?");
+            if (++count < data.size()) {
+                query.append(", ");
+            }
+        }
+
+        query.append(" WHERE email = ?");
+
+        try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int index = 1;
+
+            for (String value : data.values()) {
+                stmt.setString(index++, value);
+            }
+
+            stmt.setString(index, email);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user info: ", e);
+        }
+    }
+
+    /**
+     * Generic method for getting information about a user from the Users table.
+     * Aims to replace making new methods for specific data requests.
+     *
+     * @param columns Fields to be retrieved
+     * @param email Unique email for specific user
+     * @return A Map of the columns as the keys and their values as the values
+     */
+    public Map<String, String> getData(List<String> columns, String email) {
+        Map<String, String> data = new HashMap<>();
+        String query = "SELECT " + String.join(", ", columns) + " FROM Users WHERE email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    for (String col : columns) {
+                        if (col.equals("registered")) {
+                            data.put(col, Integer.toString(rs.getInt(col))); // Store as "0" or "1"
+                        } else {
+                            data.put(col, rs.getString(col));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user info: ", e);
+        }
+
+        return data;
+    }
+
     /**
      * Checks if the given credentials are valid.
      * @param email
@@ -183,6 +227,7 @@ public class UserDao {
             throw new RuntimeException("Error querying for user", e);
         }
     }
+
 
     public void removeUser(String email) {
         String query = "DELETE FROM Users WHERE email = ?";
