@@ -29,9 +29,9 @@ function Matching() {
     // const interests = "football, video games, and reading"
 
     // get users from database
-    function getUsers() {
+    // function getUsers() {
 
-    }
+    // }
 
     // set new user info to match screen
     function updateShownUser() {
