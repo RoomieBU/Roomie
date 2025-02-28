@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -7,35 +7,59 @@ function Registration() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [registrationError, setRegistrationError] = useState("");
 
+    // Verify that the user is currently logged in and has a valid token
+    useEffect(() => {
+        const verifyToken = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Invalid token");
+                }
+
+                const result = await response.json();
+                if (!result.valid) {
+                    throw new Error("Invalid token");
+                }
+            } catch (error) {
+                console.log("Redirecting to login due to invalid token.");
+                navigate("/login");
+            }
+        };
+
+        verifyToken();
+    }, [navigate]);
+
     const onSubmit = async (data) => {
-      try {
-          const formData = JSON.stringify({
-              token: localStorage.getItem("token"),
-              first_name: data.first_name,
-              last_name: data.last_name,
-              about_me: data.about_me,
-              date_of_birth: data.date_of_birth
-          });
-  
-          const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              body: formData, 
-          });
-  
-          if (!response.ok) {
-              throw new Error("Registration failed. Please try again.");
-          }
-  
-          alert("Registration successful!");
-          navigate("/dashboard");
-      } catch (error) {
-          setRegistrationError(error.message);
-      }
-  };
-  
+        try {
+            const formData = JSON.stringify({
+                token: localStorage.getItem("token"),
+                first_name: data.first_name,
+                last_name: data.last_name,
+                about_me: data.about_me,
+                date_of_birth: data.date_of_birth
+            });
+
+            const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Registration failed. Please try again.");
+            }
+
+            alert("Registration successful!");
+            navigate("/dashboard");
+        } catch (error) {
+            setRegistrationError(error.message);
+        }
+    };
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
