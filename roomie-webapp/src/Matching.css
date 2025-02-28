@@ -1,0 +1,104 @@
+
+.hold-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+    
+    font-weight: bold;
+}
+
+.potential-roomate-front {
+    height: 400px;
+    width: 350px;
+    background-image: url("src/assets/transparent.jpg");
+    background-size: 189% 100%;
+    margin-bottom: 20px;
+    justify-items: center;
+    border-radius: 15px;
+    border-color: purple; /* This can be changed to color scheme
+                            or maybe will be chosen based on user picture?? */
+    border-width: 1px;
+    border-style: solid;
+    display: block;
+}
+
+.potential-roomate-back {
+    height: 400px;
+    width: 350px;
+    background-color: lightgray;
+    margin-bottom: 20px;
+    text-align: left;
+    padding-left: 20px;
+    padding-top:10px;
+    border-radius: 15px;
+    border-color: purple; /* This can be changed to color scheme
+                            or maybe will be chosen based on user picture?? */
+    border-width: 1px;
+    border-style: solid; 
+    display: none;
+}
+
+.more-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user_info {
+    height: max-content;
+    width: max-content;
+    text-align: left;
+    margin-top: 97%;
+    margin-left: 5%;
+}
+
+.match-button-cluster {
+    width: 420px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.match-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: rgb(33, 223, 33);
+    background-color: transparent;
+    transition: background-color .1s ease-in-out;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color:rgb(33, 223, 33);
+    font-size: large;
+}
+
+.match-icon:hover {
+    border-color: green;
+    background-color: rgb(33, 223, 33);
+    transition: background-color .1s ease-in-out;
+    color: white
+}
+
+.deny-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-color: red;
+    background-color: transparent;
+    transition: background-color .1s ease-in-out;
+    justify-content: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: red;
+}
+
+.deny-icon:hover {
+    border-color: rgb(141, 0, 28);
+    background-color: red;
+    transition: background-color .1s ease-out;
+    color: white;
+}

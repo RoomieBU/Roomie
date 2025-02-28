@@ -5,6 +5,7 @@ import Login from "./Login";
 import Signup from "./SignUp";
 import Registration from "./Registration";
 import Dashboard from "./Dashboard";
+import Matching from "./Matching";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/registration" element={<Registration />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/matching" element={<Matching />}/>
         <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>

@@ -38,6 +38,11 @@ public class Server {
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
 
+
+            // Matches routes??
+            router.addRoute("/matches/getPotentialRoomate", MatchController::getNextMatch);
+            
+
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
