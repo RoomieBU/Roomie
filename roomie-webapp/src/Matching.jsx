@@ -26,19 +26,52 @@ function Matching() {
     // let major = "Computer Science"
     // const housingPreference = "MOA"
     // const sleepingHabits = "early"
-    // const interests = "football, video games, and reading"
+
 
     // get users from database
-    // function getUsers() {
+    useEffect(() => {
+            const verifyToken = async () => {
+                try {
+                    const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: localStorage.getItem("token") })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error("Invalid token");
+                    }
+    
+                    const result = await response.json();
+                    if (!result.valid) {
+                        throw new Error("Invalid token");
+                    }
+                } catch (error) {
+                    console.log("Redirecting to login due to invalid token.");
+                    navigate("/login");
+                }
+            };
+    
+            verifyToken();
+        }, [navigate]);
+        // const users
+        // token: localStorage.getItem("token"),
+        // first_name: data.first_name,
+        // last_name: data.last_name,
+        // about_me: data.about_me,
+        // date_of_birth: data.date_of_birth,
+        // university: data.university,
+    }
 
-    // }
+
+    
 
     // set new user info to match screen
     function updateShownUser() {
         setName("")
         setAge("")
-        setUniversity("")
-        setBio("")
+        setUniversity("") // university??
+        setBio("") // about me
         setMajor("")
         setIsFront(true)
     }
