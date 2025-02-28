@@ -1,7 +1,8 @@
 import "./Matching.css"
 import "bootstrap-icons/font/bootstrap-icons.min.css";
+import { useNavigate } from "react-router-dom";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Matching() {
 
@@ -13,67 +14,80 @@ function Matching() {
     const [major, setMajor] = useState("Computer Science");
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
 
-    // user --> don't know how it is getting sent as
-    // const user = "getUserInfo()"
-    // JSON Object
+    const navigate = useNavigate();
 
-    // let name = "John"
-    // let age = "19"
-    // let university = "Bloomsburg University"
-
-    // let bio = "This is a bio about the life of John"
-
-    // let major = "Computer Science"
-    // const housingPreference = "MOA"
-    // const sleepingHabits = "early"
-
-
-    // get users from database
+    // verify access to matching with users
     useEffect(() => {
-            const verifyToken = async () => {
-                try {
-                    const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ token: localStorage.getItem("token") })
-                    });
-    
-                    if (!response.ok) {
-                        throw new Error("Invalid token");
-                    }
-    
-                    const result = await response.json();
-                    if (!result.valid) {
-                        throw new Error("Invalid token");
-                    }
-                } catch (error) {
-                    console.log("Redirecting to login due to invalid token.");
-                    navigate("/login");
+        const verifyToken = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Invalid token");
                 }
-            };
-    
-            verifyToken();
-        }, [navigate]);
-        // const users
-        // token: localStorage.getItem("token"),
-        // first_name: data.first_name,
-        // last_name: data.last_name,
-        // about_me: data.about_me,
-        // date_of_birth: data.date_of_birth,
-        // university: data.university,
-    }
+
+                const result = await response.json();
+                if (!result.valid) {
+                    throw new Error("Invalid token");
+                }
+            } catch (error) {
+                console.log("Redirecting to login due to invalid token.", error);
+                navigate("/login");
+            }
+        };
+
+        verifyToken();
+    }, [navigate]);
+
+    const potentialRoomate = useRef(null);
+
+    // get next user
+    useEffect(() => {
+        const getPotentialRoomate = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoomate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Invalid token");
+                }
+
+                const result = await response.json();
+                if (!result.valid) {
+                    throw new Error("Invalid token");
+                }
+
+                return result;
+            } catch (error) {
+                console.log("Redirecting to login due to invalid token.", error);
+            }
+        };
+
+        const fetchRoomate = async () => {
+            potentialRoomate.current = await getPotentialRoomate();
+        };
+        fetchRoomate();
+    }, []);
 
 
-    
 
     // set new user info to match screen
     function updateShownUser() {
-        setName("")
-        setAge("")
-        setUniversity("") // university??
-        setBio("") // about me
-        setMajor("")
+        setName(potentialRoomate.getItem("name"))
+        setAge(potentialRoomate.getItem("date_of_birth"))
+        setUniversity("Bloomsburg University") // university??
+        setBio(potentialRoomate.getItem("about_me")) // about me
+        setMajor(potentialRoomate.getItem("major"))
         setIsFront(true)
+
+        console.log(potentialRoomate)
     }
 
     // matched chosen!!
@@ -94,11 +108,6 @@ function Matching() {
         updateShownUser()
     }
     
-
-    
-
-
-
 
     function swapSides() {
         setIsFront(!isFront)

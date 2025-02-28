@@ -38,6 +38,9 @@ public class Server {
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
 
+
+            // Matches routes??
+            router.addRoute("/matches/getPotentialRoomate", MatchController::getNextMatch);
             
 
             if (DEV_CONSOLE) {
