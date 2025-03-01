@@ -166,9 +166,9 @@ public class UserDao {
                 String value = entry.getValue();
 
                 if ("registered".equals(key)) {
-                    // Convert "true"/"false" to a byte[] for BYTE(1)
-                    byte[] registeredValue = new byte[]{(byte) ("true".equalsIgnoreCase(value) ? 1 : 0)};
-                    stmt.setBytes(index++, registeredValue);
+                    // Convert "true"/"false" string to boolean for BIT(1)
+                    boolean registeredValue = "true".equalsIgnoreCase(value);
+                    stmt.setBoolean(index++, registeredValue);
                 } else {
                     stmt.setString(index++, value);
                 }
@@ -181,6 +181,7 @@ public class UserDao {
             throw new RuntimeException("Error updating user info: ", e);
         }
     }
+
 
 
     /**
