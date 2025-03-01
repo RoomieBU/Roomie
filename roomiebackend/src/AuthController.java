@@ -185,8 +185,9 @@ public class AuthController {
         Map<String, String> formData = new HashMap<>();
         formData.put("first_name", data.get("first_name"));
         formData.put("last_name", data.get("last_name"));
-        formData.put("about_me", data.get("about_name"));
+        formData.put("about_me", data.get("about_me"));
         formData.put("date_of_birth", data.get("date_of_birth"));
+        formData.put("registered", String.valueOf(1));
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
