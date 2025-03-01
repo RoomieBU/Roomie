@@ -1,0 +1,109 @@
+
+  
+  /* Split Panel Container */
+  .split-panel-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    height: 92%;
+    margin: 0;
+    padding: 0;
+    border: none !important;
+    border-radius: 0 !important;
+    position: absolute;
+    top: 7%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  /* No text selection during drag */
+  .no-select {
+    user-select: none;
+  }
+  
+  /* Left Panel */
+  .left-panel {
+    overflow: auto;
+    height: 100%;
+  }
+  
+  /* Right Panel */
+  .right-panel {
+    overflow: auto;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  
+  /* Divider */
+  .divider {
+    width: 4px;
+    cursor: col-resize;
+    transition: background-color 0.2s ease;
+    height: 100%;
+    flex-shrink: 0; /* Prevent divider from shrinking */
+  }
+  
+  /* Divider hover effect */
+  .divider-hover {
+    background-color: #0d6efd !important; /* Bootstrap primary color */
+  }
+
+  .header {
+    width: 100%;
+    height: 7%;
+    background-color: purple;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  }
+
+  .profile-link {
+    height: 45px;
+    width: 45px;
+    background-image: url("assets/transparent.jpg");
+    margin-right: 2%;
+    border-radius: 100%;
+    border-width: 2px;
+    border-color: black;
+    border-style: solid;
+  }
+
+  .profile-link:hover {
+    opacity: 90%;
+  }
+
+  .action-section {
+    width:max-content;
+    left:0;
+    position: absolute;
+    display: flex;
+  }
+
+  .btn {
+    color: white;
+    font-weight: bold;
+    border-width: 0;
+  }
+
+
+  .btn:hover {
+    color:white;
+    text-decoration: underline;
+  }
+
+  .btn:focus {
+    border-width:0;
+  }
+
+  .logo {
+    font-weight: bold;
+    color:white;
+    height: auto;
+    margin:auto;
+  }

@@ -36,7 +36,7 @@ function Matching() {
                 }
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.", error);
-                navigate("/login");
+                //navigate("/login");
             }
         };
 
