@@ -40,7 +40,7 @@ public class Server {
 
 
             // Matches routes??
-            router.addRoute("/matches/getPotentialRoomate", MatchController::getNextMatch);
+            //router.addRoute("/matches/getPotentialRoomate", MatchController::getNextMatch);
             
 
             if (DEV_CONSOLE) {
