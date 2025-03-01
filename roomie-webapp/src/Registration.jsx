@@ -20,11 +20,6 @@ function Registration() {
                 if (!response.ok) {
                     throw new Error("Invalid token");
                 }
-
-                const result = await response.json();
-                if (!result.valid) {
-                    throw new Error("Invalid token");
-                }
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.");
                 navigate("/login");

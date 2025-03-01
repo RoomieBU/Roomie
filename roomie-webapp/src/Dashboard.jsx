@@ -29,14 +29,14 @@ function Dashboard() {
     // Use useCallback to memoize the event handlers
     const handleMouseMove = useCallback((e) => {
         if (!isDraggingRef.current) return;
-        
+
         const containerWidth = containerRef.current.offsetWidth;
         const deltaX = e.clientX - startXRef.current;
         const deltaPercentage = (deltaX / containerWidth) * 100;
-        
+
         // Calculate new width with constraints (minimum 10%, maximum 90%)
         const newLeftWidth = Math.min(Math.max(startLeftWidthRef.current + deltaPercentage, 10), 90);
-        
+
         setLeftWidth(newLeftWidth);
     }, []);
 
@@ -59,11 +59,32 @@ function Dashboard() {
     // Clean up event listeners on unmount
     useEffect(() => {
         return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
         };
     }, [handleMouseMove, handleMouseUp]);
 
+    // Verify that the user is currently logged in and has a valid token
+    useEffect(() => {
+        const verifyToken = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Invalid token");
+                }
+            } catch (error) {
+                console.log("Redirecting to login due to invalid token.");
+                navigate("/login");
+            }
+        };
+
+        verifyToken();
+    }, [navigate]);
 
     function showRelevantComponent(action) {
         setHideMatching(true)
@@ -95,12 +116,12 @@ function Dashboard() {
                     <button className="btn" onClick={handleLogout}>Log Out.</button>
                 </div>
 
-                
 
-                <div className="profile-link" onClick={() => navigate("/profile")}/>
+
+                <div className="profile-link" onClick={() => navigate("/profile")} />
             </div>
 
-            <div ref={containerRef} className={`split-panel-container border rounded ${isDraggingRef.current ? 'no-select' : ''}`}> 
+            <div ref={containerRef} className={`split-panel-container border rounded ${isDraggingRef.current ? 'no-select' : ''}`}>
                 {/* Left Panel */}
                 <div className="left-panel bg-light p-3" style={{ width: `${leftWidth}%` }}>
                     {/* <h4 className="mb-3">Left Panel</h4>
@@ -113,16 +134,16 @@ function Dashboard() {
                     </div>
 
                 </div>
-                
+
                 {/* Divider */}
-                <div 
+                <div
                     ref={dividerRef}
                     className="divider bg-secondary"
                     onMouseDown={handleMouseDown}
                     onMouseOver={() => dividerRef.current.classList.add('divider-hover')}
                     onMouseOut={() => dividerRef.current.classList.remove('divider-hover')}
                 />
-                
+
                 {/* Right Panel */}
                 <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
                     {/* <h4 className="mb-3">Right Panel</h4>
@@ -134,12 +155,12 @@ function Dashboard() {
                     </div> */}
 
                     {hideDefault ? null : <p>Roomie.</p>}
-                    
+
 
                     {hideMatching ? null : <Matching />}
 
                 </div>
-             </div> 
+            </div>
         </div>
     );
 }
