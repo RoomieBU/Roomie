@@ -47,7 +47,6 @@ function Login() {
             }
             else{
                 navigate("/dashboard"); // Redirect to dashboard
-
             }
 
         } catch (error) {
