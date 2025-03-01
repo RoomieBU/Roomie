@@ -161,15 +161,25 @@ public class UserDao {
         try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
             int index = 1;
 
-            for (String value : data.values()) {
-                stmt.setString(index++, value);
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+
+                // Handle the "registered" column separately
+                if ("registered".equals(key)) {
+                    // Convert the value to an integer (0 or 1)
+                    int registeredValue = "true".equalsIgnoreCase(value) ? 1 : 0;
+                    stmt.setInt(index++, registeredValue);
+                } else {
+                    stmt.setString(index++, value);
+                }
             }
 
             stmt.setString(index, email);
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving user info: ", e);
+            throw new RuntimeException("Error updating user info: ", e);
         }
     }
 
