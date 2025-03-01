@@ -77,6 +77,8 @@ function Dashboard() {
                 if (!response.ok) {
                     throw new Error("Invalid token");
                 }
+
+                return;
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.");
                 navigate("/login");
