@@ -156,6 +156,10 @@ public class UserDao {
             }
         }
 
+        if (data.containsKey("registered")) {
+            query.append(", registered = 1");
+        }
+
         query.append(" WHERE email = ?");
 
         try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
@@ -167,9 +171,7 @@ public class UserDao {
 
                 // Handle the "registered" column separately
                 if ("registered".equals(key)) {
-                    // Convert the value to an integer (0 or 1)
-                    int registeredValue = "true".equalsIgnoreCase(value) ? 1 : 0;
-                    stmt.setByte(index++, (byte) 1);
+                    index++;
                 } else {
                     stmt.setString(index++, value);
                 }
