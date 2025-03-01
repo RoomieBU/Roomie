@@ -1,9 +1,5 @@
-/**
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import Database.SQLConnection;
 import Database.User;
@@ -33,28 +29,34 @@ public class MatchController {
 
             List<User> users = DBUser.getAllUsers();
 
+            // Just got now get a random user (does no checking if it's the same user)
+            Random rand = new Random();
+            User user = users.get(rand.nextInt(0, users.size()-1));
 
             if (users.get(0) != null) {
-            response.put("message", "Next match found");
-            response.put("user", Map.of(
-                "email", user.getEmail(),
-                "name", user.getFirstName() + " " + user.getLastName(),
-                "date_of_birth", user.getDateOfBirth().toString(),
-                "about_me", user.getAboutMe(),
-                "major", user.major
-            ));
-            code = 200;
-        } else {
-            response.put("message", "No registered users found");
-            code = 404;
+                response.put("message", "Next match found");
+                /**
+                response.put("user", Map.of(
+                    "email", user.getEmail(),
+                    "name", user.getFirstName() + " " + user.getLastName(),
+                    "date_of_birth", user.getDateOfBirth().toString(),
+                    "about_me", user.getAboutMe(),
+                    "major", user.major
+                ));**/
+                response.put("email", user.getEmail());
+                response.put("name", user.getFirstName() + " " + user.getLastName());
+                response.put("date_of_birth", user.getDateOfBirth().toString());
+                response.put("about_me", user.getAboutMe());
+                code = 200;
+            } else {
+                response.put("message", "No registered users found");
+                code = 404;
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Auth Controller] Unable to connect to MySQL.");
+            response.put("message", "Database error");
+            code = 500;
         }
-    } catch (SQLException | ClassNotFoundException e) {
-        System.out.println("[Auth Controller] Unable to connect to MySQL.");
-        response.put("message", "Database error");
-        code = 500;
-    }
-
     return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 }
-**/
