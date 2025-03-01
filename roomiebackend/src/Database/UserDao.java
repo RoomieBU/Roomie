@@ -156,10 +156,6 @@ public class UserDao {
             }
         }
 
-        if (data.containsKey("registered")) {
-            query.append(", registered = 1");
-        }
-
         query.append(" WHERE email = ?");
 
         try (PreparedStatement stmt = connection.prepareStatement(query.toString())) {
@@ -169,9 +165,10 @@ public class UserDao {
                 String key = entry.getKey();
                 String value = entry.getValue();
 
-                // Handle the "registered" column separately
                 if ("registered".equals(key)) {
-                    index++;
+                    // Convert "true"/"false" to a byte[] for BYTE(1)
+                    byte[] registeredValue = new byte[]{(byte) ("true".equalsIgnoreCase(value) ? 1 : 0)};
+                    stmt.setBytes(index++, registeredValue);
                 } else {
                     stmt.setString(index++, value);
                 }
@@ -184,6 +181,7 @@ public class UserDao {
             throw new RuntimeException("Error updating user info: ", e);
         }
     }
+
 
     /**
      * Generic method for getting information about a user from the Users table.
