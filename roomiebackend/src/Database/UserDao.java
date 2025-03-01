@@ -169,7 +169,7 @@ public class UserDao {
                 if ("registered".equals(key)) {
                     // Convert the value to an integer (0 or 1)
                     int registeredValue = "true".equalsIgnoreCase(value) ? 1 : 0;
-                    stmt.setInt(index++, registeredValue);
+                    stmt.setByte(index++, (byte) 1);
                 } else {
                     stmt.setString(index++, value);
                 }
