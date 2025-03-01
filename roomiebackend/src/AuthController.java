@@ -187,7 +187,7 @@ public class AuthController {
         formData.put("last_name", data.get("last_name"));
         formData.put("about_me", data.get("about_me"));
         formData.put("date_of_birth", data.get("date_of_birth"));
-        formData.put("registered", String.valueOf(1));
+        formData.put("registered", "true");
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
