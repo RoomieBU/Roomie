@@ -16,6 +16,7 @@ public class FileController {
      * @return
      */
     public static String uploadFile(Map<String, String> data, String method) {
+        System.out.println("Made it to FileController.java");
         int code = 400;
         Map<String, String> response = new HashMap<>();
         if (!method.equals("POST")) {
