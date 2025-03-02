@@ -83,7 +83,7 @@ function FileSubmit() {
         });
 
         try {
-            const response = await fetch("http://roomie.ddns.net:8080/fileUpload", {
+            const response = await fetch("http://roomie.ddns.net:8080/fileSubmit", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: formData,

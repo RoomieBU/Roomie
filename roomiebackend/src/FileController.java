@@ -6,7 +6,7 @@ import java.util.*;
 import Database.*;
 
 /**
- * Class for controlling what happens from the frontend FileUpload
+ * Class for controlling what happens from the frontend fileSubmit
  */
 public class FileController {
     /**
