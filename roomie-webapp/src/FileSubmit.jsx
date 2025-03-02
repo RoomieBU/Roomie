@@ -1,12 +1,32 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function FileSubmit() {
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
     const [imageData, setImageData] = useState("");
     const [uploadError, setUploadError] = useState("");
+
+    // Verify that the user is currently logged in and has a valid token
+    useEffect(() => {
+        const verifyToken = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Invalid token");
+                }
+            } catch (error) {
+                console.log("Redirecting to login due to invalid token.");
+                navigate("/login");
+            }
+        };
+
+        verifyToken();
+    }, [navigate]);
 
     // Handle file selection & convert to Base64
     const handleFileChange = async (event) => {
@@ -17,12 +37,17 @@ function FileSubmit() {
                 console.error("Error processing image:", error);
                 alert("Failed to process image.");
             });
+            console.log("successfully handled file change.");
         } else {
             alert("Please select a valid image file (JPG, PNG, or WebP).");
         }
+
+
     };
 
+
     // Resize image using canvas & convert to Base64
+    // JSON can't send a binary file over so we need to convert to base64 :(
     const resizeAndConvertToBase64 = (file, maxWidth, maxHeight) => {
         return new Promise((resolve, reject) => {
             const img = new Image();
@@ -47,7 +72,9 @@ function FileSubmit() {
     };
 
     // Handle file upload (Send Base64 JSON)
-    const onSubmit = async (data) => {
+    const onSubmit = async (event) => {
+        event.preventDefault();
+
         if (!imageData) {
             alert("Please select an image before submitting.");
             return;
@@ -61,8 +88,7 @@ function FileSubmit() {
         try {
             const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
                 method: "POST",
-                headers: { "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: formData,
             });
 
@@ -80,24 +106,10 @@ function FileSubmit() {
     return (
         <div className="container">
             <h2>Upload an Image</h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="mb-3">
-                    <label className="form-label">Choose an image</label>
-                    <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/webp"
-                        onChange={handleFileChange}
-                        className={`form-control ${errors.file ? "is-invalid" : ""}`}
-                        {...register("file", { required: "Please upload an image" })}
-                    />
-                    {errors.file && <div className="invalid-feedback">{errors.file.message}</div>}
-                </div>
-
-                <button type="submit" className="btn btn-primary w-100">
-                    Upload
-                </button>
+            <form onSubmit={onSubmit}>
+                <input type="file" accept="image/jpeg, image/png, image/webp" onChange={handleFileChange} />
+                <button type="submit">Upload</button>
             </form>
-
             {uploadError && <p className="text-danger">{uploadError}</p>}
         </div>
     );
