@@ -20,6 +20,7 @@ public class FileController {
         Map<String, String> response = new HashMap<>();
         if (!method.equals("POST")) {
             response.put("message", "Method not allowed.");
+            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
         }
 
         String token = data.get("token");
@@ -36,14 +37,27 @@ public class FileController {
 
         try {
             // Decode base64 and remove the prefix if it is still there
-            String imageData = base64Image.split(",")[1];
+            String[] parts = base64Image.split(",");
+            if (parts.length < 2) {
+                response.put("message", "Invalid image data.");
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            }
+            String imageData = parts[1];
             byte[] decodedImage = Base64.getDecoder().decode(imageData);
 
+
             // Save image locally
-            String fileName = UUID.randomUUID().toString() + ".jpg";
+            // Extract "jpeg", "png", etc.
+            String fileExtension = parts[0].split("/")[1].split(";")[0];
+            if (!fileExtension.matches("jpg|jpeg|png|webp")) {
+                response.put("message", "Unsupported image format.");
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            }
+            String fileName = UUID.randomUUID() + "." + fileExtension;
+
             String filePath = "/var/www/images/" + fileName;
             // Ensure directory exists
-            File directory = new File("/var/www/images" + fileName);
+            File directory = new File("/var/www/images");
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -58,15 +72,24 @@ public class FileController {
             UserDao DBuser = new UserDao(SQLConnection.getConnection());
             List<String> column = new ArrayList<>();
             column.add("user_id");
-            int userId = DBuser.getData(column, user).size();
+            // Retrieve the user_id from the database
+            Map<String, String> userData = DBuser.getData(column, user);
+            String userIdStr = userData.get("user_id");
+            if (userIdStr == null) {
+                response.put("message", "User not found.");
+                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
+            }
+            int userId = Integer.parseInt(userIdStr);
             DBuser.closeConnection();
             // put into Images table
             UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
             userImageDao.uploadUserImage(userId, filePath);
             userImageDao.closeConnection();
 
-
-        } catch (IOException e) {
+            response.put("message", "File uploaded successfully.");
+            response.put("image_url", "/images/" + fileName);
+            code = 200;
+                    } catch (IOException e) {
             System.out.println("[FileController] Error while saving the image: " + e.getMessage());
             response.put("message", "Error saving image.");
             code = 500;

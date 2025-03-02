@@ -33,12 +33,15 @@ function FileSubmit() {
         const file = event.target.files[0];
 
         if (file && (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp")) {
-            const base64String = await resizeAndConvertToBase64(file, 800, 600);
-            setImageData(base64String);
+            resizeAndConvertToBase64(file, 800, 600).then(setImageData).catch((error) => {
+                console.error("Error processing image:", error);
+                alert("Failed to process image.");
+            });
         } else {
             alert("Please select a valid image file (JPG, PNG, or WebP).");
         }
     };
+
 
     // Resize image using canvas & convert to Base64
     // JSON can't send a binary file over so we need to convert to base64 :(
@@ -57,8 +60,7 @@ function FileSubmit() {
                 ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
 
                 // Convert resized image to Base64
-                // Remove the "data:image/png;base64," prefix
-                const base64String = canvas.toDataURL(file.type).split(",")[1];
+                const base64String = canvas.toDataURL(file.type);
                 resolve(base64String);
             };
 
@@ -67,7 +69,7 @@ function FileSubmit() {
     };
 
     // Handle file upload (Send Base64 JSON)
-    const handleSubmit = async (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
 
         if (!imageData) {
@@ -81,7 +83,7 @@ function FileSubmit() {
         });
 
         try {
-            const response = await fetch("http://roomie.ddns.net:8080/upload", {
+            const response = await fetch("http://roomie.ddns.net:8080/fileUpload", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: formData,
@@ -101,7 +103,7 @@ function FileSubmit() {
     return (
         <div className="container">
             <h2>Upload an Image</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
                 <input type="file" accept="image/jpeg, image/png, image/webp" onChange={handleFileChange} />
                 <button type="submit">Upload</button>
             </form>
