@@ -37,7 +37,7 @@ public class Server {
             router.addRoute("/auth/verify", AuthController::verify);
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
-            router.addRoute("/fileSubmit", FileController::uploadFile);
+            router.addRoute("/upload/fileSubmit", FileController::uploadFile);
 
 
             // Matches routes??
