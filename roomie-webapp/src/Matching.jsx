@@ -82,9 +82,6 @@ function Matching() {
                 }
 
                 const result = await response.json();
-                if (!result.valid) {
-                    throw new Error("Invalid token");
-                }
 
                 setRoommate(result); // Store roommate data in state
             } catch (error) {
