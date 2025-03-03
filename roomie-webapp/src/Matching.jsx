@@ -58,6 +58,15 @@ function Matching() {
                 }
 
                 const result = await response.json();
+                setName(result.getItem("name"))
+                setAge(result.getItem("date_of_birth"))
+                setUniversity("Bloomsburg University") // university??
+                setBio(result.getItem("about_me")) // about me
+                // setMajor(potentialRoomate.getItem("major"))
+                setIsFront(true)
+
+                
+
                 if (!result.valid) {
                     throw new Error("Invalid token");
                 }
@@ -95,7 +104,43 @@ function Matching() {
         // ping potential roomate that they have a match??
 
         // show new user
-        updateShownUser()
+            const getPotentialRoomate = async () => {
+                try {
+                    const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoomate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: localStorage.getItem("token") })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error("Invalid token");
+                    }
+    
+                    const result = await response.json();
+                    setName(result.getItem("name"))
+                    setAge(result.getItem("date_of_birth"))
+                    setUniversity("Bloomsburg University") // university??
+                    setBio(result.getItem("about_me")) // about me
+                    // setMajor(potentialRoomate.getItem("major"))
+                    setIsFront(true)
+    
+                    
+    
+                    if (!result.valid) {
+                        throw new Error("Invalid token");
+                    }
+    
+                    return result;
+                } catch (error) {
+                    console.log("Redirecting to login due to invalid token.", error);
+                }
+            };
+    
+            const fetchRoomate = async () => {
+                potentialRoomate.current = await getPotentialRoomate();
+            };
+            fetchRoomate();
+        
     }
 
     // declined potential user
