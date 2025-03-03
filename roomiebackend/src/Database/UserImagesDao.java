@@ -48,4 +48,8 @@ public class UserImagesDao {
         }
         return images;
     }
+
+    public void closeConnection() throws SQLException {
+        connection.close();
+    }
 }

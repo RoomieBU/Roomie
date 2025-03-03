@@ -16,7 +16,7 @@ function Matching() {
 
     const navigate = useNavigate();
 
-    // verify access to matching with users
+    // Verify that the user is currently logged in and has a valid token
     useEffect(() => {
         const verifyToken = async () => {
             try {
@@ -30,18 +30,16 @@ function Matching() {
                     throw new Error("Invalid token");
                 }
 
-                const result = await response.json();
-                if (!result.valid) {
-                    throw new Error("Invalid token");
-                }
+                return;
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.", error);
-                //navigate("/login");
+                console.log("Redirecting to login due to invalid token.");
+                navigate("/login");
             }
         };
 
         verifyToken();
     }, [navigate]);
+
 
     const potentialRoomate = useRef(null);
 
@@ -49,7 +47,7 @@ function Matching() {
     useEffect(() => {
         const getPotentialRoomate = async () => {
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoomate", {
+                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -152,7 +150,7 @@ function Matching() {
         // show new user --> updateShownUser()
         updateShownUser()
     }
-    
+
 
     function swapSides() {
         setIsFront(!isFront)
@@ -161,17 +159,17 @@ function Matching() {
 
     return (
         <div className="hold-all">
-             {isFront ? (
-                <div onClick={swapSides} style={{display: isFront ? 'block' : 'none'}} className="potential-roomate-front">
+            {isFront ? (
+                <div onClick={swapSides} style={{ display: isFront ? 'block' : 'none' }} className="potential-roomate-front">
                     <div className="user_info">
-                        <p>{name}, {age} 
-                            <br/>
+                        <p>{name}, {age}
+                            <br />
                             {university}
                         </p>
                     </div>
                 </div>
             ) : (
-                <div onClick={swapSides} style={{display: isFront ? 'none' : 'block'}} className="potential-roomate-back">
+                <div onClick={swapSides} style={{ display: isFront ? 'none' : 'block' }} className="potential-roomate-back">
                     <div className="more-user-info">
                         <h3>More about {name}</h3>
                         <dl>
@@ -183,18 +181,18 @@ function Matching() {
                     </div>
                 </div>
             )}
-            
+
             <div className="match-button-cluster">
                 <button onClick={() => declined()} className="deny-icon">
-                    <i className="bi bi-x-lg"/>
+                    <i className="bi bi-x-lg" />
                 </button>
-                    
+
                 <button onClick={() => matched()} className="match-icon">
-                    <i className="bi bi-check-lg"/>
+                    <i className="bi bi-check-lg" />
                 </button>
             </div>
         </div>
-        
+
     )
 }
 

@@ -42,6 +42,7 @@ function SignUp() {
 
 
     return (
+
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
             <h1 className="fw-bold">Create An Account with Us!</h1>
             <p>

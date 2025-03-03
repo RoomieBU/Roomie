@@ -37,10 +37,11 @@ public class Server {
             router.addRoute("/auth/verify", AuthController::verify);
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
+            router.addRoute("/upload/fileSubmit", FileController::uploadFile);
 
 
             // Matches routes??
-            router.addRoute("/matches/getPotentialRoomate", MatchController::getNextMatch);
+            router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             
 
             if (DEV_CONSOLE) {
