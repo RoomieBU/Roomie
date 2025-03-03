@@ -49,6 +49,7 @@ function Matching() {
                     throw new Error("Failed to fetch potential roommate");
                 }
 
+                const result = await response.json();
                 setRoommate(result); // Store roommate data in state
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
@@ -82,7 +83,6 @@ function Matching() {
                 }
 
                 const result = await response.json();
-
                 setRoommate(result); // Store roommate data in state
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
@@ -110,7 +110,8 @@ function Matching() {
     }
 
     function swapSides() {
-        setIsFront(!isFront);
+        console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
+        setIsFront((prev) => !prev); // Toggle isFront state
     }
 
     return (
