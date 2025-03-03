@@ -116,41 +116,46 @@ function Matching() {
 
     return (
         <div className="hold-all">
-            {isFront ? (
-                <div onClick={swapSides} style={{ display: isFront ? 'block' : 'none' }} className="potential-roomate-front">
-                    <div className="user_info">
-                        <p>{roommate.name}, {roommate.date_of_birth}
-                            <br />
-                            Bloomsburg University
-                        </p>
-                    </div>
+            {isLoading ? (
+                <p>Loading potential roommate...</p>
+            ) : error ? (
+                <p>Error: {error}</p>
+            ) : roommate ? (
+                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                    {isFront ? (
+                        <div className="user_info">
+                            <p>{roommate.name}, {roommate.date_of_birth}
+                                <br />
+                                Bloomsburg University
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="more-user-info">
+                            <h3>More about {roommate.name}</h3>
+                            <dl>
+                                <dt>Major</dt>
+                                <dd>{roommate.major}</dd>
+                                <dt>Bio:</dt>
+                                <dd>{roommate.about_me}</dd>
+                            </dl>
+                        </div>
+                    )}
                 </div>
             ) : (
-                <div onClick={swapSides} style={{ display: isFront ? 'none' : 'block' }} className="potential-roomate-back">
-                    <div className="more-user-info">
-                        <h3>More about {roommate.name}</h3>
-                        <dl>
-                            <dt>Major</dt>
-                            <dd>{roommate.major}</dd>
-                            <dt>Bio:</dt>
-                            <dd>{roommate.about_me}</dd>
-                        </dl>
-                    </div>
-                </div>
+                <p>No potential roommate found.</p>
             )}
 
             <div className="match-button-cluster">
-                <button onClick={() => declined()} className="deny-icon">
+                <button onClick={declined} className="deny-icon">
                     <i className="bi bi-x-lg" />
                 </button>
 
-                <button onClick={() => matched()} className="match-icon">
+                <button onClick={matched} className="match-icon">
                     <i className="bi bi-check-lg" />
                 </button>
             </div>
         </div>
-
-    )
+    );
 }
 
 export default Matching;
