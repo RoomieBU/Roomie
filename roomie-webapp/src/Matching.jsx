@@ -121,17 +121,15 @@ function Matching() {
             ) : error ? (
                 <p>Error: {error}</p>
             ) : roommate ? (
-                isFront ? (
-                    <div onClick={swapSides} className="potential-roomate-front">
+                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                    {isFront ? (
                         <div className="user_info">
                             <p>{roommate.name}, {roommate.date_of_birth}
                                 <br />
                                 Bloomsburg University
                             </p>
                         </div>
-                    </div>
-                ) : (
-                    <div onClick={swapSides} className="potential-roomate-back">
+                    ) : (
                         <div className="more-user-info">
                             <h3>More about {roommate.name}</h3>
                             <dl>
@@ -141,8 +139,8 @@ function Matching() {
                                 <dd>{roommate.about_me}</dd>
                             </dl>
                         </div>
-                    </div>
-                )
+                    )}
+                </div>
             ) : (
                 <p>No potential roommate found.</p>
             )}
