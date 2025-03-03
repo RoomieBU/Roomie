@@ -49,11 +49,6 @@ function Matching() {
                     throw new Error("Failed to fetch potential roommate");
                 }
 
-                const result = await response.json();
-                if (!result.valid) {
-                    throw new Error("Invalid token");
-                }
-
                 setRoommate(result); // Store roommate data in state
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
