@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 function Matching() {
     const [roommate, setRoommate] = useState(null); // Store roommate data
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
 
     const navigate = useNavigate();
 
@@ -34,6 +36,8 @@ function Matching() {
     // Fetch the next potential roommate
     useEffect(() => {
         const getPotentialRoommate = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
                     method: "POST",
@@ -42,7 +46,7 @@ function Matching() {
                 });
 
                 if (!response.ok) {
-                    throw new Error("Invalid token");
+                    throw new Error("Failed to fetch potential roommate");
                 }
 
                 const result = await response.json();
@@ -52,7 +56,10 @@ function Matching() {
 
                 setRoommate(result); // Store roommate data in state
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.", error);
+                console.error("Error fetching potential roommate:", error);
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -64,6 +71,36 @@ function Matching() {
         // Fetch a new potential roommate
         setRoommate(null); // Clear current roommate while loading new one
         setIsFront(true);
+        setIsLoading(true);
+        setError(null);
+
+        const getPotentialRoommate = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch potential roommate");
+                }
+
+                const result = await response.json();
+                if (!result.valid) {
+                    throw new Error("Invalid token");
+                }
+
+                setRoommate(result); // Store roommate data in state
+            } catch (error) {
+                console.error("Error fetching potential roommate:", error);
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        getPotentialRoommate();
     }
 
     // Matched chosen!!
@@ -86,7 +123,11 @@ function Matching() {
 
     return (
         <div className="hold-all">
-            {roommate ? (
+            {isLoading ? (
+                <p>Loading potential roommate...</p>
+            ) : error ? (
+                <p>Error: {error}</p>
+            ) : roommate ? (
                 isFront ? (
                     <div onClick={swapSides} className="potential-roomate-front">
                         <div className="user_info">
@@ -110,7 +151,7 @@ function Matching() {
                     </div>
                 )
             ) : (
-                <p>Loading potential roommate...</p>
+                <p>No potential roommate found.</p>
             )}
 
             <div className="match-button-cluster">
