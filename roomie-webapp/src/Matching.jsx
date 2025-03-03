@@ -46,15 +46,6 @@ function Matching() {
                 }
 
                 const result = await response.json();
-                setName(result.getItem("name"))
-                setAge(result.getItem("date_of_birth"))
-                setUniversity("Bloomsburg University") // university??
-                setBio(result.getItem("about_me")) // about me
-                // setMajor(potentialRoomate.getItem("major"))
-                setIsFront(true)
-
-
-
                 if (!result.valid) {
                     throw new Error("Invalid token");
                 }
