@@ -86,7 +86,7 @@ function Preferences() {
                 <input
                     type="checkbox"
                     className="form-check-input"
-                    id="petFriendly"
+                    id="pet_friendly"
                     {...register("pet_friendly")}
                 />
                 <label className="form-check-label" htmlFor="petFriendly">
