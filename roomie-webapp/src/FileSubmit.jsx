@@ -37,8 +37,8 @@ function FileSubmit() {
             console.log("File selected:", file);
             if (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/webp") {
                 console.log("Valid image file.");
-                resizeAndConvertToBase64(file, 800, 600).then((base64Image) => {
-                    console.log("Image resized and converted to Base64:", base64Image);
+                convertToBase64(file).then((base64Image) => {
+                    console.log("Image converted to Base64:", base64Image);
                     setImageData(base64Image);
                 }).catch((error) => {
                     console.error("Error processing image:", error);
@@ -52,29 +52,19 @@ function FileSubmit() {
         }
     };
 
-    // Resize image using canvas & convert to Base64
-    const resizeAndConvertToBase64 = (file, maxWidth, maxHeight) => {
+    // Convert image to Base64 without resizing
+    const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
 
-            img.onload = () => {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-
-                canvas.width = maxWidth;
-                canvas.height = maxHeight;
-
-                ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
-
-                // Convert resized image to Base64
-                const base64String = canvas.toDataURL(file.type);
+            reader.onload = () => {
                 console.log("Base64 string generated.");
-                resolve(base64String);
+                resolve(reader.result);
             };
 
-            img.onerror = (error) => {
-                console.error("Image loading error:", error);
+            reader.onerror = (error) => {
+                console.error("FileReader error:", error);
                 reject(error);
             };
         });
