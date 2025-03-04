@@ -226,6 +226,10 @@ public class AuthController {
 
     public static String sendPreferences(Map<String, String> data, String method) {
         System.out.println(data);
+        data.put("wakeup_time", "07:00:00");
+        data.put("sleep_time", "07:00:00");
+        System.out.println("data after forcing the entry:");
+        System.out.println(data);
         int code = 400; // Default code (in case of sql error)
         Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
         if (!method.equals("POST")) {
