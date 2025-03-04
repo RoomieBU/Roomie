@@ -7,6 +7,7 @@ import Registration from "./Registration";
 import Dashboard from "./Dashboard";
 import Matching from "./Matching";
 import FileSubmit from "./FileSubmit";
+import Preferences from "./Preferneces";
 
 function App() {
   return (
