@@ -17,6 +17,7 @@ public class Console {
         commands.put("totalconnections", this::totalConnections);
         commands.put("printusers", this::printUsers);
         commands.put("updateusers", this::updateUser);
+        commands.put("sendemail", this::sendEmail);
     }
 
     public void start() {
@@ -122,5 +123,22 @@ public class Console {
 
     private void totalConnections() {
         System.out.println("[Console] Total active connections: " + Server.connections);
+    }
+
+    private void sendEmail() {
+        System.out.print("[Console] Enter recipient: ");
+        String email = scan.nextLine().trim();
+        System.out.print("[Console] Enter subject: ");
+        String subject = scan.nextLine().trim();
+        System.out.print("[Console] Enter body: ");
+        String body = scan.nextLine().trim();
+
+        Mail m = new Mail();
+        if (m.send(email, subject, body)) {
+            System.out.println("[Console] Sent email!");
+        } else {
+            System.out.println("[Console] Didn't send email.");
+        }
+
     }
 }
