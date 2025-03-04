@@ -21,7 +21,6 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/matching" element={<Matching />}/>
         <Route path = "/fileSubmit" element={<FileSubmit />} />
-        <Route path = "/preferences" element={<Preferences />} />
         <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>
