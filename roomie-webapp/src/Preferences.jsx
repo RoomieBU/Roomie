@@ -122,7 +122,10 @@ function Preferences() {
                 <input
                     type="time"
                     className={`form-control ${errors.wakeup_time ? "is-invalid" : ""}`}
-                    {...register("wakeup_time", { required: "Wake up time is required" })}
+                    {...register("wakeup_time", {
+                    required: "Wake up time is required",
+                    validate: (value) => value !== "" || "Please select a valid time"
+                    })}
                 />
                 {errors.wakeup_time && (
                     <div className="invalid-feedback">{errors.wakeup_time.message}</div>
@@ -135,12 +138,16 @@ function Preferences() {
                 <input
                     type="time"
                     className={`form-control ${errors.sleep_time ? "is-invalid" : ""}`}
-                    {...register("sleep_time", { required: "Sleep time is required" })}
+                    {...register("sleep_time", {
+                    required: "Sleep time is required",
+                    validate: (value) => value !== "" || "Please select a valid time"
+                    })}
                 />
                 {errors.sleep_time && (
                     <div className="invalid-feedback">{errors.sleep_time.message}</div>
                 )}
                 </div>
+
 
                 {/* Quiet Hours */}
                 <div className="mb-3">

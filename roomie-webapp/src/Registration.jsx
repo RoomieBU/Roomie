@@ -52,7 +52,7 @@ function Registration() {
             }
 
             alert("Registration successful!");
-            navigate("/dashboard");
+            navigate("/preferences");
         } catch (error) {
             setRegistrationError(error.message);
         }
