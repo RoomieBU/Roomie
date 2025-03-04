@@ -225,6 +225,7 @@ public class AuthController {
     }
 
     public static String sendPreferences(Map<String, String> data, String method) {
+        System.out.println(data);
         int code = 400; // Default code (in case of sql error)
         Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
         if (!method.equals("POST")) {
@@ -243,7 +244,6 @@ public class AuthController {
 
         // Deal with wakeup time
         // Get wakeup_time from your data map
-        System.out.println(data);
         String wakeupTimeStr = data.get("wakeup_time").toString();
 
         // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
