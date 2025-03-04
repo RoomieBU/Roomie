@@ -60,6 +60,7 @@ public class UserPreferencesDao {
         if (rs.next()) {
             // User exists, retrieve user_id
             userId = rs.getInt("user_id");
+            System.out.println("UserID" + userId);
         } else {
             // User doesn't exist, throw an error
             throw new SQLException("User with email " + email + " does not exist.");
@@ -81,13 +82,13 @@ public class UserPreferencesDao {
         // Insert into UserPreferences
         try (PreparedStatement upsertStmt = connection.prepareStatement(upsertQuery)) {
             upsertStmt.setInt(1, userId);
-            upsertStmt.setString(3, data.get("preferred_gender").toString());
-            upsertStmt.setBoolean(4, Boolean.parseBoolean(data.get("pet_friendly").toString()));
-            upsertStmt.setString(5, data.get("personality").toString());
+            upsertStmt.setString(2, data.get("preferred_gender").toString());
+            upsertStmt.setBoolean(3, Boolean.parseBoolean(data.get("pet_friendly").toString()));
+            upsertStmt.setString(4, data.get("personality").toString());
             // Assuming wakeup_time and sleep_time are in the proper format for a Time column:
-            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wakeup_time").toString()));
-            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time").toString()));
-            upsertStmt.setString(8, data.get("quiet_hours").toString());
+            upsertStmt.setTime(5, java.sql.Time.valueOf(data.get("wakeup_time").toString()));
+            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("sleep_time").toString()));
+            upsertStmt.setString(7, data.get("quiet_hours").toString());
             upsertStmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error creating UserPreferences: " + e.getMessage());

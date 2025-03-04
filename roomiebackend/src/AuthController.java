@@ -241,10 +241,6 @@ public class AuthController {
 
         String email = Auth.getEmailfromToken(token);
 
-        // (FUCTIONALITY MISSING)
-        // Functionality for accepting profile pictures needs to happen...
-        // profile_picture = data.get("profile_picture");
-
         // Deal with wakeup time
         // Get wakeup_time from your data map
         System.out.println(data);
