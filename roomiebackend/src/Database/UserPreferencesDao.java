@@ -85,8 +85,8 @@ public class UserPreferencesDao {
             upsertStmt.setBoolean(4, Boolean.parseBoolean(data.get("pet_friendly").toString()));
             upsertStmt.setString(5, data.get("personality").toString());
             // Assuming wakeup_time and sleep_time are in the proper format for a Time column:
-            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wakeup_time").toString()));
-            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time").toString()));
+            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wakeup_time")));
+            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time")));
             upsertStmt.setString(8, data.get("quiet_hours").toString());
             upsertStmt.executeUpdate();
         } catch (SQLException e) {
