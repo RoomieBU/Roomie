@@ -78,6 +78,18 @@ public class UserPreferencesDao {
         "sleep_time = VALUES(sleep_time), " +
         "quiet_hours = VALUES(quiet_hours)";
 
+        // Deal with wakeup time
+        // Get wakeup_time from your data map
+        String wakeupTimeStr = data.get("wakeup_time").toString();
+
+        // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
+        if (wakeupTimeStr != null && wakeupTimeStr.length() == 5) {
+            wakeupTimeStr += ":00";
+        }
+
+        // Now convert to a java.sql.Time object
+        java.sql.Time wakeupTime = java.sql.Time.valueOf(wakeupTimeStr);
+
         // Insert into UserPreferences
         try (PreparedStatement upsertStmt = connection.prepareStatement(upsertQuery)) {
             upsertStmt.setInt(1, userId);
@@ -85,8 +97,8 @@ public class UserPreferencesDao {
             upsertStmt.setBoolean(4, Boolean.parseBoolean(data.get("pet_friendly").toString()));
             upsertStmt.setString(5, data.get("personality").toString());
             // Assuming wakeup_time and sleep_time are in the proper format for a Time column:
-            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wakeup_time")));
-            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time")));
+            upsertStmt.setTime(6, wakeupTime);
+            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time").toString()));
             upsertStmt.setString(8, data.get("quiet_hours").toString());
             upsertStmt.executeUpdate();
         } catch (SQLException e) {
