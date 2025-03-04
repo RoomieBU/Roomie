@@ -60,13 +60,8 @@ function Registration() {
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Register for ROOMIE</h1>
-            <p>
-                Already have an account?{" "}
-                <a href="" onClick={() => navigate("/login")}>
-                    Sign in!
-                </a>
-            </p>
+            <h1 className="fw-bold">Let's get some info about you!</h1>
+            
             <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                 <div className="mb-3">
                     <label className="form-label">First Name</label>

@@ -1,5 +1,6 @@
 import Database.SQLConnection;
 import Database.UserDao;
+import Database.UserPreferencesDao;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -210,6 +211,51 @@ public class AuthController {
             }
 
             if (DBUser.setData(formData, email)) {
+                response.put("message", "Set user data for " + email);
+                code = 200;
+            } else {
+                response.put("message", "Unable to set user data for " + email);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Auth Controller] Unable to connect to MySQL.");
+            code = 500;
+            response.put("token", "");
+        }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
+    public static String sendPreferences(Map<String, String> data, String method) {
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
+        if (!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        // Get the user from the token value
+        String token = data.get("token");
+
+        if (!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+
+        String email = Auth.getEmailfromToken(token);
+
+        // (FUCTIONALITY MISSING)
+        // Functionality for accepting profile pictures needs to happen...
+        // profile_picture = data.get("profile_picture");
+
+        Map<String, String> formData = new HashMap<>();
+        formData.put("first_name", data.get("first_name"));
+        formData.put("last_name", data.get("last_name"));
+        formData.put("about_me", data.get("about_me"));
+        formData.put("date_of_birth", data.get("date_of_birth"));
+        formData.put("registered", "true");
+
+        try {
+            UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
+
+            if (DBUser.createUserPreferences(formData, email)) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
             } else {

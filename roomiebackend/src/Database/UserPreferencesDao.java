@@ -3,6 +3,7 @@ package Database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * user preferences data access object
@@ -37,28 +38,62 @@ public class UserPreferencesDao {
         }
     }
 
-    public void createUserPreferences(int userId, String preferredGender, boolean petFriendly, String personality, Time wakeupTime, Time sleepTime, String quietHours) throws SQLException {
-        if (!userExists(userId)) {
-            throw new IllegalArgumentException("Error: user_id " + userId + " does not exist.");
-        }
-        if (preferencesExist(userId)) {
-            throw new IllegalArgumentException("Error: UserPreferences already exist for user_id " + userId);
+    public boolean createUserPreferences(Map<String, String> data, String email) throws SQLException {
+        // I don't think we need this check. User's should be able to change their preferences
+        // if (!userExists(userId)) {
+        //     throw new IllegalArgumentException("Error: user_id " + userId + " does not exist.");
+        // }
+        // if (preferencesExist(userId)) {
+        //     throw new IllegalArgumentException("Error: UserPreferences already exist for user_id " + userId);
+        // }
+
+        if (data.isEmpty()) return false;
+
+        int userId;
+
+        // Try to find the user by email
+        String selectUserQuery = "SELECT user_id FROM Users WHERE email = ?";
+        PreparedStatement selectUserStmt = connection.prepareStatement(selectUserQuery);
+        selectUserStmt.setString(1, email);
+        ResultSet rs = selectUserStmt.executeQuery();
+
+        if (rs.next()) {
+            // User exists, retrieve user_id
+            userId = rs.getInt("user_id");
+        } else {
+            // User doesn't exist, throw an error
+            throw new SQLException("User with email " + email + " does not exist.");
         }
 
+        // Step 2: Upsert into the UserPreferences table using the retrieved user_id
+        String upsertQuery = 
+        "INSERT INTO UserPreferences " +
+        "(user_id, preferred_gender, pet_friendly, personality, wake_up_time, sleep_time, quiet_hours) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+        "ON DUPLICATE KEY UPDATE " +
+        "preferred_gender = VALUES(preferred_gender), " +
+        "pet_friendly = VALUES(pet_friendly), " +
+        "personality = VALUES(personality), " +
+        "wake_up_time = VALUES(wake_up_time), " +
+        "sleep_time = VALUES(sleep_time), " +
+        "quiet_hours = VALUES(quiet_hours)";
+
         // Insert into UserPreferences
-        String query = "INSERT INTO UserPreferences (user_id, preferred_gender, pet_friendly, personality, wakeup_time, sleep_time, quiet_hours) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            stmt.setString(2, preferredGender);
-            stmt.setBoolean(3, petFriendly);
-            stmt.setString(4, personality);
-            stmt.setTime(5, wakeupTime);
-            stmt.setTime(6, sleepTime);
-            stmt.setString(7, quietHours);
-            stmt.executeUpdate();
+        try (PreparedStatement upsertStmt = connection.prepareStatement(upsertQuery)) {
+            upsertStmt.setInt(1, userId);
+            upsertStmt.setString(3, data.get("preferred_gender").toString());
+            upsertStmt.setBoolean(4, Boolean.parseBoolean(data.get("pet_friendly").toString()));
+            upsertStmt.setString(5, data.get("personality").toString());
+            // Assuming wake_up_time and sleep_time are in the proper format for a Time column:
+            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wake_up_time").toString()));
+            upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time").toString()));
+            upsertStmt.setString(8, data.get("quiet_hours").toString());
+            upsertStmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Error creating UserPreferences: " + e.getMessage());
         }
+
+        return true;
     }
 
     public List<UserPreferences> getAllUserPreferences() {
