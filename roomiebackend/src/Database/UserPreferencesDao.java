@@ -60,7 +60,6 @@ public class UserPreferencesDao {
         if (rs.next()) {
             // User exists, retrieve user_id
             userId = rs.getInt("user_id");
-            System.out.println("UserID" + userId);
         } else {
             // User doesn't exist, throw an error
             throw new SQLException("User with email " + email + " does not exist.");

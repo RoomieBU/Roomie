@@ -4,7 +4,16 @@ import { useNavigate } from "react-router-dom";
 
 function Preferences() {
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+          wakeup_time: "07:30", // or any default value you prefer
+          sleep_time: "22:00",
+          preferred_gender: "",
+          pet_friendly: false,
+          personality: "",
+          quiet_hours: ""
+        }
+      });
 
     // Verify that the user is currently logged in and has a valid token
     useEffect(() => {
