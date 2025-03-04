@@ -7,6 +7,7 @@ import Registration from "./Registration";
 import Dashboard from "./Dashboard";
 import Matching from "./Matching";
 import FileSubmit from "./FileSubmit";
+import Preferences from "./Preferneces";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/matching" element={<Matching />}/>
         <Route path = "/fileSubmit" element={<FileSubmit />} />
+        <Route path = "/preferences" element={<Preferences />} />
         <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>
