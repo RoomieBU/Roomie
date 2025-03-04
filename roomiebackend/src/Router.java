@@ -16,14 +16,15 @@ public class Router {
      *
      * Map<String, String> is the type for the received form data.
      */
-    private Map<String, BiFunction<Map<String, String>, String, String>> routes = new HashMap<>();
+    // Modified to accept Object as the data type so it can handle both Map and byte[]
+    private Map<String, BiFunction<Object, String, String>> routes = new HashMap<>();
 
-    public void addRoute(String path, BiFunction<Map<String, String>, String, String> handler) {
+    public void addRoute(String path, BiFunction<Object, String, String> handler) {
         routes.put(path, handler);
     }
 
-    public String handleRequest(String path, Map<String, String> data, String method) {
-        BiFunction<Map<String, String>, String, String> handler = routes.get(path);
+    public String handleRequest(String path, Object data, String method) {
+        BiFunction<Object, String, String> handler = routes.get(path);
         if (handler != null) {
             return handler.apply(data, method);
         }

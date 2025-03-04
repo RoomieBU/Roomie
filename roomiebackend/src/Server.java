@@ -1,3 +1,5 @@
+import jdk.jshell.execution.Util;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,18 +33,38 @@ public class Server {
             System.out.println("[Notice] Server is running on port " + port);
 
             // Authentication routes
-            router.addRoute("/auth/login", AuthController::login);
-            router.addRoute("/auth/logout", AuthController::logout);
-            router.addRoute("/auth/register", AuthController::register);
-            router.addRoute("/auth/verify", AuthController::verify);
-            router.addRoute("/auth/isregistered", AuthController::isRegistered);
-            router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
-            router.addRoute("/fileUpload", FileController::uploadFile);
-
-
+//            router.addRoute("/auth/login", AuthController::login);
+//            router.addRoute("/auth/logout", AuthController::logout);
+//            router.addRoute("/auth/register", AuthController::register);
+//            router.addRoute("/auth/verify", AuthController::verify);
+//            router.addRoute("/auth/isregistered", AuthController::isRegistered);
+//            router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
+//            router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             // Matches routes??
-            router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
-            
+//            router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
+//
+
+            // Add authentication Routes with helper method
+            // these routes are the default JSON routes :)
+            addAuthenticationRoutes();
+
+            // File Submit Route
+            router.addRoute("/upload/fileSubmit", (data, method) -> {
+                if (data instanceof byte[]) {
+                    return FileController.uploadFile((byte[]) data, method);
+                } else {
+                    return Utils.assembleHTTPResponse(400, "{\"status\":\"error\", \"message\":\"Invalid data type for file upload\"}");
+                }
+            });
+
+            // Matches Route
+            router.addRoute("/matches/getPotentialRoomate", (data, method) -> {
+                if (data instanceof Map) {
+                    return MatchController.getNextMatch((Map<String, String>) data, method);
+                } else {
+                    return Utils.assembleHTTPResponse(400, "{\"status\":\"error\", \"message\":\"Invalid data type for matches\"}");
+                }
+            });
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
@@ -76,6 +98,40 @@ public class Server {
         }
     }
 
+    /**
+     * Adds all the authentication routes to the router
+     */
+    private static void addAuthenticationRoutes() {
+        // array of route paths and controller methods
+        String[][] authRoutes = {
+                {"/auth/login", "login"},
+                {"/auth/logout", "logout"},
+                {"/auth/register", "register"},
+                {"/auth/verify", "verify"},
+                {"/auth/isregistered", "isRegistered"},
+                {"/auth/sendRegistration", "sendRegistration"}
+        };
+
+        // Loop through each route and add it to the router
+        for (String[] route : authRoutes) {
+            String path = route[0];
+            String method = route[1];
+
+            router.addRoute(path, (data, httpMethod) -> {
+                if (data instanceof Map) {
+                    try {
+                        return (String) AuthController.class.getMethod(method, Map.class, String.class)
+                                .invoke(null, data, httpMethod);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return Utils.assembleHTTPResponse(500, "{\"status\":\"error\", \"message\":\"Internal Server Error\"}");
+                    }
+                } else {
+                    return Utils.assembleHTTPResponse(400, "{\"status\":\"error\", \"message\":\"Invalid data type for authentication\"}");
+                }
+            });
+        }
+    }
 
     /**
      * Handles specific requests from single clients.
@@ -123,24 +179,39 @@ public class Server {
         }
 
         int requestLength = 0;
+        String contentType = "";
+        boolean isBinary = false; // need to check if binary here for handling file upload :)
         String line;
         while (!(line = in.readLine()).isEmpty()) {
             if (line.startsWith("Content-Length:")) {
                 requestLength = Integer.parseInt(line.split(":")[1].trim());
+            } else if (line.startsWith("Content-Type:")) {
+                contentType = line.split(":")[1].trim();
+                isBinary = contentType.startsWith("image/") || contentType.startsWith("application/octet-stream");
             }
         }
 
-        // Read in the rest of the request
-        StringBuilder body = new StringBuilder();
-        if ((method.equals("POST")) && requestLength > 0) {
-            char[] buffer = new char[requestLength];
-            in.read(buffer, 0, requestLength);
-            body.append(buffer);
+        String httpResponse;
+        if (isBinary) {
+            // read the binary file
+            byte[] fileData = new byte[requestLength];
+            client.getInputStream().read(fileData);
+            // pass binary data to file controller
+            httpResponse = FileController.uploadFile(fileData, contentType);
+
+        } else {
+            // Default to JSON Handling
+            // Read in the rest of the request
+            StringBuilder body = new StringBuilder();
+            if ((method.equals("POST")) && requestLength > 0) {
+                char[] buffer = new char[requestLength];
+                in.read(buffer, 0, requestLength);
+                body.append(buffer);
+            }
+
+            Map<String, String> data = Utils.parseJson(body.toString());
+            httpResponse = router.handleRequest(path, data, method);
         }
-
-        Map<String, String> data = Utils.parseJson(body.toString());
-
-        String httpResponse = router.handleRequest(path, data, method);
 
         out.write(httpResponse.getBytes());
         out.flush();

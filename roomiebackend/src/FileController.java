@@ -3,101 +3,80 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import Database.*;
-
 /**
- * Class for controlling what happens from the frontend FileUpload
+ * Class for controlling what happens from the frontend fileSubmit
  */
 public class FileController {
+    private static final String UPLOAD_DIRECTORY = "/var/www/images/";
+    private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit for uploads
+
     /**
-     * Saves the file locally and  puts the url into Images
-     * @param data base64 image file
-     * @param method
-     * @return
+     * Handles the uploading of binary file data
+     * @param fileData the raw binary data of the file
+     * @param contentType the content type of the file (jpeg, png, ...)
+     * @return HTTP response as a String
      */
-    public static String uploadFile(Map<String, String> data, String method) {
-        int code = 400;
-        Map<String, String> response = new HashMap<>();
-        if (!method.equals("POST")) {
-            response.put("message", "Method not allowed.");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
+    public static String uploadFile(byte[] fileData, String contentType) {
+        // Debug: Check if the upload directory exists and has correct permissions
+        File uploadDir = new File(UPLOAD_DIRECTORY);
+        if (!uploadDir.exists()) {
+            System.out.println("[Debug] Upload directory does not exist. Attempting to create it...");
+            if (!uploadDir.mkdirs()) {
+                System.out.println("[Error] Failed to create directory: " + UPLOAD_DIRECTORY);
+                return Utils.assembleHTTPResponse(500, "{\"status\":\"error\", \"message\":\"Failed to create directory\"}");
+            }
+        } else {
+            System.out.println("[Debug] Upload directory exists.");
         }
 
-        String token = data.get("token");
-        if (!Auth.isValidToken(token)) {
-            response.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        // Debug: Check if the file size is within the allowed limit
+        if (fileData.length > MAX_FILE_SIZE) {
+            System.out.println("[Error] File is too large. Max allowed size is " + MAX_FILE_SIZE / (1024 * 1024) + " MB");
+            return Utils.assembleHTTPResponse(400, "{\"status\":\"error\", \"message\":\"File size exceeds the limit of 10MB\"}");
+        } else {
+            System.out.println("[Debug] File size is acceptable: " + fileData.length + " bytes.");
         }
 
-        String base64Image = data.get("image");
-        if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data provided.");
-            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+        // Generate unique filename
+        String filename = UUID.randomUUID().toString() + getFileExtension(contentType);
+        File file = new File(uploadDir, filename);
+
+        // Debug: Output the chosen filename and content type
+        System.out.println("[Debug] Generated filename: " + filename);
+        System.out.println("[Debug] Content type: " + contentType);
+
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            fos.write(fileData);
+            fos.flush();
+
+            // Debug: File written successfully
+            System.out.println("[Debug] File uploaded successfully: " + file.getAbsolutePath());
+
+            // return success
+            return Utils.assembleHTTPResponse(200, "{\"status\":\"success\", \"filename\":\"" + filename + "\"}");
+        } catch (IOException e) {
+            System.out.println("[Error] IOException while uploading file: " + e.getMessage());
+            e.printStackTrace();
+            return Utils.assembleHTTPResponse(500, "{\"status\":\"error\", \"message\":\"File upload failed\"}");
         }
+    }
 
-        try {
-            // Decode base64 and remove the prefix if it is still there
-            String[] parts = base64Image.split(",");
-            if (parts.length < 2) {
-                response.put("message", "Invalid image data.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
-            }
-            String imageData = parts[1];
-            byte[] decodedImage = Base64.getDecoder().decode(imageData);
-
-
-            // Save image locally
-            // Extract "jpeg", "png", etc.
-            String fileExtension = parts[0].split("/")[1].split(";")[0];
-            if (!fileExtension.matches("jpg|jpeg|png|webp")) {
-                response.put("message", "Unsupported image format.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
-            }
-            String fileName = UUID.randomUUID() + "." + fileExtension;
-
-            String filePath = "/var/www/images/" + fileName;
-            // Ensure directory exists
-            File directory = new File("/var/www/images");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            // write the image bytes to a file
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                fos.write(decodedImage);
-            }
-
-            // Save the filepath into database
-            // get user_id first
-            String user = Auth.getEmailfromToken(token);
-            UserDao DBuser = new UserDao(SQLConnection.getConnection());
-            List<String> column = new ArrayList<>();
-            column.add("user_id");
-            // Retrieve the user_id from the database
-            Map<String, String> userData = DBuser.getData(column, user);
-            String userIdStr = userData.get("user_id");
-            if (userIdStr == null) {
-                response.put("message", "User not found.");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
-            }
-            int userId = Integer.parseInt(userIdStr);
-            DBuser.closeConnection();
-            // put into Images table
-            UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-            userImageDao.uploadUserImage(userId, filePath);
-            userImageDao.closeConnection();
-
-            response.put("message", "File uploaded successfully.");
-            response.put("image_url", "/images/" + fileName);
-            code = 200;
-                    } catch (IOException e) {
-            System.out.println("[FileController] Error while saving the image: " + e.getMessage());
-            response.put("message", "Error saving image.");
-            code = 500;
-        } catch (Exception e) {
-            System.out.println("[File Controller ] Unexpected Error.");
-            response.put("message", "Unexpected error");
-            code = 500;
+    /**
+     * Returns the file extension based on the content type.
+     * @param contentType the content type of the file (e.g., image/jpeg)
+     * @return the file extension (e.g., .jpg)
+     */
+    private static String getFileExtension(String contentType) {
+        switch (contentType) {
+            case "image/png":
+                return ".png";
+            case "image/jpeg":
+                return ".jpg";
+            case "image/webp":
+                return ".webp";
+            default:
+                System.out.println("[Warning] Unknown content type: " + contentType + ". Defaulting to .bin extension.");
+                return ".bin";
         }
-        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 }
