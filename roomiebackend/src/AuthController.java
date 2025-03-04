@@ -246,11 +246,14 @@ public class AuthController {
         // profile_picture = data.get("profile_picture");
 
         Map<String, String> formData = new HashMap<>();
-        formData.put("first_name", data.get("first_name"));
-        formData.put("last_name", data.get("last_name"));
-        formData.put("about_me", data.get("about_me"));
-        formData.put("date_of_birth", data.get("date_of_birth"));
-        formData.put("registered", "true");
+        formData.put("email", email);
+        formData.put("preferred_gender", data.get("preferred_gender"));
+        formData.put("pet_friendly", data.get("pet_friendly"));
+        formData.put("personality", data.get("personality"));
+        formData.put("wakeup_time", data.get("wakeup_time"));
+        formData.put("sleep_time", data.get("sleep_time"));
+        formData.put("quiet_hours", data.get("quiet_hours"));
+
 
         try {
             UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());

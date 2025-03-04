@@ -37,7 +37,7 @@ function Preferences() {
                 preferred_gender: data.preferred_gender,
                 pet_friendly: data.pet_friendly,
                 personality: data.personality,
-                wake_up_time: data.wake_up_time,
+                wakeup_time: data.wake_up_time,
                 sleep_time: data.sleep_time,
                 quiet_hours: data.quiet_hours
             });
