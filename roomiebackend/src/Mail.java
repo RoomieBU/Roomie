@@ -36,6 +36,7 @@ public class Mail {
             System.out.println();
 
         } catch (MessagingException e) {
+            System.out.println("Error while sending mail: " + e.getMessage());
             return false;
         }
         return true;
