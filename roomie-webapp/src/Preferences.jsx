@@ -154,4 +154,4 @@ function Preferences() {
     );
 }
 
-export default Registration;
+export default Preferences;
