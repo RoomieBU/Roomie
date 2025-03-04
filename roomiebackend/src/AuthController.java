@@ -247,6 +247,7 @@ public class AuthController {
 
         // Deal with wakeup time
         // Get wakeup_time from your data map
+        System.out.println(data);
         String wakeupTimeStr = data.get("wakeup_time").toString();
 
         // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
