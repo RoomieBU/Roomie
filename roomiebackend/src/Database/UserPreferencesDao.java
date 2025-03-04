@@ -69,7 +69,7 @@ public class UserPreferencesDao {
         String upsertQuery = 
         "INSERT INTO UserPreferences " +
         "(user_id, preferred_gender, pet_friendly, personality, wakeup_time, sleep_time, quiet_hours) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?) " +
         "ON DUPLICATE KEY UPDATE " +
         "preferred_gender = VALUES(preferred_gender), " +
         "pet_friendly = VALUES(pet_friendly), " +
