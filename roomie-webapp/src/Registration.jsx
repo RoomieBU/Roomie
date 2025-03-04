@@ -107,6 +107,15 @@ function Registration() {
                     {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
                 </div>
 
+                <div className="mb-3">
+                    <label className="form-label">Email Verification Code</label>
+                    <input
+                        type="text"
+                        className={`form-control ${errors.code ? "is-invalid" : ""}`}
+                        {...register("code", { required: "Verification code is required. Please check your email." })}
+                    />
+                </div>
+
                 {registrationError && <div className="text-danger mb-3">{registrationError}</div>}
 
                 <button type="submit" className="btn btn-primary w-100">
