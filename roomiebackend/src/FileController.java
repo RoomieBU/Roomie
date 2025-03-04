@@ -20,22 +20,27 @@ public class FileController {
 
         int code = 400;
         Map<String, String> response = new HashMap<>();
+
+        // CORS Handling
+        String corsHeader = "Access-Control-Allow-Origin: *\n" +
+                "Access-Control-Allow-Methods: POST\n" +
+                "Access-Control-Allow-Headers: Content-Type, Authorization\n";
+
         if (!method.equals("POST")) {
             response.put("message", "Method not allowed.");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
+            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response)) + corsHeader;
         }
 
         String token = data.get("token");
         if (!Auth.isValidToken(token)) {
             response.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response)) + corsHeader;
         }
 
         String base64Image = data.get("image");
         if (base64Image == null || base64Image.isEmpty()) {
-            System.out.println("base64Image: " + base64Image);
-            response.put("message", "No image data provided: " + base64Image);
-            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            response.put("message", "No image data provided.");
+            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
         }
 
         try {
@@ -43,7 +48,7 @@ public class FileController {
             String[] parts = base64Image.split(",");
             if (parts.length < 2) {
                 response.put("message", "Invalid image data.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
             }
             String imageData = parts[1];
             byte[] decodedImage = Base64.getDecoder().decode(imageData);
@@ -56,7 +61,7 @@ public class FileController {
             String fileExtension = parts[0].split("/")[1].split(";")[0];
             if (!fileExtension.matches("jpg|jpeg|png|webp")) {
                 response.put("message", "Unsupported image format.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
             }
             String fileName = UUID.randomUUID() + "." + fileExtension;
             String filePath = "/var/www/images/" + fileName;
@@ -85,7 +90,7 @@ public class FileController {
             String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 response.put("message", "User not found.");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
+                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response)) + corsHeader;
             }
             int userId = Integer.parseInt(userIdStr);
             DBuser.closeConnection();
@@ -110,6 +115,7 @@ public class FileController {
         }
 
         // Combine the CORS header with the response body
-        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
-        }
+        String finalResponse = Utils.assembleHTTPResponse(code, Utils.assembleJson(response)) + corsHeader;
+        return finalResponse;
+    }
 }
