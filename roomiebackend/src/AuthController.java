@@ -245,12 +245,21 @@ public class AuthController {
         // Functionality for accepting profile pictures needs to happen...
         // profile_picture = data.get("profile_picture");
 
+        // Deal with wakeup time
+        // Get wakeup_time from your data map
+        String wakeupTimeStr = data.get("wakeup_time").toString();
+
+        // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
+        if (wakeupTimeStr != null && wakeupTimeStr.length() == 5) {
+            wakeupTimeStr += ":00";
+        }
+
         Map<String, String> formData = new HashMap<>();
         formData.put("email", email);
         formData.put("preferred_gender", data.get("preferred_gender"));
         formData.put("pet_friendly", data.get("pet_friendly"));
         formData.put("personality", data.get("personality"));
-        formData.put("wakeup_time", data.get("wakeup_time"));
+        formData.put("wakeup_time", wakeupTimeStr);
         formData.put("sleep_time", data.get("sleep_time"));
         formData.put("quiet_hours", data.get("quiet_hours"));
 
