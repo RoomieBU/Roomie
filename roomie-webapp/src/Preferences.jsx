@@ -46,7 +46,7 @@ function Preferences() {
                 preferred_gender: data.preferred_gender,
                 pet_friendly: data.pet_friendly,
                 personality: data.personality,
-                wakeup_time: data.wakeup_time,
+                wakeup_time: "07:00:00",
                 sleep_time: data.sleep_time,
                 quiet_hours: data.quiet_hours
             });
