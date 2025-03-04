@@ -120,8 +120,7 @@ function Preferences() {
                 <div className="mb-3">
                 <label className="form-label">Wake Up Time</label>
                 <input
-                    type="text"  // Changed from "time" to "text"
-                    defaultValue="07:30"
+                    type="time"
                     className={`form-control ${errors.wakeup_time ? "is-invalid" : ""}`}
                     {...register("wakeup_time", { required: "Wake up time is required" })}
                 />
@@ -134,8 +133,7 @@ function Preferences() {
                 <div className="mb-3">
                 <label className="form-label">Sleep Time</label>
                 <input
-                    type="text"  // Changed from "time" to "text"
-                    defaultValue="22:00"
+                    type="time"
                     className={`form-control ${errors.sleep_time ? "is-invalid" : ""}`}
                     {...register("sleep_time", { required: "Sleep time is required" })}
                 />
