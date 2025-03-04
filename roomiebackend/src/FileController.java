@@ -11,8 +11,8 @@ public class FileController {
     /**
      * Saves the file locally and puts the URL into Images
      * @param data base64 image file
-     * @param method
-     * @return
+     * @param method HTTP method
+     * @return HTTP response
      */
     public static String uploadFile(Map<String, String> data, String method) {
         System.out.println("Made it to FileController.java");
@@ -21,48 +21,59 @@ public class FileController {
         int code = 400;
         Map<String, String> response = new HashMap<>();
 
-        // CORS Handling
-        String corsHeader = "Access-Control-Allow-Origin: *\n" +
-                "Access-Control-Allow-Methods: POST\n" +
-                "Access-Control-Allow-Headers: Content-Type, Authorization\n";
-
         if (!method.equals("POST")) {
             response.put("message", "Method not allowed.");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response)) + corsHeader;
+            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
         }
 
         String token = data.get("token");
         if (!Auth.isValidToken(token)) {
             response.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response)) + corsHeader;
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
         String base64Image = data.get("image");
+        String fileType = data.get("fileType");  
+
         if (base64Image == null || base64Image.isEmpty()) {
             response.put("message", "No image data provided.");
-            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
+            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+        }
+        if (fileType == null || fileType.isEmpty()) {
+            response.put("message", "No file type provided.");
+            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+        }
+
+        // Extract file extension from MIME type
+        String fileExtension = "";
+        switch (fileType) {
+            case "image/jpeg":
+            case "image/jpg":
+                fileExtension = "jpg";
+                break;
+            case "image/png":
+                fileExtension = "png";
+                break;
+            case "image/webp":
+                fileExtension = "webp";
+                break;
+            default:
+                response.put("message", "Unsupported image format.");
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
 
         try {
-            // Decode base64 and remove the prefix if it is still there
+            // Decode Base64
             String[] parts = base64Image.split(",");
             if (parts.length < 2) {
                 response.put("message", "Invalid image data.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
+                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
             }
-            String imageData = parts[1];
-            byte[] decodedImage = Base64.getDecoder().decode(imageData);
 
-            // Log decoded image byte length
+            byte[] decodedImage = Base64.getDecoder().decode(parts[1]);
             System.out.println("Decoded image length: " + decodedImage.length + " bytes");
 
             // Save image locally
-            // Extract "jpeg", "png", etc.
-            String fileExtension = parts[0].split("/")[1].split(";")[0];
-            if (!fileExtension.matches("jpg|jpeg|png|webp")) {
-                response.put("message", "Unsupported image format.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response)) + corsHeader;
-            }
             String fileName = UUID.randomUUID() + "." + fileExtension;
             String filePath = "/var/www/images/" + fileName;
 
@@ -73,29 +84,32 @@ public class FileController {
                 System.out.println("Created images directory: /var/www/images");
             }
 
-            // Write the image bytes to a file
+            // Write image file
             try (FileOutputStream fos = new FileOutputStream(filePath)) {
                 fos.write(decodedImage);
                 System.out.println("Image saved at: " + filePath);
             }
 
-            // Save the file path into the database
-            String user = Auth.getEmailfromToken(token);
-            UserDao DBuser = new UserDao(SQLConnection.getConnection());
-            List<String> column = new ArrayList<>();
-            column.add("user_id");
+            // Get user ID from token
+            String userEmail = Auth.getEmailfromToken(token);
+            if (userEmail == null) {
+                response.put("message", "Invalid token.");
+                return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+            }
 
-            // Retrieve the user_id from the database
-            Map<String, String> userData = DBuser.getData(column, user);
+            UserDao userDao = new UserDao(SQLConnection.getConnection());
+            Map<String, String> userData = userDao.getData(Collections.singletonList("user_id"), userEmail);
+            userDao.closeConnection();
+
             String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 response.put("message", "User not found.");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response)) + corsHeader;
+                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
             }
-            int userId = Integer.parseInt(userIdStr);
-            DBuser.closeConnection();
 
-            // Put into Images table
+            int userId = Integer.parseInt(userIdStr);
+
+            // Store image path in database
             UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
             userImageDao.uploadUserImage(userId, filePath);
             userImageDao.closeConnection();
@@ -105,17 +119,17 @@ public class FileController {
             code = 200;
 
         } catch (IOException e) {
-            System.out.println("[FileController] Error while saving the image: " + e.getMessage());
+            System.err.println("[FileController] Error saving image: " + e.getMessage());
+            e.printStackTrace();
             response.put("message", "Error saving image.");
             code = 500;
         } catch (Exception e) {
-            System.out.println("[FileController] Unexpected error: " + e.getMessage());
-            response.put("message", "Unexpected error");
+            System.err.println("[FileController] Unexpected error: " + e.getMessage());
+            e.printStackTrace();
+            response.put("message", "Unexpected error.");
             code = 500;
         }
 
-        // Combine the CORS header with the response body
-        String finalResponse = Utils.assembleHTTPResponse(code, Utils.assembleJson(response)) + corsHeader;
-        return finalResponse;
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 }
