@@ -2,6 +2,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Useful methods that support server operations and produce easier to read code.
@@ -99,5 +100,11 @@ public class Utils {
         }
         json.append("}");
         return json.toString();
+    }
+
+    public static String generateVerifyCode() {
+        Random random = new Random();
+        int code = 10000 + random.nextInt(90000); // Ensures a 5-digit number (10000 - 99999)
+        return String.valueOf(code);
     }
 }

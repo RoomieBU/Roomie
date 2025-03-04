@@ -54,6 +54,14 @@ public class AuthController {
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.createUser(email, pass)) {
+                String verifyCode = Utils.generateVerifyCode();
+                Map<String, String> verifyCodeFormatted = new HashMap<>();
+                verifyCodeFormatted.put("verify_code", verifyCode);
+
+                DBUser.setData(verifyCodeFormatted, email);
+                Mail emailer = new Mail();
+                emailer.send(email, "Roomie Verification Email", "Here is your verification code: " + verifyCode);
+
                 response.put("token", Auth.getToken(email));
                 code = 200;
             } else {
@@ -189,8 +197,18 @@ public class AuthController {
         formData.put("date_of_birth", data.get("date_of_birth"));
         formData.put("registered", "true");
 
+        String userEnteredVerifyCode = data.get("code");
+
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
+
+            // Just compare the user's verification code to the database
+            if (!userEnteredVerifyCode.equals(DBUser.getData(List.of("verify_code"), email).get("verify_code"))) {
+                response.put("message", "Verification code incorrect. Please check your email.");
+                code = 422;
+                return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+            }
+
             if (DBUser.setData(formData, email)) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
