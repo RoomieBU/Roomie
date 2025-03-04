@@ -37,7 +37,7 @@ function Preferences() {
                 preferred_gender: data.preferred_gender,
                 pet_friendly: data.pet_friendly,
                 personality: data.personality,
-                wakeup_time: data.wake_up_time,
+                wakeup_time: data.wakeup_time,
                 sleep_time: data.sleep_time,
                 quiet_hours: data.quiet_hours
             });
@@ -111,11 +111,11 @@ function Preferences() {
                 <label className="form-label">Wake Up Time</label>
                 <input
                     type="time"
-                    className={`form-control ${errors.wake_up_time ? "is-invalid" : ""}`}
-                    {...register("wake_up_time", { required: "Wake up time is required" })}
+                    className={`form-control ${errors.wakeup_time ? "is-invalid" : ""}`}
+                    {...register("wakeup_time", { required: "Wake up time is required" })}
                 />
-                {errors.wake_up_time && (
-                    <div className="invalid-feedback">{errors.wake_up_time.message}</div>
+                {errors.wakeup_time && (
+                    <div className="invalid-feedback">{errors.wakeup_time.message}</div>
                 )}
                 </div>
 

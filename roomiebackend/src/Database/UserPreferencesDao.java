@@ -68,13 +68,13 @@ public class UserPreferencesDao {
         // Step 2: Upsert into the UserPreferences table using the retrieved user_id
         String upsertQuery = 
         "INSERT INTO UserPreferences " +
-        "(user_id, preferred_gender, pet_friendly, personality, wake_up_time, sleep_time, quiet_hours) " +
+        "(user_id, preferred_gender, pet_friendly, personality, wakeup_time, sleep_time, quiet_hours) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
         "ON DUPLICATE KEY UPDATE " +
         "preferred_gender = VALUES(preferred_gender), " +
         "pet_friendly = VALUES(pet_friendly), " +
         "personality = VALUES(personality), " +
-        "wake_up_time = VALUES(wake_up_time), " +
+        "wakeup_time = VALUES(wakeup_time), " +
         "sleep_time = VALUES(sleep_time), " +
         "quiet_hours = VALUES(quiet_hours)";
 
@@ -84,8 +84,8 @@ public class UserPreferencesDao {
             upsertStmt.setString(3, data.get("preferred_gender").toString());
             upsertStmt.setBoolean(4, Boolean.parseBoolean(data.get("pet_friendly").toString()));
             upsertStmt.setString(5, data.get("personality").toString());
-            // Assuming wake_up_time and sleep_time are in the proper format for a Time column:
-            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wake_up_time").toString()));
+            // Assuming wakeup_time and sleep_time are in the proper format for a Time column:
+            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("wakeup_time").toString()));
             upsertStmt.setTime(7, java.sql.Time.valueOf(data.get("sleep_time").toString()));
             upsertStmt.setString(8, data.get("quiet_hours").toString());
             upsertStmt.executeUpdate();
