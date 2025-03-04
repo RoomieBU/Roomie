@@ -43,12 +43,7 @@ function Preferences() {
         try {
             const formData = JSON.stringify({
                 token: localStorage.getItem("token"),
-                preferred_gender: data.preferred_gender,
-                pet_friendly: data.pet_friendly,
-                personality: data.personality,
-                wakeup_time: "07:00:00",
-                sleep_time: data.sleep_time,
-                quiet_hours: data.quiet_hours
+                preferred_gender: data.preferred_gender
             });
 
             const response = await fetch("http://roomie.ddns.net:8080/auth/sendPreferences", {
