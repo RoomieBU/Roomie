@@ -13,7 +13,7 @@ function SignUp() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://roomie.ddns.net:8080/auth/register", {
+            const response = await fetch("https://roomie.ddns.net:8080/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

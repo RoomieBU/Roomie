@@ -68,7 +68,7 @@ function Dashboard() {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })

@@ -9,7 +9,7 @@ function Login() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("http://roomie.ddns.net:8080/auth/login", {
+            const response = await fetch("https://roomie.ddns.net:8080/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -32,7 +32,7 @@ function Login() {
 
 
             // Check if user is registered and redirect on response
-            const response2 = await fetch("http://roomie.ddns.net:8080/auth/isregistered", {
+            const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,7 @@ function Login() {
             if (!response2.ok) {
                 navigate("/registration"); // Redirect to registration page
             }
-            else{
+            else {
                 navigate("/dashboard"); // Redirect to dashboard
             }
 
