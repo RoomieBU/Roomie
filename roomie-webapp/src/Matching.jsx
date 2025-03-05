@@ -5,9 +5,16 @@ import { useState, useEffect } from "react";
 
 function Matching() {
     const [roommate, setRoommate] = useState(null); // Store roommate data
-    const [isFront, setIsFront] = useState(true); // Controls front/back swap
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+
+    // State variables
+    // const [name, setName] = useState("John");
+    // const [age, setAge] = useState("19");
+    // const [university, setUniversity] = useState("Bloomsburg University");
+    // const [bio, setBio] = useState("This is a bio about the life of John");
+    // const [major, setMajor] = useState("Computer Science");
+    const [isFront, setIsFront] = useState(true); // Controls front/back swap
 
     const navigate = useNavigate();
 
@@ -111,16 +118,18 @@ function Matching() {
 
     function swapSides() {
         console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
-        setIsFront((prev) => !prev); // Toggle isFront state
+        setIsFront(!isFront); // Toggle isFront state
     }
 
     return (
         <div className="hold-all">
+            {error && (
+                <p>Error: {error}</p>
+            )}
+
             {isLoading ? (
                 <p>Loading potential roommate...</p>
-            ) : error ? (
-                <p>Error: {error}</p>
-            ) : roommate ? (
+            ): roommate ? (
                 <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
