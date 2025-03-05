@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.Base64;
 import Database.*;
 
 /**
@@ -35,9 +36,22 @@ public class FileController {
         String base64Image = data.get("data");
         String fileType = data.get("fileType");
 
+        // Log the base64 string length for debugging
+        if (base64Image != null) {
+            System.out.println("Received base64 image data (length): " + base64Image.length());
+        } else {
+            System.out.println("No base64 image data received.");
+        }
+
+        // Remove the prefix if present (base64 prefix for data URLs)
+        if (base64Image != null && base64Image.startsWith("data:image/")) {
+            base64Image = base64Image.split(",")[1];
+            System.out.println("Base64 prefix removed.");
+        }
+
         // Check for missing data
         if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data provided :(");
+            response.put("message", "No image data provided.");
             return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
         if (fileType == null || fileType.isEmpty()) {
@@ -58,14 +72,14 @@ public class FileController {
 
         try {
             // Decode Base64
-            String[] parts = base64Image.split(",");
-            if (parts.length < 2) {
-                response.put("message", "Invalid image data.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
-            }
-
-            byte[] decodedImage = Base64.getDecoder().decode(parts[1]);
+            byte[] decodedImage = Base64.getDecoder().decode(base64Image);
             System.out.println("Decoded image length: " + decodedImage.length + " bytes");
+
+            // Check for large image size
+            if (decodedImage.length > 10 * 1024 * 1024) {
+                response.put("message", "Image too large.");
+                return Utils.assembleHTTPResponse(413, Utils.assembleJson(response));
+            }
 
             // Save image locally
             String fileName = UUID.randomUUID() + "." + fileExtension;

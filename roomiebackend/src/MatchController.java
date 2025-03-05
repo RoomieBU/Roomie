@@ -33,7 +33,7 @@ public class MatchController {
             Random rand = new Random();
             do {
                 user = users.get(rand.nextInt(0, users.size() - 1));
-            } while (!user.getRegistered());
+            } while (!user.getRegistered() || user.getDateOfBirth() == null);
 
             if (users.get(0) != null) {
                 response.put("message", "Next match found");
