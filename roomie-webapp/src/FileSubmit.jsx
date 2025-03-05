@@ -57,7 +57,7 @@ function FileSubmit() {
 
     return (
         <div>
-            <h2>Upload an Image</h2>
+            <h2>Upload Image</h2>
             <input type="file" accept="image/*" onChange={handleFileChange} />
             {preview && <img src={preview} alt="Preview" style={{ width: "200px", marginTop: "10px" }} />}
             <button onClick={handleUpload}>Upload</button>
