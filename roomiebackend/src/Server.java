@@ -94,7 +94,7 @@ public class Server {
      * @throws Exception
      */
     private static SSLServerSocketFactory getSSLServerSocketFactory() throws Exception {
-        String keystoreFile = "keystore.p12";
+        String keystoreFile = "/home/backdev/keystore.p12";
         String keystorePassword = System.getenv("SSL_KEY");
 
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
