@@ -21,6 +21,7 @@ public class FileController {
         int code = 400;
         Map<String, String> response = new HashMap<>();
 
+        // Ensure the method is POST
         if (!method.equals("POST")) {
             response.put("message", "Method not allowed.");
             return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
@@ -32,11 +33,12 @@ public class FileController {
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
-        String base64Image = data.get("image");
-        String fileType = data.get("fileType");  
+        String base64Image = data.get("data");
+        String fileType = data.get("fileType");
 
+        // Check for missing data
         if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data provided.");
+            response.put("message", "No image data provided :(");
             return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
         if (fileType == null || fileType.isEmpty()) {
@@ -44,23 +46,16 @@ public class FileController {
             return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
 
-        // Extract file extension from MIME type
-        String fileExtension = "";
-        switch (fileType) {
-            case "image/jpeg":
-            case "image/jpg":
-                fileExtension = "jpg";
-                break;
-            case "image/png":
-                fileExtension = "png";
-                break;
-            case "image/webp":
-                fileExtension = "webp";
-                break;
-            default:
+        // Define file extension based on the provided file type
+        String fileExtension = switch (fileType) {
+            case "image/jpeg", "image/jpg" -> "jpg";
+            case "image/png" -> "png";
+            case "image/webp" -> "webp";
+            default -> {
                 response.put("message", "Unsupported image format.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
-        }
+                yield Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            }
+        };
 
         try {
             // Decode Base64
