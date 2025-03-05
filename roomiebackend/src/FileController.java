@@ -58,13 +58,7 @@ public class FileController {
 
         try {
             // Decode Base64
-            String[] parts = base64Image.split(",");
-            if (parts.length < 2) {
-                response.put("message", "Invalid image data.");
-                return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
-            }
-
-            byte[] decodedImage = Base64.getDecoder().decode(parts[1]);
+            byte[] decodedImage = Base64.getDecoder().decode(base64Image);
             System.out.println("Decoded image length: " + decodedImage.length + " bytes");
 
             // Save image locally

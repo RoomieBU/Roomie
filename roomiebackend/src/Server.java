@@ -132,11 +132,20 @@ public class Server {
         }
 
         // Read in the rest of the request
+        // Read the body in chunks to handle large files
         StringBuilder body = new StringBuilder();
-        if ((method.equals("POST")) && requestLength > 0) {
-            char[] buffer = new char[requestLength];
-            in.read(buffer, 0, requestLength);
-            body.append(buffer);
+        char[] buffer = new char[4096];  // Read in chunks of 4KB (adjust if needed)
+        int bytesRead;
+        int totalBytesRead = 0;
+
+        while (totalBytesRead < requestLength && (bytesRead = in.read(buffer)) != -1) {
+            body.append(buffer, 0, bytesRead);
+            totalBytesRead += bytesRead;
+        }
+
+        // If body size is still not fully read, you may want to log or handle that case
+        if (totalBytesRead < requestLength) {
+            System.out.println("[Warning] Body was not completely read, size mismatch.");
         }
 
         Map<String, String> data = Utils.parseJson(body.toString());
