@@ -95,14 +95,14 @@ function Matching() {
         getPotentialRoommate();
     }
 
-    const sendMatchData = async (data) => {
+    const sendMatchData = async (relationship) => {
+
         try {
 
             const matchInteraction = JSON.stringify({
-                match_id: data.match_id,
-                user: data.user,
-                shown_user: data.shown_user,
-                relationship: data.relationship
+                token: localStorage.getItem("token"),
+                shown_user: roommate.email,
+                relationship: relationship
             })
 
             const response = await fetch("http://roomie.ddns.net:8080/matches/sendMatchInteraction", {
@@ -120,22 +120,22 @@ function Matching() {
             alert("Interaction Added"); // will be removed after testing
 
         } catch(error) {
-            console.error(error)
+            console.error("HERE we are", error)
         }     
     }
 
     // Matched chosen!!
     function matched() {
         // TODO: Add logic to store the matched roommate in the database
-        
-        sendMatchData()
+        sendMatchData(true)
         updateShownUser(); // Load a new potential roommate
     }
 
     // Declined potential user
     function declined() {
         // TODO: Add logic to remove this user from future match lists
-
+        
+        sendMatchData(false)
         updateShownUser(); // Load a new potential roommate
     }
 

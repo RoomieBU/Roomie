@@ -33,8 +33,10 @@ public class FileController {
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
-        String base64Image = data.get("data");
+        String givenFileName = data.get("fileName");
         String fileType = data.get("fileType");
+        String base64Image = data.get("data");
+
 
         // Log the base64 string length for debugging
         if (base64Image != null) {
@@ -51,7 +53,7 @@ public class FileController {
 
         // Check for missing data
         if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data provided.");
+            response.put("message", "No image data has been provided.");
             return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
         if (fileType == null || fileType.isEmpty()) {

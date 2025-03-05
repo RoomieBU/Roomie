@@ -1,5 +1,4 @@
 import Database.UserMatchInteractionDao;
-
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
@@ -50,12 +49,10 @@ public class Server {
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
 
-            
-
 
             // Matches routes??
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
-            router.addRoute("/matches/sendMatchInteraction", UserMatchInteractionDao::sendMatchInteraction);
+            router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");

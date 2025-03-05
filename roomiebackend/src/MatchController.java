@@ -1,12 +1,54 @@
-import java.sql.SQLException;
-import java.util.*;
-
 import Database.SQLConnection;
 import Database.User;
 import Database.UserDao;
+import Database.UserMatchInteractionDao;
+import java.sql.SQLException;
+import java.util.*;
 
 
 public class MatchController {
+
+    public static String sendMatchInformation(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+        if(!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        String token = data.get("token");
+        if(!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+
+
+        Map<String, String> matchData = new HashMap<>();
+        matchData.put("user", email);
+        matchData.put("shown_user", data.get("shown_user"));
+        matchData.put("relationship", data.get("relationship"));
+
+
+        try {
+            UserMatchInteractionDao DBMatch = new UserMatchInteractionDao(SQLConnection.getConnection());
+
+            if(DBMatch.sendMatchInteraction(matchData, email)) {
+                response.put("message", "Send Match Interaction data for " + email);
+                code = 200;
+            } else {
+                response.put("message", "Unable to send Match interaction data for " + email);
+            }
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL.");
+            code = 500;
+            response.put("token", "");
+        }
+
+
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
 
 
     public static String getNextMatch(Map<String, String> data, String method) {
