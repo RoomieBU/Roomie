@@ -23,28 +23,6 @@ public class UserDao {
     }
 
     /**
-     * Creates a user from the given params
-     */
-    public void createUser(String username, String email, String hashedPassword, String firstName, String lastName, String aboutMe, Date dob) {
-        String query = "INSERT INTO Users (username, email, hashed_password, first_name, last_name, about_me, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, username);
-            stmt.setString(2, email);
-            stmt.setString(3, hashedPassword);
-            stmt.setString(4, firstName);
-            stmt.setString(5, lastName);
-            stmt.setString(6, aboutMe);
-            stmt.setDate(7, dob);
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error creating user: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Inserts a new user into the database with just username and email.
      * @param email
      * @param hashedPassword
@@ -55,24 +33,6 @@ public class UserDao {
         try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, email);
             stmt.setString(2, hashedPassword);
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean updateUserInfo(String username, String email, String first_name, String last_name, String about_me, String DOB) {
-        String query = "UPDATE Users SET username = ?, first_name = ?, last_name = ?, about_me = ?, date_of_birth = ?, registered = 1 WHERE email = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, username);
-            stmt.setString(2, first_name);
-            stmt.setString(3, last_name);
-            stmt.setString(4, about_me);
-            stmt.setString(5, DOB);
-            stmt.setString(6, email);
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -139,10 +99,16 @@ public class UserDao {
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving user by ID", e);
         }
-
         return user;
     }
 
+    /**
+     * Generic method for setting data within the Users table in the database.
+     *
+     * @param data
+     * @param email
+     * @return
+     */
     public boolean setData(Map<String, String> data, String email) {
         if (data.isEmpty()) return false;
 
@@ -225,8 +191,8 @@ public class UserDao {
     public boolean isUserLogin(String email, String password) {
         String query = "SELECT user_id FROM Users WHERE email = ? AND hashed_password = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);  // <-- Set first parameter
-            stmt.setString(2, password);  // <-- Set second parameter
+            stmt.setString(1, email);
+            stmt.setString(2, password);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return true;
@@ -238,7 +204,6 @@ public class UserDao {
             throw new RuntimeException("Error querying for user", e);
         }
     }
-
 
     public void removeUser(String email) {
         String query = "DELETE FROM Users WHERE email = ?";
