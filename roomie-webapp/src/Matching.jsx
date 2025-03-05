@@ -99,8 +99,7 @@ function Matching() {
         try {
 
             const matchInteraction = JSON.stringify({
-                match_id: data.match_id,
-                user: data.user,
+                token: localStorage.getItem("token"),
                 shown_user: data.shown_user,
                 relationship: data.relationship
             })
