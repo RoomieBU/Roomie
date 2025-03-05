@@ -41,44 +41,48 @@ function FileSubmit() {
         });
     };
 
-    const handleUpload = async () => {
-        if (!preview) {
-            setUploadStatus("Please select a file first.");
-            return;
-        }
+const handleUpload = async () => {
+    if (!preview) {
+        setUploadStatus("Please select a file first.");
+        return;
+    }
 
-        const token = localStorage.getItem("token");
-        const base64Data = preview.split(",")[1];
+    const token = localStorage.getItem("token");
+    let base64Data = preview.split(",")[1];
 
-        const payload = JSON.stringify({
-            token: token,
-            fileName: selectedFile.name,
-            fileType: selectedFile.type,
-            data: base64Data,
+    // Clean the base64 data by removing any newlines or spaces
+    base64Data = base64Data.replace(/\s+/g, '');  // Remove any whitespace or line breaks
+
+    const payload = JSON.stringify({
+        token: token,
+        fileName: selectedFile.name,
+        fileType: selectedFile.type,
+        data: base64Data,
+    });
+
+    console.log("Uploading file:", selectedFile.name);
+
+    try {
+        const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
         });
 
-        console.log("Uploading file:", selectedFile.name);
+        const responseBody = await response.json();
+        console.log("Server response:", responseBody);
 
-        try {
-            const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: payload,
-            });
-
-            const responseBody = await response.json();
-            console.log("Server response:", responseBody);
-
-            if (!response.ok) {
-                throw new Error(responseBody.message || "File upload failed.");
-            }
-
-            setUploadStatus("File uploaded successfully!");
-        } catch (error) {
-            console.error("Upload error:", error);
-            setUploadStatus(`Upload failed: ${error.message}`);
+        if (!response.ok) {
+            throw new Error(responseBody.message || "File upload failed.");
         }
-    };
+
+        setUploadStatus("File uploaded successfully!");
+    } catch (error) {
+        console.error("Upload error:", error);
+        setUploadStatus(`Upload failed: ${error.message}`);
+    }
+};
+
 
     return (
         <div>
