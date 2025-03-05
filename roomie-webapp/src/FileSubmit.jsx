@@ -29,46 +29,56 @@ function FileSubmit() {
         });
     };
 
-// Send base64 to backend
-const handleUpload = async () => {
-    if (!preview) {
-        setUploadStatus("Please select a file first.");
-        return;
-    }
-
-    const token = localStorage.getItem("token");
-
-    // Use setPreview to update the state after removing the base64 prefix
-    const cleanPreview = preview.split(",")[1]; // Remove base64 prefix
-    // Create the payload
-    const payload = JSON.stringify({
-        token: token,
-        fileName: selectedFile.name,
-        fileType: selectedFile.type,
-        data: cleanPreview,
-    });
-
-    // Log the payload to inspect the request
-    console.log("Payload being sent to server:", payload);
-
-    try {
-        const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: payload,
-        });
-
-        if (!response.ok) {
-            const errorResponse = await response.json(); // Get error details from response
-            throw new Error(errorResponse.message || "File upload failed.");
+    // Send base64 to backend
+    const handleUpload = async () => {
+        if (!preview) {
+            setUploadStatus("Please select a file first.");
+            return;
         }
 
-        setUploadStatus("File uploaded successfully!");
-    } catch (error) {
-        setUploadStatus(`Er ror: ${error.message}`);
-    }
-};
+        const token = localStorage.getItem("token");
+        let base64Data = preview.split(",")[1]; // Remove base64 prefix
 
+        // Create the payload
+        const payload = JSON.stringify({
+            token: token,
+            fileName: selectedFile.name,
+            fileType: selectedFile.type,
+            data: base64Data,
+        });
+
+        console.log("Payload being sent to server:", payload);
+
+        try {
+            const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: payload,
+            });
+
+            if (!response.ok) {
+                let errorMessage = "File upload failed.";
+                try {
+                    const errorResponse = await response.json();
+                    errorMessage = errorResponse.message || errorMessage;
+                    console.error("Server Error Response:", errorResponse);
+                } catch (jsonError) {
+                    console.error("Failed to parse error response:", jsonError);
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            setUploadStatus("File uploaded successfully!");
+        } catch (error) {
+            console.error("Upload request failed:", error);
+            console.error("Error name:", error.name);
+            console.error("Error stack:", error.stack);
+            setUploadStatus(`Error Caught: ${error.message}`);
+        } finally {
+            console.log("Upload attempt finished at:", new Date().toISOString());
+        }
+    };
 
     return (
         <div>
