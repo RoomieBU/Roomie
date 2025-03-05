@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
     static private final boolean DEV_CONSOLE = true;
+    static public final boolean ALLOW_EMAIL_VERIFICATION = true;
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
 

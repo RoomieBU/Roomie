@@ -72,10 +72,9 @@ public class Console {
     private void removeUser() {
         try {
             UserDao ud = new UserDao(SQLConnection.getConnection());
-
+            System.out.print("[Console] Enter username: ");
             String user = scan.nextLine().trim();
             ud.removeUser(user);
-            System.out.print("[Console] Enter username: ");
             ud.closeConnection();
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Console] Unable to establish SQL connection");

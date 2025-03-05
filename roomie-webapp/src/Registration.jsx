@@ -38,7 +38,8 @@ function Registration() {
                 first_name: data.first_name,
                 last_name: data.last_name,
                 about_me: data.about_me,
-                date_of_birth: data.date_of_birth
+                date_of_birth: data.date_of_birth,
+                code: data.code
             });
 
             const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {

@@ -38,7 +38,7 @@ p {
                             or maybe will be chosen based on user picture?? */
     border-width: 1px;
     border-style: solid; 
-    display: none;
+    display: block;
 }
 
 .more-user-info {

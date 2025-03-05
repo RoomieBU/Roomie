@@ -203,11 +203,15 @@ public class AuthController {
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
 
-            // Just compare the user's verification code to the database
-            if (!userEnteredVerifyCode.equals(DBUser.getData(List.of("verify_code"), email).get("verify_code"))) {
-                response.put("message", "Verification code incorrect. Please check your email.");
-                code = 422;
-                return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+            if (Server.ALLOW_EMAIL_VERIFICATION) {
+                Map<String, String> codeReturn = DBUser.getData(List.of("verify_code"), email);
+                String verifyCode = codeReturn.get("verify_code");
+
+                if (!userEnteredVerifyCode.equals(verifyCode)) {
+                    response.put("message", "Verification code incorrect. Please check your email.");
+                    code = 422;
+                    return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+                }
             }
 
             if (DBUser.setData(formData, email)) {

@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 
 function Matching() {
     const [roommate, setRoommate] = useState(null); // Store roommate data
-    const [isFront, setIsFront] = useState(true); // Controls front/back swap
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
+    const [isFront, setIsFront] = useState(true); // Controls front/back swap
 
     const navigate = useNavigate();
 
@@ -95,10 +95,40 @@ function Matching() {
         getPotentialRoommate();
     }
 
+    const sendMatchData = async (data) => {
+        try {
+
+            const matchInteraction = JSON.stringify({
+                match_id: data.match_id,
+                user: data.user,
+                shown_user: data.shown_user,
+                relationship: data.relationship
+            })
+
+            const response = await fetch("http://roomie.ddns.net:8080/matches/sendMatchInteraction", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: matchInteraction,
+            });
+
+            if(!response.ok) {
+                throw new Error("Match Interaction failed. Please try again.");
+            }
+
+            alert("Interaction Added"); // will be removed after testing
+
+        } catch(error) {
+            console.error(error)
+        }     
+    }
+
     // Matched chosen!!
     function matched() {
         // TODO: Add logic to store the matched roommate in the database
-
+        
+        sendMatchData()
         updateShownUser(); // Load a new potential roommate
     }
 
@@ -111,16 +141,18 @@ function Matching() {
 
     function swapSides() {
         console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
-        setIsFront((prev) => !prev); // Toggle isFront state
+        setIsFront(!isFront); // Toggle isFront state
     }
 
     return (
         <div className="hold-all">
+            {error && (
+                <p>Error: {error}</p>
+            )}
+
             {isLoading ? (
                 <p>Loading potential roommate...</p>
-            ) : error ? (
-                <p>Error: {error}</p>
-            ) : roommate ? (
+            ): roommate ? (
                 <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
