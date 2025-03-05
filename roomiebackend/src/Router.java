@@ -29,4 +29,9 @@ public class Router {
         }
         return Utils.assembleHTTPResponse(404, "{\"message\": \"Not Found\"}");
     }
+
+    public void addRoute(String path, Object handler) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addRoute'");
+    }
 }
