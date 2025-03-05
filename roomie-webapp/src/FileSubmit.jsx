@@ -37,12 +37,17 @@ function FileSubmit() {
         }
 
         const token = localStorage.getItem("token");
+
+        // Create the payload
         const payload = JSON.stringify({
             token: token,
             fileName: selectedFile.name,
             fileType: selectedFile.type,
             data: preview.split(",")[1], // Remove Base64 prefix
         });
+
+        // Log the payload to inspect the request
+        console.log("Payload being sent to server:", payload);
 
         try {
             const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
@@ -52,18 +57,19 @@ function FileSubmit() {
             });
 
             if (!response.ok) {
-                throw new Error("File upload failed.");
+                const errorResponse = await response.json(); // Get error details from response
+                throw new Error(errorResponse.message || "File upload failed.");
             }
 
             setUploadStatus("File uploaded successfully!");
         } catch (error) {
-            setUploadStatus(error.message);
+            setUploadStatus(`Error: ${error.message}`);
         }
     };
 
     return (
         <div>
-            <h2>Upload a Image</h2>
+            <h2>Upload Image</h2>
             <input type="file" accept="image/*" onChange={handleFileChange} />
             {preview && <img src={preview} alt="Preview" style={{ width: "200px", marginTop: "10px" }} />}
             <button onClick={handleUpload}>Upload</button>
