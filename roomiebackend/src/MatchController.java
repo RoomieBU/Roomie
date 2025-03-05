@@ -33,12 +33,6 @@ public class MatchController {
         try {
             UserMatchInteractionDao DBMatch = new UserMatchInteractionDao(SQLConnection.getConnection());
 
-            // if(Server.ALLOW_EMAIL_VERIFICATION) {
-            //     Map<String, String> codeReturn = DBMatch.getData(List.of("verify_code"), email);
-            //     String verifyCode = codeReturn.get("verify_code");
-
-            // }
-
             if(DBMatch.sendMatchInteraction(matchData, email)) {
                 response.put("message", "Send Match Interaction data for " + email);
                 code = 200;

@@ -41,8 +41,6 @@ public class Server {
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
 
-            
-
 
             // Matches routes??
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
