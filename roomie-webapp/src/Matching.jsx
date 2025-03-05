@@ -12,7 +12,7 @@ function Matching() {
     const [university, setUniversity] = useState("Bloomsburg University");
     const [bio, setBio] = useState("This is a bio about the life of John");
     const [major, setMajor] = useState("Computer Science");
-    const [isFront, setIsFront] = useState(true); // Controls front/back swap
+    const [isFront, setIsFront] = useState(false); // Controls front/back swap
 
     const navigate = useNavigate();
 
