@@ -33,9 +33,10 @@ public class FileController {
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
-        String base64Image = data.get("data");
-        base64Image = base64Image.split(",")[1];
+        String givenFileName = data.get("fileName");
         String fileType = data.get("fileType");
+        String base64Image = data.get("data");
+
 
         // Log the base64 string length for debugging
         if (base64Image != null) {
