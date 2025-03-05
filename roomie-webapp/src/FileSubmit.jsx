@@ -29,43 +29,46 @@ function FileSubmit() {
         });
     };
 
-    // Send base64 to backend
-    const handleUpload = async () => {
-        if (!preview) {
-            setUploadStatus("Please select a file first.");
-            return;
-        }
+// Send base64 to backend
+const handleUpload = async () => {
+    if (!preview) {
+        setUploadStatus("Please select a file first.");
+        return;
+    }
 
-        const token = localStorage.getItem("token");
-        preview = preview.split(",")[1]; // remove base64 prefix
-        // Create the payload
-        const payload = JSON.stringify({
-            token: token,
-            fileName: selectedFile.name,
-            fileType: selectedFile.type,
-            data: preview,
+    const token = localStorage.getItem("token");
+
+    // Use setPreview to update the state after removing the base64 prefix
+    const cleanPreview = preview.split(",")[1]; // Remove base64 prefix
+    // Create the payload
+    const payload = JSON.stringify({
+        token: token,
+        fileName: selectedFile.name,
+        fileType: selectedFile.type,
+        data: cleanPreview,
+    });
+
+    // Log the payload to inspect the request
+    console.log("Payload being sent to server:", payload);
+
+    try {
+        const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
         });
 
-        // Log the payload to inspect the request
-        console.log("Payload being sent to server:", payload);
-
-        try {
-            const response = await fetch("http://roomie.ddns.net:8080/upload/fileSubmit", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: payload,
-            });
-
-            if (!response.ok) {
-                const errorResponse = await response.json(); // Get error details from response
-                throw new Error(errorResponse.message || "File upload failed.");
-            }
-
-            setUploadStatus("File uploaded successfully!");
-        } catch (error) {
-            setUploadStatus(`Error: ${error.message}`);
+        if (!response.ok) {
+            const errorResponse = await response.json(); // Get error details from response
+            throw new Error(errorResponse.message || "File upload failed.");
         }
-    };
+
+        setUploadStatus("File uploaded successfully!");
+    } catch (error) {
+        setUploadStatus(`Er ror: ${error.message}`);
+    }
+};
+
 
     return (
         <div>
