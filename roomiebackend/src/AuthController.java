@@ -1,7 +1,6 @@
 import Database.SQLConnection;
 import Database.UserDao;
 import Database.UserPreferencesDao;
-
 import java.sql.SQLException;
 import java.util.*;
 
