@@ -1,18 +1,13 @@
-import "./Matching.css"
+import "./Matching.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import { useNavigate } from "react-router-dom";
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 function Matching() {
-
-    // State variables
-    const [name, setName] = useState("John");
-    const [age, setAge] = useState("19");
-    const [university, setUniversity] = useState("Bloomsburg University");
-    const [bio, setBio] = useState("This is a bio about the life of John");
-    const [major, setMajor] = useState("Computer Science");
+    const [roommate, setRoommate] = useState(null); // Store roommate data
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
 
     const navigate = useNavigate();
 
@@ -29,8 +24,6 @@ function Matching() {
                 if (!response.ok) {
                     throw new Error("Invalid token");
                 }
-
-                return;
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.");
                 navigate("/login");
@@ -40,12 +33,11 @@ function Matching() {
         verifyToken();
     }, [navigate]);
 
-
-    const potentialRoomate = useRef(null);
-
-    // get next user
+    // Fetch the next potential roommate
     useEffect(() => {
-        const getPotentialRoomate = async () => {
+        const getPotentialRoommate = async () => {
+            setIsLoading(true);
+            setError(null);
             try {
                 const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
                     method: "POST",
@@ -54,146 +46,116 @@ function Matching() {
                 });
 
                 if (!response.ok) {
-                    throw new Error("Invalid token");
+                    throw new Error("Failed to fetch potential roommate");
                 }
 
                 const result = await response.json();
-                setName(result.getItem("name"))
-                setAge(result.getItem("date_of_birth"))
-                setUniversity("Bloomsburg University") // university??
-                setBio(result.getItem("about_me")) // about me
-                // setMajor(potentialRoomate.getItem("major"))
-                setIsFront(true)
-
-                
-
-                if (!result.valid) {
-                    throw new Error("Invalid token");
-                }
-
-                return result;
+                setRoommate(result); // Store roommate data in state
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.", error);
+                console.error("Error fetching potential roommate:", error);
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        const fetchRoomate = async () => {
-            potentialRoomate.current = await getPotentialRoomate();
-        };
-        fetchRoomate();
+        getPotentialRoommate();
     }, []);
 
-
-
-    // set new user info to match screen
+    // Set new user info to match screen
     function updateShownUser() {
-        setName(potentialRoomate.getItem("name"))
-        setAge(potentialRoomate.getItem("date_of_birth"))
-        setUniversity("Bloomsburg University") // university??
-        setBio(potentialRoomate.getItem("about_me")) // about me
-        setMajor(potentialRoomate.getItem("major"))
-        setIsFront(true)
+        // Fetch a new potential roommate
+        setRoommate(null); // Clear current roommate while loading new one
+        setIsFront(true);
+        setIsLoading(true);
+        setError(null);
 
-        console.log(potentialRoomate)
-    }
+        const getPotentialRoommate = async () => {
+            try {
+                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
 
-    // matched chosen!!
-    function matched() {
-        // send potential roomate to current user's database 
-
-        // ping potential roomate that they have a match??
-
-        // show new user
-            const getPotentialRoomate = async () => {
-                try {
-                    const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoomate", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ token: localStorage.getItem("token") })
-                    });
-    
-                    if (!response.ok) {
-                        throw new Error("Invalid token");
-                    }
-    
-                    const result = await response.json();
-                    setName(result.getItem("name"))
-                    setAge(result.getItem("date_of_birth"))
-                    setUniversity("Bloomsburg University") // university??
-                    setBio(result.getItem("about_me")) // about me
-                    // setMajor(potentialRoomate.getItem("major"))
-                    setIsFront(true)
-    
-                    
-    
-                    if (!result.valid) {
-                        throw new Error("Invalid token");
-                    }
-    
-                    return result;
-                } catch (error) {
-                    console.log("Redirecting to login due to invalid token.", error);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch potential roommate");
                 }
-            };
-    
-            const fetchRoomate = async () => {
-                potentialRoomate.current = await getPotentialRoomate();
-            };
-            fetchRoomate();
-        
+
+                const result = await response.json();
+                setRoommate(result); // Store roommate data in state
+            } catch (error) {
+                console.error("Error fetching potential roommate:", error);
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        getPotentialRoommate();
     }
 
-    // declined potential user
+    // Matched chosen!!
+    function matched() {
+        // TODO: Add logic to store the matched roommate in the database
+
+        updateShownUser(); // Load a new potential roommate
+    }
+
+    // Declined potential user
     function declined() {
-        // remove user from list of potential roomates that will pop up
+        // TODO: Add logic to remove this user from future match lists
 
-        // show new user --> updateShownUser()
-        updateShownUser()
+        updateShownUser(); // Load a new potential roommate
     }
-
 
     function swapSides() {
-        setIsFront(!isFront)
+        console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
+        setIsFront((prev) => !prev); // Toggle isFront state
     }
-
 
     return (
         <div className="hold-all">
-            {isFront ? (
-                <div onClick={swapSides} style={{ display: isFront ? 'block' : 'none' }} className="potential-roomate-front">
-                    <div className="user_info">
-                        <p>{name}, {age}
-                            <br />
-                            {university}
-                        </p>
-                    </div>
+            {isLoading ? (
+                <p>Loading potential roommate...</p>
+            ) : error ? (
+                <p>Error: {error}</p>
+            ) : roommate ? (
+                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                    {isFront ? (
+                        <div className="user_info">
+                            <p>{roommate.name}, {roommate.date_of_birth}
+                                <br />
+                                Bloomsburg University
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="more-user-info">
+                            <h3>More about {roommate.name}</h3>
+                            <dl>
+                                <dt>Major</dt>
+                                <dd>{roommate.major}</dd>
+                                <dt>Bio:</dt>
+                                <dd>{roommate.about_me}</dd>
+                            </dl>
+                        </div>
+                    )}
                 </div>
             ) : (
-                <div onClick={swapSides} style={{ display: isFront ? 'none' : 'block' }} className="potential-roomate-back">
-                    <div className="more-user-info">
-                        <h3>More about {name}</h3>
-                        <dl>
-                            <dt>Major</dt>
-                            <dd>{major}</dd>
-                            <dt>Bio:</dt>
-                            <dd>{bio}</dd>
-                        </dl>
-                    </div>
-                </div>
+                <p>No potential roommate found.</p>
             )}
 
             <div className="match-button-cluster">
-                <button onClick={() => declined()} className="deny-icon">
+                <button onClick={declined} className="deny-icon">
                     <i className="bi bi-x-lg" />
                 </button>
 
-                <button onClick={() => matched()} className="match-icon">
+                <button onClick={matched} className="match-icon">
                     <i className="bi bi-check-lg" />
                 </button>
             </div>
         </div>
-
-    )
+    );
 }
 
-export default Matching
+export default Matching;

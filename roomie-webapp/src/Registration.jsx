@@ -52,7 +52,7 @@ function Registration() {
             }
 
             alert("Registration successful!");
-            navigate("/dashboard");
+            navigate("/preferences");
         } catch (error) {
             setRegistrationError(error.message);
         }
@@ -60,13 +60,8 @@ function Registration() {
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Register for ROOMIE</h1>
-            <p>
-                Already have an account?{" "}
-                <a href="" onClick={() => navigate("/login")}>
-                    Sign in!
-                </a>
-            </p>
+            <h1 className="fw-bold">Let's get some info about you!</h1>
+            
             <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                 <div className="mb-3">
                     <label className="form-label">First Name</label>
@@ -105,6 +100,15 @@ function Registration() {
                         {...register("date_of_birth", { required: "Date of birth is required" })}
                     />
                     {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Email Verification Code</label>
+                    <input
+                        type="text"
+                        className={`form-control ${errors.code ? "is-invalid" : ""}`}
+                        {...register("code", { required: "Verification code is required. Please check your email." })}
+                    />
                 </div>
 
                 {registrationError && <div className="text-danger mb-3">{registrationError}</div>}

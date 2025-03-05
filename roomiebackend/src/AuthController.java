@@ -1,5 +1,6 @@
 import Database.SQLConnection;
 import Database.UserDao;
+import Database.UserPreferencesDao;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -54,6 +55,14 @@ public class AuthController {
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             if (DBUser.createUser(email, pass)) {
+                String verifyCode = Utils.generateVerifyCode();
+                Map<String, String> verifyCodeFormatted = new HashMap<>();
+                verifyCodeFormatted.put("verify_code", verifyCode);
+
+                DBUser.setData(verifyCodeFormatted, email);
+                Mail emailer = new Mail();
+                emailer.send(email, "Roomie Verification Email", "Here is your verification code: " + verifyCode);
+
                 response.put("token", Auth.getToken(email));
                 code = 200;
             } else {
@@ -189,9 +198,77 @@ public class AuthController {
         formData.put("date_of_birth", data.get("date_of_birth"));
         formData.put("registered", "true");
 
+        String userEnteredVerifyCode = data.get("code");
+
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
+
+            // Just compare the user's verification code to the database
+            if (!userEnteredVerifyCode.equals(DBUser.getData(List.of("verify_code"), email).get("verify_code"))) {
+                response.put("message", "Verification code incorrect. Please check your email.");
+                code = 422;
+                return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+            }
+
             if (DBUser.setData(formData, email)) {
+                response.put("message", "Set user data for " + email);
+                code = 200;
+            } else {
+                response.put("message", "Unable to set user data for " + email);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Auth Controller] Unable to connect to MySQL.");
+            code = 500;
+            response.put("token", "");
+        }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
+    public static String sendPreferences(Map<String, String> data, String method) {
+        System.out.println(data);
+        data.put("wakeup_time", "07:00:00");
+        data.put("sleep_time", "07:00:00");
+        System.out.println("data after forcing the entry:");
+        System.out.println(data);
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
+        if (!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        // Get the user from the token value
+        String token = data.get("token");
+
+        if (!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+
+        String email = Auth.getEmailfromToken(token);
+
+        // Deal with wakeup time
+        // Get wakeup_time from your data map
+        String wakeupTimeStr = data.get("wakeup_time").toString();
+
+        // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
+        if (wakeupTimeStr != null && wakeupTimeStr.length() == 5) {
+            wakeupTimeStr += ":00";
+        }
+
+        Map<String, String> formData = new HashMap<>();
+        formData.put("email", email);
+        formData.put("preferred_gender", data.get("preferred_gender"));
+        formData.put("pet_friendly", data.get("pet_friendly"));
+        formData.put("personality", data.get("personality"));
+        formData.put("wakeup_time", wakeupTimeStr);
+        formData.put("sleep_time", data.get("sleep_time"));
+        formData.put("quiet_hours", data.get("quiet_hours"));
+
+
+        try {
+            UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
+
+            if (DBUser.createUserPreferences(formData, email)) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
             } else {

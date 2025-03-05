@@ -28,10 +28,12 @@ public class MatchController {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
 
             List<User> users = DBUser.getAllUsers();
-
+            User user;
             // Just got now get a random user (does no checking if it's the same user)
             Random rand = new Random();
-            User user = users.get(rand.nextInt(0, users.size()-1));
+            do {
+                user = users.get(rand.nextInt(0, users.size() - 1));
+            } while (!user.getRegistered());
 
             if (users.get(0) != null) {
                 response.put("message", "Next match found");
@@ -47,6 +49,7 @@ public class MatchController {
                 response.put("name", user.getFirstName() + " " + user.getLastName());
                 response.put("date_of_birth", user.getDateOfBirth().toString());
                 response.put("about_me", user.getAboutMe());
+                response.put("major", "Wumbology (Undergrad)");
                 code = 200;
             } else {
                 response.put("message", "No registered users found");
