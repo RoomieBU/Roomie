@@ -1,4 +1,3 @@
-import Database.UserMatchInteractionDao;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,7 +46,7 @@ public class Server {
 
             // Matches routes??
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
-            router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInteraction);
+            router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
