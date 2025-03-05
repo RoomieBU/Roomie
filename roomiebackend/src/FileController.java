@@ -53,7 +53,7 @@ public class FileController {
 
         // Check for missing data
         if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data provided.");
+            response.put("message", "No image data has been provided.");
             return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
         }
         if (fileType == null || fileType.isEmpty()) {

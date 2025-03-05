@@ -48,7 +48,7 @@ function FileSubmit() {
         }
 
         const token = localStorage.getItem("token");
-        const base64Data = preview;
+        const base64Data = preview.split(",")[1];
 
         const payload = JSON.stringify({
             token: token,
