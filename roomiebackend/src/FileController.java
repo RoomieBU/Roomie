@@ -34,6 +34,7 @@ public class FileController {
         }
 
         String base64Image = data.get("data");
+        base64Image = base64Image.split(",")[1];
         String fileType = data.get("fileType");
 
         // Log the base64 string length for debugging
