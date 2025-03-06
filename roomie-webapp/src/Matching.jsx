@@ -8,7 +8,6 @@ function Matching() {
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
-    const [age, setAge] = useState(0); // Stores Calculated Age of roomate shown
 
     const navigate = useNavigate();
 
@@ -96,7 +95,10 @@ function Matching() {
         };
 
         getPotentialRoommate();
+        calculateAge()
     }
+
+    
 
     const sendMatchData = async (relationship) => {
 
@@ -148,24 +150,8 @@ function Matching() {
     }
 
     function calculateAge() {
-        const date = new Date(roommate.date_of_birth)
-        console.log("DATE: ", date)
 
-        const today = new Date()
-
-        // Calculate age
-        let age = today.getFullYear() - date.getFullYear()
-
-        // Check if birthday has occured this year
-        const hasbirthdayPassed = today.getMonth() > date.getMonth() || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate())
-
-        if(!hasbirthdayPassed) {
-            age--
-        }
-
-        console.log("AGE: ", age)
-
-        setAge(age)
+        console.log(roommate.date_of_birth)
     }
 
     return (
