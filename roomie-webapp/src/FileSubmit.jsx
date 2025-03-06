@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-function FileSubmit() {
+function FileSubmit({ isProfilePic = false }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [uploadStatus, setUploadStatus] = useState("");
@@ -27,7 +27,6 @@ function FileSubmit() {
         convertBase64(file)
             .then((base64) => setPreview(base64))
             .catch((error) => {
-                console.error("Error converting file:", error);
                 setUploadStatus("Failed to process the image.");
             });
     };
@@ -51,16 +50,16 @@ function FileSubmit() {
         let base64Data = preview.split(",")[1];
 
         // Clean the base64 data by removing any newlines or spaces
-        base64Data = base64Data.replace(/\s+/g, '');  // Remove any whitespace or line breaks
+        base64Data = base64Data.replace(/\s+/g, '');
 
         const payload = JSON.stringify({
             token: token,
             fileName: selectedFile.name,
             fileType: selectedFile.type,
             data: base64Data,
+            isProfilePic: isProfilePic.toString(),
         });
 
-        console.log("Uploading file:", selectedFile.name);
 
         try {
             const response = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
@@ -70,7 +69,6 @@ function FileSubmit() {
             });
 
             const responseBody = await response.json();
-            console.log("Server response:", responseBody);
 
             if (!response.ok) {
                 throw new Error(responseBody.message || "File upload failed.");
@@ -78,7 +76,6 @@ function FileSubmit() {
 
             setUploadStatus("File uploaded successfully!");
         } catch (error) {
-            console.error("Upload error:", error);
             setUploadStatus(`Upload failed: ${error.message}`);
         }
     };
