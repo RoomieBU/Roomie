@@ -49,6 +49,24 @@ public class UserImagesDao {
         return images;
     }
 
+    public List<String> getUserImageUrls(int userId) {
+        List<String> urls = new ArrayList<>();
+        String query = "SELECT image_url FROM UserImages WHERE user_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                urls.add(rs.getString("image_url"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching image URLs", e);
+        }
+
+        return urls;
+    }
+
     public void closeConnection() throws SQLException {
         connection.close();
     }

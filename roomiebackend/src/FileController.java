@@ -74,6 +74,7 @@ public class FileController {
             // Save image locally
             String fileName = UUID.randomUUID() + "." + fileExtension;
             String filePath = "/var/www/images/" + fileName;
+            String urlPath = "https://roomie.ddns.net/images/" + fileName;
 
             // Ensure directory exists
             File directory = new File("/var/www/images");
@@ -109,18 +110,18 @@ public class FileController {
                 // Store profile picture URL in userDao
                 userDao = new UserDao(SQLConnection.getConnection());
                 Map<String, String> updateData = new HashMap<>();
-                updateData.put("profile_picture_url", "/images/" + fileName);
+                updateData.put("profile_picture_url", urlPath);
                 userDao.setData(updateData, userIdStr);
                 userDao.closeConnection();
             } else {
                 // Store image path in userImagesDao
                 UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-                userImageDao.uploadUserImage(userId, filePath);
+                userImageDao.uploadUserImage(userId, urlPath);
                 userImageDao.closeConnection();
             }
 
             response.put("message", "File uploaded successfully.");
-            response.put("image_url", "/images/" + fileName);
+            response.put("image_url", urlPath);
             code = 200;
 
         } catch (IOException e) {
