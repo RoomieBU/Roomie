@@ -52,6 +52,7 @@ function Matching() {
 
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
+                setAge(calculateAge(result.date_of_birth))
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -61,11 +62,8 @@ function Matching() {
         };
 
         getPotentialRoommate();
-        calculateAge();
     }, []);
-
-    calculateAge()
-
+    
     // Set new user info to match screen
     function updateShownUser() {
         // Fetch a new potential roommate
@@ -88,6 +86,8 @@ function Matching() {
 
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
+                setAge(calculateAge(result.date_of_birth))
+                console.log(result.date_of_birth)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -97,10 +97,7 @@ function Matching() {
         };
 
         getPotentialRoommate();
-        calculateAge()
     }
-
-    
 
     const sendMatchData = async (relationship) => {
 
@@ -147,13 +144,13 @@ function Matching() {
     }
 
     function swapSides() {
-        console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
         setIsFront(!isFront); // Toggle isFront state
     }
 
-    function calculateAge() {
+    function calculateAge(dateString) {
         // Parse the input date string
-        const [year, month, day] = roommate.date_of_birth.split('-').map(Number);
+
+        const [year, month, day] = dateString.split('-').map(Number);
         
         // Create a Date object using the parsed values
         const birthDate = new Date(year, month - 1, day); // month is 0-indexed in JS Date
@@ -173,8 +170,8 @@ function Matching() {
           age--;
         }
         
-        setAge(age.toString())
-      }
+        return age
+    }
 
     return (
         <div className="hold-all">
