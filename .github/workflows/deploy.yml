@@ -70,3 +70,24 @@ jobs:
             sudo npm install
             sudo npm run build
             sudo systemctl daemon-reload
+
+
+      - name: Restart backend server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER_BACKDEV }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Stop the currently running screen session (if it exists)
+            if screen -list | grep -q "roomie_backend"; then
+              screen -S roomie_backend -X quit
+              echo "Old screen session terminated."
+            else
+              echo "No existing screen session found."
+            fi
+
+            # Start a new screen session running ./start
+            screen -dmS roomie_backend bash -c 'cd /opt/roomiebackend && ./start'
+            echo "New screen session started."
+
