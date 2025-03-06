@@ -1,10 +1,15 @@
 import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function Profile() {
     //const [profile, setProfile] = useState(null); // Store profile data
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [age, setAge] = useState("-1")
+
+    const navigate = useNavigate();
 
     const profile = {
         email: "john.doe@example.com",
