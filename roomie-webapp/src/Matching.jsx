@@ -145,12 +145,7 @@ function Matching() {
     // }
 
     function calculateAge() {
-        const date = roommate.date_of_birth
-
-        // Make sure roomate dob is Date object
-        if(!(date instanceof Date) || isNaN(date)) {
-            throw new Error("Invalid date object")
-        }
+        const date = new Date(roommate.date_of_birth)
 
         const today = new Date()
 
