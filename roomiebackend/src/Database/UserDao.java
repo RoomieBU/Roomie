@@ -103,6 +103,28 @@ public class UserDao {
     }
 
     /**
+     * Returns a userID from the database based on their email
+     */
+    public int getIDfromEmail(String email) {
+        String query = "SELECT user_id FROM Users WHERE email = ?";
+        int userID = -1; // Default to -1 (or some other invalid value) in case no user is found
+    
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email); // Bind email to the query
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userID = rs.getInt("user_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user ID from email", e);
+        }
+        return userID;
+    }
+    
+
+    /**
      * Generic method for setting data within the Users table in the database.
      *
      * @param data

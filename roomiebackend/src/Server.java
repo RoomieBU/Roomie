@@ -54,6 +54,9 @@ public class Server {
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
 
+            // Profile Info Route
+            router.addRoute("/profile/getProfile", ProfileController::getProfile);
+            
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
