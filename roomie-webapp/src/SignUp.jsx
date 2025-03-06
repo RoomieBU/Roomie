@@ -44,13 +44,13 @@ function SignUp() {
     return (
 
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Create An Account with Us!</h1>
-            <p>
+            <h1 className="dashboard-h1">Create An Account with Us!</h1>
+            <p className="dashboard-p">
                 & find your dream roommate..
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                 <div className="mb-3">
-                    <label className="form-label">School Email</label>
+                    <label className="dashboard-p">School Email</label>
                     <input
                         type="email"
                         className={`form-control ${errors.email ? "is-invalid" : ""}`}
@@ -60,7 +60,7 @@ function SignUp() {
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Password</label>
+                    <label className="dashboard-p">Password</label>
                     <input
                         type="password"
                         className={`form-control ${errors.password ? "is-invalid" : ""}`}
@@ -72,7 +72,7 @@ function SignUp() {
                 <button type="submit" className="btn btn-primary w-100">
                     Sign Up
                 </button>
-                <p>
+                <p className="dashboard-p">
                     Already have an account?{" "}
                     <a href="login" onClick={() => navigate("/login")}>
                         Sign in!

@@ -103,6 +103,28 @@ public class UserDao {
     }
 
     /**
+     * Returns a userID from the database based on their email
+     */
+    public int getIDfromEmail(String email) {
+        String query = "SELECT user_id FROM Users WHERE email = ?";
+        int userID = -1; // Default to -1 (or some other invalid value) in case no user is found
+    
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email); // Bind email to the query
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userID = rs.getInt("user_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user ID from email", e);
+        }
+        return userID;
+    }
+    
+
+    /**
      * Generic method for setting data within the Users table in the database.
      *
      * @param data
@@ -164,6 +186,39 @@ public class UserDao {
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    for (String col : columns) {
+                        if (col.equals("registered")) {
+                            data.put(col, Integer.toString(rs.getInt(col))); // Store as "0" or "1"
+                        } else {
+                            data.put(col, rs.getString(col));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user info: ", e);
+        }
+
+        return data;
+    }
+
+
+    /**
+     * Generic method for getting information about a user from the Preferences table.
+     *
+     * @param columns Fields to be retrieved
+     * @param email Unique email for specific user
+     * @return A Map of the columns as the keys and their values as the values
+     */
+    public Map<String, String> getPreferences(List<String> columns, String email) {
+        Map<String, String> data = new HashMap<>();
+        int userId = getIDfromEmail(email);
+        String query = "SELECT " + String.join(", ", columns) + " FROM UserPreferences WHERE user_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, String.valueOf(userId));
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     for (String col : columns) {

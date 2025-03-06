@@ -6,14 +6,14 @@ function Index() {
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Welcome to ROOMIE</h1>
-            <p>Your go-to platform for finding and managing roommates.</p>
+            <h1 className="dashboard-h1">Roomie.</h1>
+            <p className="dashboard-p">Find your perfect roommate.</p>
 
             <div className="d-flex gap-3 mt-4">
-                <button className="btn btn-primary" onClick={() => navigate("/login")}>
+                <button className="button" onClick={() => navigate("/login")}>
                     Login
                 </button>
-                <button className="btn btn-secondary" onClick={() => navigate("/signup")}>
+                <button className="button" onClick={() => navigate("/signup")}>
                     Sign Up
                 </button>
             </div>

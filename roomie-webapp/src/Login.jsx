@@ -57,8 +57,8 @@ function Login() {
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Welcome to ROOMIE.</h1>
-            <p>
+            <h1 className="dashboard-h1">Welcome to ROOMIE.</h1>
+            <p className="dashboard-p">
                 Don’t have an account?{" "}
                 <a href="" onClick={() => navigate("/signup")}>
                     Sign up!
@@ -66,7 +66,7 @@ function Login() {
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                 <div className="mb-3">
-                    <label className="form-label">School Email</label>
+                    <label className="dashboard-p">School Email</label>
                     <input
                         type="email"
                         className={`form-control ${errors.email ? "is-invalid" : ""}`}
@@ -76,7 +76,7 @@ function Login() {
                 </div>
 
                 <div className="mb-3">
-                    <label className="form-label">Password</label>
+                    <label className="dashboard-p">Password</label>
                     <input
                         type="password"
                         className={`form-control ${errors.password ? "is-invalid" : ""}`}
