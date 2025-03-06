@@ -24,9 +24,7 @@ public class ProfileController {
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            
-            System.out.println(userEmail); // Debugging output
-        
+                    
             // Fetch user data as a Map
             Map<String, String> userDataQuery = DBUser.getData(
                 List.of("first_name", "last_name", "date_of_birth", "about_me"), userEmail
