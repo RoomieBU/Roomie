@@ -8,17 +8,29 @@ public class ImageController {
         Map<String, String> responseBody = new HashMap<>();
         int statusCode = 200;
 
+        // Handle preflight OPTIONS request
+        if (method.equals("OPTIONS")) {
+            return Utils.assembleHTTPResponse(200, "")
+                    .replace("HTTP/1.1", "HTTP/1.1\n"
+                            + "Access-Control-Allow-Origin: *\n"
+                            + "Access-Control-Allow-Methods: GET, OPTIONS\n"
+                            + "Access-Control-Allow-Headers: Authorization, Content-Type\n"
+                            + "Access-Control-Max-Age: 3600");
+        }
+
         // Validate method
         if (!method.equals("GET")) {
             responseBody.put("message", "Method not allowed");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(responseBody));
+            return Utils.assembleHTTPResponse(405, Utils.assembleJson(responseBody))
+                    .replace("HTTP/1.1", "HTTP/1.1\nAccess-Control-Allow-Origin: *");
         }
 
         // Authentication
         String token = data.get("token");
         if (!Auth.isValidToken(token)) {
             responseBody.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(responseBody));
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(responseBody))
+                    .replace("HTTP/1.1", "HTTP/1.1\nAccess-Control-Allow-Origin: *");
         }
 
         try (Connection connection = SQLConnection.getConnection()) {
@@ -33,7 +45,8 @@ public class ImageController {
             String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 responseBody.put("message", "User not found");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(responseBody));
+                return Utils.assembleHTTPResponse(404, Utils.assembleJson(responseBody))
+                        .replace("HTTP/1.1", "HTTP/1.1\nAccess-Control-Allow-Origin: *");
             }
 
             // Get images
@@ -53,6 +66,7 @@ public class ImageController {
             statusCode = 500;
         }
 
-        return Utils.assembleHTTPResponse(statusCode, Utils.assembleJson(responseBody));
+        return Utils.assembleHTTPResponse(statusCode, Utils.assembleJson(responseBody))
+                .replace("HTTP/1.1", "HTTP/1.1\nAccess-Control-Allow-Origin: *");
     }
 }
