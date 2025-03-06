@@ -16,7 +16,7 @@ function TempImageDemo() {
                 }
 
                 // Fetch image URLs from the backend
-                const response = await fetch("https://roomie.ddns.net:8080/user/images", {
+                const response = await fetch("https://roomie.ddns.net/user/images", {
                     method: "GET",
                     headers: {
                         "Authorization": token,

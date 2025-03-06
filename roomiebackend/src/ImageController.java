@@ -15,6 +15,7 @@ public class ImageController {
                     + "Access-Control-Allow-Methods: GET, OPTIONS\r\n"
                     + "Access-Control-Allow-Headers: Authorization, Content-Type\r\n"
                     + "Access-Control-Max-Age: 3600\r\n"
+                    + "Content-Length: 0\r\n"
                     + "\r\n";
         }
 
@@ -23,6 +24,7 @@ public class ImageController {
             responseBody.put("message", "Method not allowed");
             return "HTTP/1.1 405 Method Not Allowed\r\n"
                     + "Content-Type: application/json\r\n"
+                    + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
                     + "\r\n"
                     + Utils.assembleJson(responseBody);
         }
@@ -33,6 +35,7 @@ public class ImageController {
             responseBody.put("message", "Unauthorized");
             return "HTTP/1.1 401 Unauthorized\r\n"
                     + "Content-Type: application/json\r\n"
+                    + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
                     + "\r\n"
                     + Utils.assembleJson(responseBody);
         }
@@ -51,6 +54,7 @@ public class ImageController {
                 responseBody.put("message", "User not found");
                 return "HTTP/1.1 404 Not Found\r\n"
                         + "Content-Type: application/json\r\n"
+                        + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
                         + "\r\n"
                         + Utils.assembleJson(responseBody);
             }
@@ -74,6 +78,7 @@ public class ImageController {
 
         return "HTTP/1.1 " + statusCode + " OK\r\n"
                 + "Content-Type: application/json\r\n"
+                + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
                 + "\r\n"
                 + Utils.assembleJson(responseBody);
     }
