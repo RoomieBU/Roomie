@@ -1,12 +1,17 @@
+import Database.UserMatchInteractionDao;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.*;
+import java.security.KeyStore;
+import java.io.FileInputStream;
 
 /**
  * This is the main server class for the backend of Roomie.
@@ -28,7 +33,10 @@ public class Server {
      */
     public static void main(String[] args) {
         int port = 8080;
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try {
+            SSLServerSocketFactory sslServerSocketFactory = getSSLServerSocketFactory();
+            SSLServerSocket serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
+
             System.out.println("[Notice] Server is running on port " + port);
 
             // Authentication routes
@@ -75,9 +83,33 @@ public class Server {
             throw new RuntimeException(e);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Manages obtaining certs for decrypting
+     * @return
+     * @throws Exception
+     */
+    private static SSLServerSocketFactory getSSLServerSocketFactory() throws Exception {
+        String keystoreFile = "/home/backdev/keystore.p12";
+        String keystorePassword = System.getenv("SSL_KEY");
+
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        try (FileInputStream keyFile = new FileInputStream(keystoreFile)) {
+            keyStore.load(keyFile, keystorePassword.toCharArray());
+        }
+
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
+
+        return sslContext.getServerSocketFactory();
+    }
 
     /**
      * Handles specific requests from single clients.

@@ -15,7 +15,7 @@ function Matching() {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -39,7 +39,7 @@ function Matching() {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
+                const response = await fetch("https://roomie.ddns.net:8080/matches/getPotentialRoommate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -72,7 +72,7 @@ function Matching() {
 
         const getPotentialRoommate = async () => {
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/matches/getPotentialRoommate", {
+                const response = await fetch("https://roomie.ddns.net:8080/matches/getPotentialRoommate", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -105,7 +105,7 @@ function Matching() {
                 relationship: relationship
             })
 
-            const response = await fetch("http://roomie.ddns.net:8080/matches/sendMatchInteraction", {
+            const response = await fetch("https://roomie.ddns.net:8080/matches/sendMatchInteraction", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -113,29 +113,29 @@ function Matching() {
                 body: matchInteraction,
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error("Match Interaction failed. Please try again.");
             }
 
             alert("Interaction Added"); // will be removed after testing
 
-        } catch(error) {
+        } catch (error) {
             console.error("HERE we are", error)
-        }     
+        }
     }
 
     // Matched chosen!!
     function matched() {
         // TODO: Add logic to store the matched roommate in the database
-        sendMatchData("Liked")
+        sendMatchData(true)
         updateShownUser(); // Load a new potential roommate
     }
 
     // Declined potential user
     function declined() {
         // TODO: Add logic to remove this user from future match lists
-        
-        sendMatchData("Declined")
+
+        sendMatchData(false)
         updateShownUser(); // Load a new potential roommate
     }
 

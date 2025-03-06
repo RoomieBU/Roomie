@@ -11,7 +11,7 @@ function Registration() {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("http://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -42,7 +42,7 @@ function Registration() {
                 code: data.code
             });
 
-            const response = await fetch("http://roomie.ddns.net:8080/auth/sendRegistration", {
+            const response = await fetch("https://roomie.ddns.net:8080/auth/sendRegistration", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: formData,
@@ -53,7 +53,7 @@ function Registration() {
             }
 
             alert("Registration successful!");
-            navigate("/preferences");
+            navigate("/dashboard");
         } catch (error) {
             setRegistrationError(error.message);
         }
@@ -61,8 +61,13 @@ function Registration() {
 
     return (
         <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Let's get some info about you!</h1>
-            
+            <h1 className="fw-bold">Register for ROOMIE</h1>
+            <p>
+                Already have an account?{" "}
+                <a href="" onClick={() => navigate("/login")}>
+                    Sign in!
+                </a>
+            </p>
             <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                 <div className="mb-3">
                     <label className="form-label">First Name</label>
@@ -110,6 +115,7 @@ function Registration() {
                         className={`form-control ${errors.code ? "is-invalid" : ""}`}
                         {...register("code", { required: "Verification code is required. Please check your email." })}
                     />
+                    {errors.code && <div className="invalid-feedback">{errors.code.message}</div>}
                 </div>
 
                 {registrationError && <div className="text-danger mb-3">{registrationError}</div>}
