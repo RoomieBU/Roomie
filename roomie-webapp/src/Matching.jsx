@@ -127,7 +127,7 @@ function Matching() {
     // Matched chosen!!
     function matched() {
         // TODO: Add logic to store the matched roommate in the database
-        sendMatchData(true)
+        sendMatchData("Liked")
         updateShownUser(); // Load a new potential roommate
     }
 
@@ -135,13 +135,36 @@ function Matching() {
     function declined() {
         // TODO: Add logic to remove this user from future match lists
         
-        sendMatchData(false)
+        sendMatchData("Declined")
         updateShownUser(); // Load a new potential roommate
     }
 
-    function swapSides() {
-        console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
-        setIsFront(!isFront); // Toggle isFront state
+    // function swapSides() {
+    //     console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
+    //     setIsFront(!isFront); // Toggle isFront state
+    // }
+
+    function calculateAge() {
+        const date = roommate.date_of_birth
+
+        // Make sure roomate dob is Date object
+        if(!(date instanceof Date) || isNaN(date)) {
+            throw new Error("Invalid date object")
+        }
+
+        const today = new Date()
+
+        // Calculate age
+        let age = today.getFullYear() - date.getFullYear()
+
+        // Check if birthday has occured this year
+        const hasbirthdayPassed = today.getMonth() > date.getMonth() || (today.getMonth() === date.getMonth() && today.getDate() >= date.getDate())
+
+        if(!hasbirthdayPassed) {
+            age--
+        }
+
+        return age
     }
 
     return (
@@ -153,10 +176,10 @@ function Matching() {
             {isLoading ? (
                 <p>Loading potential roommate...</p>
             ): roommate ? (
-                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                <div onClick={setIsFront(!isFront)} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
-                            <p>{roommate.name}, {roommate.date_of_birth}
+                            <p>{roommate.name}, {calculateAge()}
                                 <br />
                                 Bloomsburg University
                             </p>
