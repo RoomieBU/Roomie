@@ -8,6 +8,7 @@ function Matching() {
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
+    const [age, setAge] = useState("-1")
 
     const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ function Matching() {
         };
 
         getPotentialRoommate();
+        calculateAge();
     }, []);
 
     calculateAge()
@@ -150,9 +152,29 @@ function Matching() {
     }
 
     function calculateAge() {
-
-        console.log(roommate.date_of_birth)
-    }
+        // Parse the input date string
+        const [year, month, day] = roommate.date_of_birth.split('-').map(Number);
+        
+        // Create a Date object using the parsed values
+        const birthDate = new Date(year, month - 1, day); // month is 0-indexed in JS Date
+        
+        // Get current date
+        const currentDate = new Date();
+        
+        // Calculate the difference in years
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+        
+        // Check if birthday hasn't occurred yet this year
+        const currentMonth = currentDate.getMonth();
+        const birthMonth = birthDate.getMonth();
+        
+        if (currentMonth < birthMonth || 
+            (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        
+        setAge(age.toString())
+      }
 
     return (
         <div className="hold-all">
@@ -166,7 +188,7 @@ function Matching() {
                 <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
-                            <p>{roommate.name}, {roommate.date_of_birth}
+                            <p>{roommate.name}, {age}
                                 <br />
                                 Bloomsburg University
                             </p>
