@@ -21,14 +21,20 @@ public class ImageController {
         // Validate method
         if (!method.equals("GET")) {
             responseBody.put("message", "Method not allowed");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(responseBody));
+            return "HTTP/1.1 405 Method Not Allowed\r\n"
+                    + "Content-Type: application/json\r\n"
+                    + "\r\n"
+                    + Utils.assembleJson(responseBody);
         }
 
         // Authentication
         String token = data.get("token");
         if (!Auth.isValidToken(token)) {
             responseBody.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(responseBody));
+            return "HTTP/1.1 401 Unauthorized\r\n"
+                    + "Content-Type: application/json\r\n"
+                    + "\r\n"
+                    + Utils.assembleJson(responseBody);
         }
 
         try (Connection connection = SQLConnection.getConnection()) {
@@ -43,7 +49,10 @@ public class ImageController {
             String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 responseBody.put("message", "User not found");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(responseBody));
+                return "HTTP/1.1 404 Not Found\r\n"
+                        + "Content-Type: application/json\r\n"
+                        + "\r\n"
+                        + Utils.assembleJson(responseBody);
             }
 
             // Get images
@@ -63,6 +72,9 @@ public class ImageController {
             statusCode = 500;
         }
 
-        return Utils.assembleHTTPResponse(statusCode, Utils.assembleJson(responseBody));
+        return "HTTP/1.1 " + statusCode + " OK\r\n"
+                + "Content-Type: application/json\r\n"
+                + "\r\n"
+                + Utils.assembleJson(responseBody);
     }
 }
