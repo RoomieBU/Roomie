@@ -179,7 +179,7 @@ function Matching() {
                 <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
-                            <p>{roommate.name}, {age}
+                            <p>{roommate.name}, {roommate.date_of_birth}
                                 <br />
                                 Bloomsburg University
                             </p>
