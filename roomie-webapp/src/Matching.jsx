@@ -148,6 +148,7 @@ function Matching() {
 
     function calculateAge() {
         const date = new Date(roommate.date_of_birth)
+        console.log("DATE: ", date)
 
         const today = new Date()
 
@@ -160,6 +161,8 @@ function Matching() {
         if(!hasbirthdayPassed) {
             age--
         }
+
+        console.log("AGE: ", age)
 
         setAge(age)
     }
