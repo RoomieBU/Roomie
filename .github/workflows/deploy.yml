@@ -88,6 +88,6 @@ jobs:
             fi
 
             # Start a new screen session running ./start
-            screen -dmS roomie_backend bash -c './start'
+            screen -dmS roomie_backend bash -c 'cd ~ && ./start'
             echo "New screen session started."
 
