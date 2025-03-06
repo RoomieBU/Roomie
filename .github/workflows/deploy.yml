@@ -79,6 +79,10 @@ jobs:
           username: ${{ secrets.EC2_USER_BACKDEV }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+
+            # Ensure the SSL_KEY variable is set before running the server
+            export SSL_KEY="${{ secrets.SSL_KEY }}"
+            
             # Stop the currently running screen session (if it exists)
             if screen -list | grep -q "roomie_backend"; then
               screen -S roomie_backend -X quit
@@ -88,6 +92,6 @@ jobs:
             fi
 
             # Start a new screen session running ./start
-            screen -dmS roomie_backend bash -c '~/start; exec bash'
+            screen -dmS roomie_backend bash -c 'export SSL_KEY=$SSL_KEY; ~/start; exec bash'
             echo "New screen session started."
 
