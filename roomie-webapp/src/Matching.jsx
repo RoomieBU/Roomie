@@ -8,6 +8,7 @@ function Matching() {
     const [isLoading, setIsLoading] = useState(true); // Loading state
     const [error, setError] = useState(null); // Error state
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
+    const [age, setAge] = useState(0); // Stores Calculated Age of roomate shown
 
     const navigate = useNavigate();
 
@@ -51,6 +52,7 @@ function Matching() {
 
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
+                calculateAge()
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -139,10 +141,10 @@ function Matching() {
         updateShownUser(); // Load a new potential roommate
     }
 
-    // function swapSides() {
-    //     console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
-    //     setIsFront(!isFront); // Toggle isFront state
-    // }
+    function swapSides() {
+        console.log("Swapping sides. Current roommate:", roommate); // Debugging: Check if roommate exists
+        setIsFront(!isFront); // Toggle isFront state
+    }
 
     function calculateAge() {
         const date = new Date(roommate.date_of_birth)
@@ -159,7 +161,7 @@ function Matching() {
             age--
         }
 
-        return age
+        setAge(age)
     }
 
     return (
@@ -171,10 +173,10 @@ function Matching() {
             {isLoading ? (
                 <p>Loading potential roommate...</p>
             ): roommate ? (
-                <div onClick={setIsFront(!isFront)} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
                     {isFront ? (
                         <div className="user_info">
-                            <p>{roommate.name}, {calculateAge()}
+                            <p>{roommate.name}, {age}
                                 <br />
                                 Bloomsburg University
                             </p>
