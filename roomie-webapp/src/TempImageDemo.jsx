@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const TempImageDemo = () => {
+function TempImageDemo() {
     const [images, setImages] = useState([]); // Stores the list of image URLs
     const [loading, setLoading] = useState(true); // Loading state
     const [error, setError] = useState(""); // Error message
@@ -77,6 +77,6 @@ const TempImageDemo = () => {
             </div>
         </div>
     );
-};
+}
 
 export default TempImageDemo;

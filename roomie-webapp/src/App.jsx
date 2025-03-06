@@ -8,6 +8,7 @@ import Dashboard from "./Dashboard";
 import Matching from "./Matching";
 import FileSubmit from "./FileSubmit";
 import Preferences from "./Preferences";
+import TempImageDemo from "./TempImageDemo";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/matching" element={<Matching />}/>
         <Route path="/preferences" element={<Preferences />}/>
         <Route path = "/fileSubmit" element={<FileSubmit />} />
+        <Route path = "/user/images" element={<TempImageDemo /> } />
         <Route path="*" element={<Navigate to="/" replace />} />  {/* Redirect unknown routes */}
       </Routes>
     </Router>
