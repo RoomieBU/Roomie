@@ -10,7 +10,7 @@ public class ImageController {
 
         // Handle preflight OPTIONS request
         if (method.equals("OPTIONS")) {
-            return "HTTP/1.1 200 OK\r\n"
+            return "HTTP/1.1 204 No Content\r\n"
                     + "Access-Control-Allow-Origin: *\r\n"
                     + "Access-Control-Allow-Methods: GET, OPTIONS\r\n"
                     + "Access-Control-Allow-Headers: Authorization, Content-Type\r\n"
