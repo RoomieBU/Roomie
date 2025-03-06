@@ -25,18 +25,28 @@ public class ProfileController {
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
             
-            int userID = DBUser.getIDfromEmail(userEmail);
-
-            User user = DBUser.getUserById(userID);
-
-            if (user != null) {
+            System.out.println(userEmail); // Debugging output
+        
+            // Fetch user data as a Map
+            Map<String, String> userDataQuery = DBUser.getData(
+                List.of("first_name", "last_name", "date_of_birth", "about_me"), userEmail
+            );
+        
+            if (userDataQuery != null) {
                 response.put("message", "Profile found");
-                response.put("email", user.getEmail());
-                response.put("name", user.getFirstName() + " " + user.getLastName());
-                response.put("date_of_birth", user.getDateOfBirth().toString());
-                response.put("about_me", user.getAboutMe());
+                response.put("email", userEmail); // We already have the email
+        
+                String firstName = userDataQuery.get("first_name");
+                String lastName = userDataQuery.get("last_name");
+                String dateOfBirth = userDataQuery.get("date_of_birth");
+                String aboutMe = userDataQuery.get("about_me");
+        
+                response.put("name", (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : ""));
+                response.put("date_of_birth", dateOfBirth != null ? dateOfBirth : "N/A");
+                response.put("about_me", aboutMe != null ? aboutMe : "N/A");
                 response.put("major", "Wumbology (Undergrad)");
-                code = 200;
+        
+                return Utils.assembleHTTPResponse(200, Utils.assembleJson(response)); // Return the response
             } else {
                 response.put("message", "No profile found");
                 code = 404;
