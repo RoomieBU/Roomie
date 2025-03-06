@@ -52,7 +52,6 @@ function Matching() {
 
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
-                calculateAge()
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
