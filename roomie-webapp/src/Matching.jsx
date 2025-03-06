@@ -63,6 +63,8 @@ function Matching() {
         getPotentialRoommate();
     }, []);
 
+    calculateAge()
+
     // Set new user info to match screen
     function updateShownUser() {
         // Fetch a new potential roommate
