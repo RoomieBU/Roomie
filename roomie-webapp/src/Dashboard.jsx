@@ -118,8 +118,6 @@ function Dashboard() {
                     <button className="btn" onClick={handleLogout}>Log Out.</button>
                 </div>
 
-
-
                 <div className="profile-link" onClick={() => navigate("/profile")} />
             </div>
 

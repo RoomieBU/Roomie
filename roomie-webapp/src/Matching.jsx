@@ -63,7 +63,7 @@ function Matching() {
 
         getPotentialRoommate();
     }, []);
-    
+
     // Set new user info to match screen
     function updateShownUser() {
         // Fetch a new potential roommate
@@ -87,7 +87,6 @@ function Matching() {
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
-                console.log(result.date_of_birth)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -121,8 +120,6 @@ function Matching() {
                 throw new Error("Match Interaction failed. Please try again.");
             }
 
-            alert("Interaction Added"); // will be removed after testing
-
         } catch (error) {
             console.error("HERE we are", error)
         }
@@ -149,7 +146,6 @@ function Matching() {
 
     function calculateAge(dateString) {
         // Parse the input date string
-
         const [year, month, day] = dateString.split('-').map(Number);
         
         // Create a Date object using the parsed values
