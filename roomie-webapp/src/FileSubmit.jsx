@@ -58,11 +58,8 @@ function FileSubmit({ isProfilePic = false }) {
                     height = 150;
                 } else {
                     // Regular image: Resize for phone screens, max width of 1080px
-                    const maxWidth = 1080;
-                    if (width > maxWidth) {
-                        height = (maxWidth / width) * height;
-                        width = maxWidth;
-                    }
+                    width = 600;
+                    height = 800;
                 }
 
                 // Set canvas dimensions to resized image dimensions
