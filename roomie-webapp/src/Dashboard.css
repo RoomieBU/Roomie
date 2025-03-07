@@ -85,22 +85,6 @@
     display: flex;
   }
 
-  .btn {
-    color: white;
-    font-weight: bold;
-    border-width: 0;
-  }
-
-
-  .btn:hover {
-    color:white;
-    text-decoration: underline;
-  }
-
-  .btn:focus {
-    border-width:0;
-  }
-
   .logo {
     font-weight: bold;
     color:white;

@@ -114,10 +114,12 @@ function Dashboard() {
         <div>
             <div className="header">
                 <div className="action-section">
-                    <h4 className="logo">Roomie.</h4>
-                    <button className="btn" onClick={() => showRelevantComponent("match")}>Match.</button>
-                    <button className="btn" onClick={() => showRelevantComponent("chat")}>Chat.</button>
-                    <button className="btn" onClick={handleLogout}>Log Out.</button>
+                    <button onClick={() => navigate("/")}>
+                        <h4 className="logo">Roomie.</h4>
+                    </button>
+                    <button onClick={() => showRelevantComponent("match")}>Match.</button>
+                    <button onClick={() => showRelevantComponent("chat")}>Chat.</button>
+                    <button onClick={handleLogout}>Log Out.</button>
                 </div>
 
                 <div className="profile-link" onClick={() => navigate("/profile")} />

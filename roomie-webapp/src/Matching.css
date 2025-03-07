@@ -79,7 +79,8 @@ p {
     border-color: green;
     background-color: rgb(33, 223, 33);
     transition: background-color .1s ease-in-out;
-    color: white
+    color: white;
+    border-radius: 50%;
 }
 
 .deny-icon {
@@ -101,4 +102,5 @@ p {
     background-color: red;
     transition: background-color .1s ease-out;
     color: white;
+    border-radius: 50%;
 }

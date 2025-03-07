@@ -49,3 +49,17 @@
     white-space: normal;
     text-align: left;
 }
+
+.responseBubble {
+    margin-right: auto;
+    width: 300px;
+    overflow: visible;
+    height:fit-content;
+    padding:20px;
+    background-color: grey;
+    border-radius: 15px;
+    color:white;
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: left;
+}
