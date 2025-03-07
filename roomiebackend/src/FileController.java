@@ -10,14 +10,12 @@ import Database.*;
  */
 public class FileController {
     /**
-     * Saves the file locally and puts the URL into Images
+     * Saves the file locally and puts the URL into Images or User profile
      * @param data base64 image file
      * @param method HTTP method
      * @return HTTP response
      */
     public static String uploadFile(Map<String, String> data, String method) {
-        System.out.println("Received data: " + data);
-
         int code = 400;
         Map<String, String> response = new HashMap<>();
 
@@ -33,22 +31,13 @@ public class FileController {
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
-        String givenFileName = data.get("fileName");
         String fileType = data.get("fileType");
         String base64Image = data.get("data");
-
-
-        // Log the base64 string length for debugging
-        if (base64Image != null) {
-            System.out.println("Received base64 image data (length): " + base64Image.length());
-        } else {
-            System.out.println("No base64 image data received.");
-        }
+        String isProfilePicture = data.get("isProfilePicture");
 
         // Remove the prefix if present (base64 prefix for data URLs)
         if (base64Image != null && base64Image.startsWith("data:image/")) {
             base64Image = base64Image.split(",")[1];
-            System.out.println("Base64 prefix removed.");
         }
 
         // Check for missing data
@@ -75,7 +64,6 @@ public class FileController {
         try {
             // Decode Base64
             byte[] decodedImage = Base64.getDecoder().decode(base64Image);
-            System.out.println("Decoded image length: " + decodedImage.length + " bytes");
 
             // Check for large image size
             if (decodedImage.length > 10 * 1024 * 1024) {
@@ -86,18 +74,17 @@ public class FileController {
             // Save image locally
             String fileName = UUID.randomUUID() + "." + fileExtension;
             String filePath = "/var/www/images/" + fileName;
+            String urlPath = "https://roomie.ddns.net/images/" + fileName;
 
             // Ensure directory exists
             File directory = new File("/var/www/images");
             if (!directory.exists()) {
                 directory.mkdirs();
-                System.out.println("Created images directory: /var/www/images");
             }
 
             // Write image file
             try (FileOutputStream fos = new FileOutputStream(filePath)) {
                 fos.write(decodedImage);
-                System.out.println("Image saved at: " + filePath);
             }
 
             // Get user ID from token
@@ -109,9 +96,9 @@ public class FileController {
 
             UserDao userDao = new UserDao(SQLConnection.getConnection());
             Map<String, String> userData = userDao.getData(Collections.singletonList("user_id"), userEmail);
+            String userIdStr = userData.get("user_id");
             userDao.closeConnection();
 
-            String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 response.put("message", "User not found.");
                 return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
@@ -119,13 +106,22 @@ public class FileController {
 
             int userId = Integer.parseInt(userIdStr);
 
-            // Store image path in database
-            UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-            userImageDao.uploadUserImage(userId, filePath);
-            userImageDao.closeConnection();
+            if ("True".equals(isProfilePicture)) {
+                // Store profile picture URL in userDao
+                userDao = new UserDao(SQLConnection.getConnection());
+                Map<String, String> updateData = new HashMap<>();
+                updateData.put("profile_picture_url", urlPath);
+                userDao.setData(updateData, userIdStr);
+                userDao.closeConnection();
+            } else {
+                // Store image path in userImagesDao
+                UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
+                userImageDao.uploadUserImage(userId, urlPath);
+                userImageDao.closeConnection();
+            }
 
             response.put("message", "File uploaded successfully.");
-            response.put("image_url", "/images/" + fileName);
+            response.put("image_url", urlPath);
             code = 200;
 
         } catch (IOException e) {

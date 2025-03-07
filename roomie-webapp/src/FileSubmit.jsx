@@ -1,98 +1,131 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+function TempImageDemo() {
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-function FileSubmit() {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const [uploadStatus, setUploadStatus] = useState("");
+    useEffect(() => {
+        const fetchImages = async () => {
+            console.log("[DEBUG] Starting image fetch");
+            try {
+                // Get token
+                const token = localStorage.getItem("token");
+                console.log("[DEBUG] Retrieved token from localStorage:", token ? "exists" : "missing");
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
+                if (!token) {
+                    console.warn("[DEBUG] No token found, setting error");
+                    setError("You must be logged in to view images.");
+                    return;
+                }
 
-        if (!file) return;
+                // API call
+                console.log("[DEBUG] Starting fetch request");
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    controller.abort();
+                    console.error("[DEBUG] Fetch timed out after 10 seconds");
+                    setError("Request timed out. Please try again.");
+                }, 10000);
 
-        const validTypes = ["image/jpeg", "image/png", "image/webp"];
-        if (!validTypes.includes(file.type)) {
-            setUploadStatus("Unsupported image format.");
-            return;
-        }
+                const response = await fetch("https://roomie.ddns.net/user/images", {
+                    method: "GET",
+                    headers: { "Authorization": `Bearer ${token}` }, // Added Bearer prefix
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
 
-        if (file.size > MAX_FILE_SIZE) {
-            setUploadStatus("Image file is too large. Please upload a smaller image.");
-            return;
-        }
+                // Response handling
+                console.log("[DEBUG] Received response, status:", response.status);
+                console.log("[DEBUG] Response headers:", JSON.stringify([...response.headers.entries()]));
 
-        setSelectedFile(file);
-        convertBase64(file)
-            .then((base64) => setPreview(base64))
-            .catch((error) => {
-                console.error("Error converting file:", error);
-                setUploadStatus("Failed to process the image.");
-            });
-    };
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("[DEBUG] Non-OK response. Status:", response.status, "Content:", errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText || "Unknown error"}`);
+                }
 
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
+                // Data parsing
+                const rawData = await response.text();
+                console.log("[DEBUG] Raw response data:", rawData);
 
-    const handleUpload = async () => {
-        if (!preview) {
-            setUploadStatus("Please select a file first.");
-            return;
-        }
+                try {
+                    const data = JSON.parse(rawData);
+                    console.log("[DEBUG] Parsed JSON data:", data);
 
-        const token = localStorage.getItem("token");
-        let base64Data = preview.split(",")[1];
+                    if (!data.images) {
+                        console.warn("[DEBUG] 'images' field missing in response");
+                        setError("No images found in response");
+                        return;
+                    }
 
-        // Clean the base64 data by removing any newlines or spaces
-        base64Data = base64Data.replace(/\s+/g, '');  // Remove any whitespace or line breaks
+                    const imageUrls = data.images.split(",");
+                    console.log("[DEBUG] Extracted image URLs:", imageUrls);
+                    setImages(imageUrls);
 
-        const payload = JSON.stringify({
-            token: token,
-            fileName: selectedFile.name,
-            fileType: selectedFile.type,
-            data: base64Data,
-        });
+                } catch (parseError) {
+                    console.error("[DEBUG] JSON parsing failed:", parseError);
+                    throw new Error("Invalid response format from server");
+                }
 
-        console.log("Uploading file:", selectedFile.name);
+            } catch (err) {
+                console.error("[DEBUG] Error in fetchImages:", err);
+                setError(err.message || "An error occurred while fetching images.");
 
-        try {
-            const response = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: payload,
-            });
-
-            const responseBody = await response.json();
-            console.log("Server response:", responseBody);
-
-            if (!response.ok) {
-                throw new Error(responseBody.message || "File upload failed.");
+            } finally {
+                console.log("[DEBUG] Cleaning up, setting loading to false");
+                setLoading(false);
             }
+        };
 
-            setUploadStatus("File uploaded successfully!");
-        } catch (error) {
-            console.error("Upload error:", error);
-            setUploadStatus(`Upload failed: ${error.message}`);
-        }
-    };
+        fetchImages();
 
+        return () => {
+            console.log("[DEBUG] Component unmounted, cleanup");
+        };
+    }, []);
+
+    // Render states
+    console.log("[DEBUG] Render state - loading:", loading, "error:", error, "images:", images);
+
+    if (loading) {
+        return <p>Loading images...</p>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-container">
+                <p>Error: {error}</p>
+                <button onClick={() => window.location.reload()}>Retry</button>
+            </div>
+        );
+    }
 
     return (
         <div>
-            <h2>Upload Image</h2>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            {preview && <img src={preview} alt="Preview" style={{ width: "200px", marginTop: "10px" }} />}
-            <button onClick={handleUpload}>Upload</button>
-            {uploadStatus && <p>{uploadStatus}</p>}
+            <h1>Your Uploaded Images</h1>
+            {images.length === 0 ? (
+                <p>No images found in your account.</p>
+            ) : (
+                <div className="image-grid">
+                    {images.map((url, index) => (
+                        <div key={index} className="image-item">
+                            <img
+                                src={url}
+                                alt={`Upload ${index + 1}`}
+                                onError={(e) => {
+                                    console.warn("[DEBUG] Image failed to load:", url);
+                                    e.target.src = "/image-error.jpg";
+                                }}
+                                onLoad={() => console.log("[DEBUG] Image loaded successfully:", url)}
+                            />
+                            <div className="image-url">Image URL: {url}</div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
 
-export default FileSubmit;
+export default TempImageDemo;
