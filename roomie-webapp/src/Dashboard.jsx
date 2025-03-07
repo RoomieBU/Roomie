@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./Dashboard.css"
 
-import Matching from "./Matching";
+import Matching from "./Matching"
 import Chat from "./Chat"
+import Profile from "./Profile"
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ function Dashboard() {
     const [hideMatching, setHideMatching] = useState(true)
     const [hideDefault, setHideDefault] = useState(false)
     const [hideChat, setHideChat] = useState(true)
+    const [hideProfile, setHideProfile] = useState(true)
 
 
     const [leftWidth, setLeftWidth] = useState(33.3); // Initial left panel width as percentage
@@ -94,6 +96,7 @@ function Dashboard() {
         setHideMatching(true)
         setHideDefault(true)
         setHideChat(true)
+        setHideProfile(true)
 
         switch (action) {
             case "match":
@@ -102,6 +105,9 @@ function Dashboard() {
             case "chat":
                 // add chat show here
                 setHideChat(false) // this for now
+                break;
+            case "profile":
+                setHideProfile(false)
                 break;
             default:
                 setHideDefault(false)
@@ -122,7 +128,7 @@ function Dashboard() {
                     <button onClick={handleLogout}>Log Out.</button>
                 </div>
 
-                <div className="profile-link" onClick={() => navigate("/profile")} />
+                <div className="profile-link" onClick={() => showRelevantComponent("profile")} />
             </div>
 
             <div ref={containerRef} className={`split-panel-container border rounded ${isDraggingRef.current ? 'no-select' : ''}`}>
@@ -154,6 +160,7 @@ function Dashboard() {
                     {hideDefault ? null : <p>Roomie.</p>}
                     {hideMatching ? null : <Matching />}
                     {hideChat ? null : <Chat/>}
+                    {hideProfile ? null : <Profile/>}
 
                 </div>
             </div>
