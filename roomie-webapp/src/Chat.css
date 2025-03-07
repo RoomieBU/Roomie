@@ -1,0 +1,51 @@
+
+.holdChat {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.messageArea {
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    flex-grow: 1; 
+    overflow-y: auto; 
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.messageInput {
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+    width:auto;
+    margin-left:20px;
+    margin-right: 20px;
+    gap: 30px;
+    align-items: center;
+    position: sticky;
+}
+
+.sendButton {
+    height: max-content;
+    width: max-content;
+}
+
+.messageBubble {
+    margin-left: auto;
+    width: 300px;
+    overflow: visible;
+    height:fit-content;
+    padding:20px;
+    background-color: purple;
+    border-radius: 15px;
+    color:white;
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: left;
+}

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./Dashboard.css"
 
 import Matching from "./Matching";
+import Chat from "./Chat"
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function Dashboard() {
     // action area states
     const [hideMatching, setHideMatching] = useState(true)
     const [hideDefault, setHideDefault] = useState(false)
+    const [hideChat, setHideChat] = useState(true)
 
 
     const [leftWidth, setLeftWidth] = useState(33.3); // Initial left panel width as percentage
@@ -91,7 +93,7 @@ function Dashboard() {
     function showRelevantComponent(action) {
         setHideMatching(true)
         setHideDefault(true)
-        // chat one as well
+        setHideChat(true)
 
         switch (action) {
             case "match":
@@ -99,7 +101,7 @@ function Dashboard() {
                 break;
             case "chat":
                 // add chat show here
-                setHideDefault(false) // this for now
+                setHideChat(false) // this for now
                 break;
             default:
                 setHideDefault(false)
@@ -146,18 +148,10 @@ function Dashboard() {
 
                 {/* Right Panel */}
                 <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
-                    {/* <h4 className="mb-3">Right Panel</h4>
-                    <p>This panel starts at 2/3 width (66.7%)</p>
-                    <p className="mt-2">Current width: {(100 - leftWidth - 0.5).toFixed(1)}%</p>
-                    
-                    <div className="mt-4 p-3 bg-light border rounded">
-                    <p className="mb-0">Drag the divider to resize the panels</p>
-                    </div> */}
 
                     {hideDefault ? null : <p>Roomie.</p>}
-
-
                     {hideMatching ? null : <Matching />}
+                    {hideChat ? null : <Chat/>}
 
                 </div>
             </div>
