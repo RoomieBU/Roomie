@@ -4,21 +4,19 @@ import Database.*;
 
 public class ImageController {
     public static String getUserImages(Map<String, String> data, String method) {
+        Map<String, String> response = new HashMap<>();
+
         // Validate method
         if (!method.equals("GET")) {
-            return "HTTP/1.1 405 Method Not Allowed\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: 0\r\n"
-                    + "\r\n";
+            response.put("message", "Method not allowed.");
+            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
         }
 
         // Validate Authorization header
         String authHeader = data.get("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return "HTTP/1.1 401 Unauthorized\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: 0\r\n"
-                    + "\r\n";
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
         // Extract token
@@ -26,10 +24,8 @@ public class ImageController {
 
         // Validate token
         if (!Auth.isValidToken(token)) {
-            return "HTTP/1.1 401 Unauthorized\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: 0\r\n"
-                    + "\r\n";
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
 
         // Fetch images
@@ -40,28 +36,20 @@ public class ImageController {
             );
 
             if (user == null || user.get("user_id") == null) {
-                return "HTTP/1.1 404 Not Found\r\n"
-                        + "Content-Type: application/json\r\n"
-                        + "Content-Length: 0\r\n"
-                        + "\r\n";
+                response.put("message", "User not found.");
+                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
             }
 
             int userId = Integer.parseInt(user.get("user_id"));
             List<String> images = new UserImagesDao(conn).getUserImageUrls(userId);
 
             // Build response
-            String responseBody = "{\"images\":\"" + String.join(",", images) + "\"}";
-            return "HTTP/1.1 200 OK\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: " + responseBody.length() + "\r\n"
-                    + "\r\n"
-                    + responseBody;
+            response.put("images", String.join(",", images));
+            return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
 
         } catch (Exception e) {
-            return "HTTP/1.1 500 Internal Server Error\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: 0\r\n"
-                    + "\r\n";
+            response.put("message", "Server error.");
+            return Utils.assembleHTTPResponse(500, Utils.assembleJson(response));
         }
     }
 }
