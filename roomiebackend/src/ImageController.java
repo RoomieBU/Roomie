@@ -4,6 +4,19 @@ import java.util.*;
 import Database.*;
 
 public class ImageController {
+    private static String getReasonPhrase(int statusCode) {
+        switch (statusCode) {
+            case 200: return "OK";
+            case 204: return "No Content";
+            case 400: return "Bad Request";
+            case 401: return "Unauthorized";
+            case 404: return "Not Found";
+            case 405: return "Method Not Allowed";
+            case 500: return "Internal Server Error";
+            default: return "";
+        }
+    }
+
     public static String getUserImages(Map<String, String> data, String method) {
         Map<String, String> responseBody = new HashMap<>();
         int statusCode = 200;
@@ -22,22 +35,23 @@ public class ImageController {
         // Validate method
         if (!method.equals("GET")) {
             responseBody.put("message", "Method not allowed");
-            return "HTTP/1.1 405 Method Not Allowed\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
-                    + "\r\n"
-                    + Utils.assembleJson(responseBody);
+            statusCode = 405;
+            return formatResponse(statusCode, responseBody);
         }
 
         // Authentication
-        String token = data.get("token");
+        String authHeader = data.get("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            responseBody.put("message", "Unauthorized");
+            statusCode = 401;
+            return formatResponse(statusCode, responseBody);
+        }
+        String token = authHeader.substring(7);
+
         if (!Auth.isValidToken(token)) {
             responseBody.put("message", "Unauthorized");
-            return "HTTP/1.1 401 Unauthorized\r\n"
-                    + "Content-Type: application/json\r\n"
-                    + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
-                    + "\r\n"
-                    + Utils.assembleJson(responseBody);
+            statusCode = 401;
+            return formatResponse(statusCode, responseBody);
         }
 
         try (Connection connection = SQLConnection.getConnection()) {
@@ -52,11 +66,8 @@ public class ImageController {
             String userIdStr = userData.get("user_id");
             if (userIdStr == null) {
                 responseBody.put("message", "User not found");
-                return "HTTP/1.1 404 Not Found\r\n"
-                        + "Content-Type: application/json\r\n"
-                        + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
-                        + "\r\n"
-                        + Utils.assembleJson(responseBody);
+                statusCode = 404;
+                return formatResponse(statusCode, responseBody);
             }
 
             // Get images
@@ -76,10 +87,17 @@ public class ImageController {
             statusCode = 500;
         }
 
-        return "HTTP/1.1 " + statusCode + " OK\r\n"
+        return formatResponse(statusCode, responseBody);
+    }
+
+    private static String formatResponse(int statusCode, Map<String, String> responseBody) {
+        String reasonPhrase = getReasonPhrase(statusCode);
+        String jsonBody = Utils.assembleJson(responseBody);
+
+        return "HTTP/1.1 " + statusCode + " " + reasonPhrase + "\r\n"
                 + "Content-Type: application/json\r\n"
-                + "Content-Length: " + Utils.assembleJson(responseBody).length() + "\r\n"
+                + "Content-Length: " + jsonBody.length() + "\r\n"
                 + "\r\n"
-                + Utils.assembleJson(responseBody);
+                + jsonBody;
     }
 }
