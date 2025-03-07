@@ -2,6 +2,7 @@
   font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  height: 100%;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -12,6 +13,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+html, body {
+  height: 100vh; /* Ensure full viewport height */
+  width: 100vw;  /* Ensure full viewport width */
+  margin: 0;
+  overflow: hidden; /* Prevent scrolling */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-image: url(assets/dashboard_bg.webp);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 
 a {
   font-weight: 500;
@@ -49,8 +68,8 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  background-color: #00000000;
-  border-color: #00000000;
+  background-color: transparent;
+  border-color: transparent;
   cursor: pointer;
   transition: border-color 0.25s;
 }
