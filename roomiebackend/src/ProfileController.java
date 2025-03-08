@@ -7,7 +7,7 @@ import java.util.*;
 
 public class ProfileController {
 
-        public static String getProfile(Map<String, String> data, String method) {
+    public static String getProfile(Map<String, String> data, String method) {
         int code = 400;
         Map<String, String> response = new HashMap<>();
         if(!method.equals("POST")) {
@@ -19,7 +19,6 @@ public class ProfileController {
             response.put("message", "Unauthorized");
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
-        
         String userEmail = Auth.getEmailfromToken(token);
 
         try {
