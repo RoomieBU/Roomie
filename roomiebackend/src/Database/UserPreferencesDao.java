@@ -1,125 +1,91 @@
 package Database;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-/**
- * user preferences data access object
- * interfaces with the database
- *
- * work in progress, add methods as needed
- */
 public class UserPreferencesDao {
-    private Connection connection;
+    private final Connection connection;
 
     public UserPreferencesDao(Connection connection) {
         this.connection = connection;
     }
 
-    public boolean userExists(int userId) throws SQLException {
-        String query = "SELECT 1 FROM Users WHERE user_id = ? LIMIT 1";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // true if user exists
-            }
-        }
-    }
-
-    public boolean preferencesExist(int userId) throws SQLException {
-        String query = "SELECT 1 FROM UserPreferences WHERE user_id = ? LIMIT 1";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // true if prefs exist
-            }
-        }
-    }
-
     public boolean createUserPreferences(Map<String, String> data, String email) throws SQLException {
-        // I don't think we need this check. User's should be able to change their preferences
-        // if (!userExists(userId)) {
-        //     throw new IllegalArgumentException("Error: user_id " + userId + " does not exist.");
-        // }
-        // if (preferencesExist(userId)) {
-        //     throw new IllegalArgumentException("Error: UserPreferences already exist for user_id " + userId);
-        // }
+        if (data.isEmpty()) return false; // No data, nothing to insert
 
-        if (data.isEmpty()) return false;
+        // Start building the SQL query dynamically
+        StringBuilder columns = new StringBuilder("email, ");
+        StringBuilder values = new StringBuilder("?, ");
+        StringBuilder updates = new StringBuilder();
 
-        int userId;
+        List<Object> params = new ArrayList<>();
+        params.add(email); // First parameter is the email
 
-        // Try to find the user by email
-        String selectUserQuery = "SELECT user_id FROM Users WHERE email = ?";
-        PreparedStatement selectUserStmt = connection.prepareStatement(selectUserQuery);
-        selectUserStmt.setString(1, email);
-        ResultSet rs = selectUserStmt.executeQuery();
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            String column = entry.getKey();
+            String value = entry.getValue();
 
-        if (rs.next()) {
-            // User exists, retrieve user_id
-            userId = rs.getInt("user_id");
-        } else {
-            // User doesn't exist, throw an error
-            throw new SQLException("User with email " + email + " does not exist.");
+            // Skip email since it's already added
+            if (column.equalsIgnoreCase("email")) continue;
+
+            columns.append(column).append(", ");
+            values.append("?, ");
+            updates.append(column).append(" = VALUES(").append(column).append("), ");
+
+            // Handle TINYINT(1) values (boolean)
+            if (isTinyIntColumn(column)) {
+                params.add(Boolean.parseBoolean(value)); // Convert to boolean
+            } else {
+                params.add(value); // Store as-is
+            }
         }
 
-        // Step 2: Upsert into the UserPreferences table using the retrieved user_id
-        String upsertQuery = 
-        "INSERT INTO UserPreferences " +
-        "(user_id, preferred_gender, pet_friendly, personality, wakeup_time, sleep_time, quiet_hours) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-        "ON DUPLICATE KEY UPDATE " +
-        "preferred_gender = VALUES(preferred_gender), " +
-        "pet_friendly = VALUES(pet_friendly), " +
-        "personality = VALUES(personality), " +
-        "wakeup_time = VALUES(wakeup_time), " +
-        "sleep_time = VALUES(sleep_time), " +
-        "quiet_hours = VALUES(quiet_hours)";
+        // Remove trailing commas
+        columns.setLength(columns.length() - 2);
+        values.setLength(values.length() - 2);
+        updates.setLength(updates.length() - 2);
 
-        // Insert into UserPreferences
-        try (PreparedStatement upsertStmt = connection.prepareStatement(upsertQuery)) {
-            upsertStmt.setInt(1, userId);
-            upsertStmt.setString(2, data.get("preferred_gender").toString());
-            upsertStmt.setBoolean(3, Boolean.parseBoolean(data.get("pet_friendly").toString()));
-            upsertStmt.setString(4, data.get("personality").toString());
-            // Assuming wakeup_time and sleep_time are in the proper format for a Time column:
-            upsertStmt.setTime(5, java.sql.Time.valueOf(data.get("wakeup_time").toString()));
-            upsertStmt.setTime(6, java.sql.Time.valueOf(data.get("sleep_time").toString()));
-            upsertStmt.setString(7, data.get("quiet_hours").toString());
-            upsertStmt.executeUpdate();
+        // Construct final query
+        String sql = "INSERT INTO UserPreferences (" + columns + ") VALUES (" + values + ") " +
+                "ON DUPLICATE KEY UPDATE " + updates;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i)); // Set parameters dynamically
+            }
+            stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating UserPreferences: " + e.getMessage());
+            throw new RuntimeException("Error creating UserPreferences: " + e.getMessage(), e);
         }
 
         return true;
     }
 
-    public List<UserPreferences> getAllUserPreferences() {
-        List<UserPreferences> userPreferences = new ArrayList<>();
+    // Helper method to check if a column is a TINYINT(1)
+    private boolean isTinyIntColumn(String column) {
+        return Set.of("pet_friendly", "smoke", "smoke_okay", "drugs", "drugs_okay")
+                .contains(column);
+    }
+
+
+    public List<Map<String, Object>> getAllUserPreferences() throws SQLException {
+        List<Map<String, Object>> userPreferences = new ArrayList<>();
         String query = "SELECT * FROM UserPreferences";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    UserPreferences userPrefs = new UserPreferences(
-                            rs.getInt("user_id"),
-                            rs.getString("preferred_gender"),
-                            rs.getBoolean("pet_friendly"),
-                            rs.getString("personality"),
-                            rs.getTime("wakeup_time"),
-                            rs.getTime("sleep_time"),
-                            rs.getString("quiet_hours")
-                    );
-                    userPreferences.add(userPrefs);
+        try (PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (rs.next()) {
+                Map<String, Object> prefs = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    prefs.put(metaData.getColumnName(i), rs.getObject(i));
                 }
+                userPreferences.add(prefs);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving user preferences", e);
         }
-
-
         return userPreferences;
     }
 

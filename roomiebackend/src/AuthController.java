@@ -228,11 +228,6 @@ public class AuthController {
     }
 
     public static String sendPreferences(Map<String, String> data, String method) {
-        System.out.println(data);
-        data.put("wakeup_time", "07:00:00");
-        data.put("sleep_time", "07:00:00");
-        System.out.println("data after forcing the entry:");
-        System.out.println(data);
         int code = 400; // Default code (in case of sql error)
         Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
         if (!method.equals("POST")) {
@@ -249,24 +244,8 @@ public class AuthController {
 
         String email = Auth.getEmailfromToken(token);
 
-        // Deal with wakeup time
-        // Get wakeup_time from your data map
-        String wakeupTimeStr = data.get("wakeup_time").toString();
-
-        // Check if the time string is in "HH:MM" format (length 5) and append ":00" if needed.
-        if (wakeupTimeStr != null && wakeupTimeStr.length() == 5) {
-            wakeupTimeStr += ":00";
-        }
-
-        Map<String, String> formData = new HashMap<>();
-        formData.put("email", email);
-        formData.put("preferred_gender", data.get("preferred_gender"));
-        formData.put("pet_friendly", data.get("pet_friendly"));
-        formData.put("personality", data.get("personality"));
-        formData.put("wakeup_time", wakeupTimeStr);
-        formData.put("sleep_time", data.get("sleep_time"));
-        formData.put("quiet_hours", data.get("quiet_hours"));
-
+        Map<String, String> formData = data;
+        formData.remove("token");
 
         try {
             UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
