@@ -61,24 +61,24 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--bs-primary) !important;
-    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .btn-primary:hover {
-    background-color: #5a34a1 !important;
-    border-color: #5a34a1 !important;
+    background-color: #5a34a1;
+    border-color: #5a34a1;
 }
 
 .form-check-input:checked {
-    background-color: var(--bs-primary) !important;
-    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .form-range::-webkit-slider-thumb {
-    background: var(--bs-primary) !important;
+    background: var(--bs-primary);
 }
 
 .form-range::-moz-range-thumb {
-    background: var(--bs-primary) !important;
+    background: var(--bs-primary);
 }
