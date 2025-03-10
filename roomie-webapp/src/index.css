@@ -24,7 +24,7 @@ html, body {
   align-items: center;
 }
 
-body {
+.landingPageBackground {
   background-image: url(assets/dashboard_bg.webp);
   background-size: cover;
   background-position: center;
@@ -41,11 +41,10 @@ a:hover {
   color: #ffffff;
 }
 
-body {
-  margin: 0;
+.landingPageBackground {
   display: flex;
   place-items: center;
-  min-width: 320px;
+  width: 100%;
   min-height: 100vh;
   background-image: url(assets/dashboard_bg.webp);
   background-size: cover;
