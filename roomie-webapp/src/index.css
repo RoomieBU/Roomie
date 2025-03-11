@@ -14,8 +14,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
-body {
+html,body {
   height: 100vh;
   /* Ensure full viewport height */
   width: 100vw;
@@ -27,12 +26,12 @@ body {
   overflow: hidden;
 }
 
-.landingPageBackground {
+/* .landingPageBackground {
   background-image: url(assets/dashboard_bg.webp);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
+} */
 
 
 a {
@@ -45,10 +44,10 @@ a:hover {
   color: #ffffff;
 }
 
-.landingPageBackground {
+.manBun {
   display: flex;
   place-items: center;
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background-image: url(assets/dashboard_bg.webp);
   background-size: cover;

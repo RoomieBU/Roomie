@@ -16,7 +16,12 @@
     overflow-y: auto; 
     margin-right: 20px;
     margin-left: 20px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
+    scrollbar-width: none;
+}
+
+.messageArea::-webkit-scrollbar {
+    display: none;
 }
 
 .messageInput {
@@ -62,4 +67,11 @@
     word-wrap: break-word;
     white-space: normal;
     text-align: left;
+}
+
+.chatNote {
+    align-self: center;
+    font-style: italic;
+    color: lightgray;
+    margin-bottom: 30px;
 }

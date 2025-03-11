@@ -7,7 +7,7 @@ function Index() {
     const navigate = useNavigate();
 
     return (
-        <div className="landingPageBackground">
+        <div className="manBun">
             <div className="container d-flex flex-column align-items-center vw-100 vh-100 justify-content-center">
                 <h1 className="dashboard-h1">Roomie.</h1>
                 <p className="dashboard-p">Find your perfect roommate.</p>

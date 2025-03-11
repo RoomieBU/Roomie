@@ -42,43 +42,44 @@ function SignUp() {
 
 
     return (
-
-        <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="dashboard-h1">Create An Account with Us!</h1>
-            <p className="dashboard-p">
-                & find your dream roommate..
-            </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="w-50">
-                <div className="mb-3">
-                    <label className="dashboard-p">School Email</label>
-                    <input
-                        type="email"
-                        className={`form-control ${errors.email ? "is-invalid" : ""}`}
-                        {...register("email", { required: "Email is required" })}
-                    />
-                    {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
-                </div>
-
-                <div className="mb-3">
-                    <label className="dashboard-p">Password</label>
-                    <input
-                        type="password"
-                        className={`form-control ${errors.password ? "is-invalid" : ""}`}
-                        {...register("password", { required: "Password is required", minLength: { value: 6, message: "At least 6 characters required" } })}
-                    />
-                    {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
-                </div>
-
-                <button type="submit" className="btn btn-primary w-100">
-                    Sign Up
-                </button>
+        <div className="manBun">
+            <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
+                <h1 className="dashboard-h1">Create An Account with Us!</h1>
                 <p className="dashboard-p">
-                    Already have an account?{" "}
-                    <a href="login" onClick={() => navigate("/login")}>
-                        Sign in!
-                    </a>
+                    & find your dream roommate..
                 </p>
-            </form>
+                <form onSubmit={handleSubmit(onSubmit)} className="w-50">
+                    <div className="mb-3">
+                        <label className="dashboard-p">School Email</label>
+                        <input
+                            type="email"
+                            className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                            {...register("email", { required: "Email is required" })}
+                        />
+                        {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="dashboard-p">Password</label>
+                        <input
+                            type="password"
+                            className={`form-control ${errors.password ? "is-invalid" : ""}`}
+                            {...register("password", { required: "Password is required", minLength: { value: 6, message: "At least 6 characters required" } })}
+                        />
+                        {errors.password && <div className="invalid-feedback">{errors.password.message}</div>}
+                    </div>
+
+                    <button type="submit" className="btn btn-primary w-100">
+                        Sign Up
+                    </button>
+                    <p className="dashboard-p">
+                        Already have an account?{" "}
+                        <a href="login" onClick={() => navigate("/login")}>
+                            Sign in!
+                        </a>
+                    </p>
+                </form>
+            </div>
         </div>
     );
 }
