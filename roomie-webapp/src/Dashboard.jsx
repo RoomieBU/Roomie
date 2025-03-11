@@ -6,6 +6,7 @@ import "./Dashboard.css"
 import Matching from "./Matching"
 import Chat from "./Chat"
 import Profile from "./Profile"
+import Sidebar from "./Sidebar";
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -21,6 +22,9 @@ function Dashboard() {
     const [hideDefault, setHideDefault] = useState(false)
     const [hideChat, setHideChat] = useState(true)
     const [hideProfile, setHideProfile] = useState(true)
+
+    // set chat name
+    const [selectedChat, setSelectedChat] = useState(null);
 
 
     const [leftWidth, setLeftWidth] = useState(33.3); // Initial left panel width as percentage
@@ -39,7 +43,7 @@ function Dashboard() {
         const deltaPercentage = (deltaX / containerWidth) * 100;
 
         // Calculate new width with constraints (minimum 10%, maximum 90%)
-        const newLeftWidth = Math.min(Math.max(startLeftWidthRef.current + deltaPercentage, 10), 90);
+        const newLeftWidth = Math.min(Math.max(startLeftWidthRef.current + deltaPercentage, 30), 40);
 
         setLeftWidth(newLeftWidth);
     }, []);
@@ -84,13 +88,29 @@ function Dashboard() {
 
                 return;
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.");
+                console.log("Redirecting to login due to invalid token.", error);
                 navigate("/login");
             }
         };
 
         verifyToken();
     }, [navigate]);
+
+
+    // Add this new state for tracking the current view
+    const [currentView, setCurrentView] = useState("Chat");
+        
+    // Add this handler function
+    const handleViewChange = (viewName) => {
+        setCurrentView(viewName);
+        // This will also handle showing the relevant component based on the view
+        showRelevantComponent(viewName.toLowerCase());
+    };
+
+    const handleChatSelect = (chat) => {
+        setSelectedChat(chat);
+    };
+
 
     function showRelevantComponent(action) {
         setHideMatching(true)
@@ -123,26 +143,18 @@ function Dashboard() {
                     <button onClick={() => navigate("/")}>
                         <h4 className="logo">Roomie.</h4>
                     </button>
-                    <button onClick={() => showRelevantComponent("match")}>Match.</button>
-                    <button onClick={() => showRelevantComponent("chat")}>Chat.</button>
-                    <button onClick={handleLogout}>Log Out.</button>
+                    <button onClick={() => handleViewChange("Match")}>Match.</button>
+                    <button onClick={() => handleViewChange("Chat")}>Chat.</button>
+                    
                 </div>
-
-                <div className="profile-link" onClick={() => showRelevantComponent("profile")} />
+                <button style={{borderRadius: 0}}onClick={handleLogout}>Log Out.</button>
+                <div className="profile-link" onClick={() => handleViewChange("Profile")} />
             </div>
 
             <div ref={containerRef} className={`split-panel-container border rounded ${isDraggingRef.current ? 'no-select' : ''}`}>
                 {/* Left Panel */}
-                <div className="left-panel bg-light p-3" style={{ width: `${leftWidth}%` }}>
-                    {/* <h4 className="mb-3">Left Panel</h4>
-                    <p>This panel starts at 1/3 width (33.3%)</p>
-                    <p className="mt-2">Current width: {leftWidth.toFixed(1)}%</p> */}
-
-                    <div>
-                        <h1 className="fw-bold">Welcome to Your Dashboard</h1>
-                        <p>This is your landing page after logging in. Profile is in top right</p>
-                    </div>
-
+                <div className="left-panel " style={{ width: `${leftWidth}%` }}>
+                    <Sidebar onChatSelect={handleChatSelect} currentView={currentView}/>
                 </div>
 
                 {/* Divider */}
@@ -159,7 +171,7 @@ function Dashboard() {
 
                     {hideDefault ? null : <p>Roomie.</p>}
                     {hideMatching ? null : <Matching />}
-                    {hideChat ? null : <Chat/>}
+                    {hideChat ? null : <Chat selectedChat={selectedChat}/>}
                     {hideProfile ? null : <Profile/>}
 
                 </div>

@@ -1,17 +1,17 @@
 
-  
+
+
   /* Split Panel Container */
   .split-panel-container {
     display: flex;
     flex: 1;
     width: 100%;
-    height:auto;
+    height:93%;
     margin: 0;
-    padding: 0;
     border: none !important;
     border-radius: 0 !important;
     position:absolute;
-    top: 7%;
+    top: 50px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -26,6 +26,8 @@
   .left-panel {
     overflow: auto;
     height: 100%;
+    margin-right: 10px;
+    scrollbar-width: none;
   }
   
   /* Right Panel */
@@ -48,7 +50,7 @@
   
   /* Divider hover effect */
   .divider-hover {
-    background-color: #0d6efd !important; /* Bootstrap primary color */
+    background-color: purple !important; /* Bootstrap primary color */
   }
 
   .header {
@@ -72,6 +74,7 @@
     border-width: 2px;
     border-color: black;
     border-style: solid;
+    margin-left:15px;
   }
 
   .profile-link:hover {

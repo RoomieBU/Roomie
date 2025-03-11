@@ -2,6 +2,7 @@ import "./Matching.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Matching() {
     const [roommate, setRoommate] = useState(null); // Store roommate data

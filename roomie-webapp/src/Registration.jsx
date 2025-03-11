@@ -60,70 +60,72 @@ function Registration() {
     };
 
     return (
-        <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-            <h1 className="fw-bold">Register for ROOMIE</h1>
-            <p>
-                Already have an account?{" "}
-                <a href="" onClick={() => navigate("/login")}>
-                    Sign in!
-                </a>
-            </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="w-50">
-                <div className="mb-3">
-                    <label className="form-label">First Name</label>
-                    <input
-                        type="text"
-                        className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
-                        {...register("first_name", { required: "First name is required" })}
-                    />
-                    {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
-                </div>
+        <div className="manBun">
+            <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
+                <h1 className="fw-bold">Register for ROOMIE</h1>
+                <p>
+                    Already have an account?{" "}
+                    <a href="" onClick={() => navigate("/login")}>
+                        Sign in!
+                    </a>
+                </p>
+                <form onSubmit={handleSubmit(onSubmit)} className="w-50">
+                    <div className="mb-3">
+                        <label className="form-label">First Name</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
+                            {...register("first_name", { required: "First name is required" })}
+                        />
+                        {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
+                    </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Last Name</label>
-                    <input
-                        type="text"
-                        className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
-                        {...register("last_name", { required: "Last name is required" })}
-                    />
-                    {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
-                </div>
+                    <div className="mb-3">
+                        <label className="form-label">Last Name</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
+                            {...register("last_name", { required: "Last name is required" })}
+                        />
+                        {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
+                    </div>
 
-                <div className="mb-3">
-                    <label className="form-label">About Me</label>
-                    <textarea
-                        className={`form-control ${errors.about_me ? "is-invalid" : ""}`}
-                        {...register("about_me", { required: "Please write something about yourself" })}
-                    />
-                    {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
-                </div>
+                    <div className="mb-3">
+                        <label className="form-label">About Me</label>
+                        <textarea
+                            className={`form-control ${errors.about_me ? "is-invalid" : ""}`}
+                            {...register("about_me", { required: "Please write something about yourself" })}
+                        />
+                        {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
+                    </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Date of Birth</label>
-                    <input
-                        type="date"
-                        className={`form-control ${errors.date_of_birth ? "is-invalid" : ""}`}
-                        {...register("date_of_birth", { required: "Date of birth is required" })}
-                    />
-                    {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
-                </div>
+                    <div className="mb-3">
+                        <label className="form-label">Date of Birth</label>
+                        <input
+                            type="date"
+                            className={`form-control ${errors.date_of_birth ? "is-invalid" : ""}`}
+                            {...register("date_of_birth", { required: "Date of birth is required" })}
+                        />
+                        {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
+                    </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Email Verification Code</label>
-                    <input
-                        type="text"
-                        className={`form-control ${errors.code ? "is-invalid" : ""}`}
-                        {...register("code", { required: "Verification code is required. Please check your email." })}
-                    />
-                    {errors.code && <div className="invalid-feedback">{errors.code.message}</div>}
-                </div>
+                    <div className="mb-3">
+                        <label className="form-label">Email Verification Code</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.code ? "is-invalid" : ""}`}
+                            {...register("code", { required: "Verification code is required. Please check your email." })}
+                        />
+                        {errors.code && <div className="invalid-feedback">{errors.code.message}</div>}
+                    </div>
 
-                {registrationError && <div className="text-danger mb-3">{registrationError}</div>}
+                    {registrationError && <div className="text-danger mb-3">{registrationError}</div>}
 
-                <button type="submit" className="btn btn-primary w-100">
-                    Register
-                </button>
-            </form>
+                    <button type="submit" className="btn btn-primary w-100">
+                        Register
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

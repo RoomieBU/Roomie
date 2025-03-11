@@ -60,23 +60,50 @@ function TempImageDemo() {
         fetchImages();
     }, []);
 
-    return (
-        <div>
-            {isLoading ? (
-                <p>Loading images...</p>
-            ) : error ? (
-                <p>Error: {error}</p>
-            ) : images.length > 0 ? (
-                <div className="image-container">
+return (
+    <div>
+        {isLoading ? (
+            <p>Loading images...</p>
+        ) : error ? (
+            <p>Error: {error}</p>
+        ) : images.length > 0 ? (
+            <div
+                style={{
+                    width: "100%",
+                    height: "500px", // Adjust as needed
+                    overflowY: "auto", // Enables vertical scrolling
+                    overflowX: "hidden", // Prevents horizontal scrolling
+                    border: "1px solid #ccc", // Optional for clarity
+                    padding: "10px",
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column", // Stack images vertically
+                        gap: "10px", // Space between images
+                    }}
+                >
                     {images.map((url, index) => (
-                        <img key={index} src={url} alt={`Upload ${index}`} />
+                        <img
+                            key={index}
+                            src={url}
+                            alt={`Upload ${index}`}
+                            style={{
+                                maxWidth: "100%", // Ensure images don’t overflow
+                                height: "auto",
+                                borderRadius: "5px",
+                            }}
+                        />
                     ))}
                 </div>
-            ) : (
-                <p>No images available.</p>
-            )}
-        </div>
-    );
+            </div>
+        ) : (
+            <p>No images available.</p>
+        )}
+    </div>
+);
+
 }
 
 export default TempImageDemo;

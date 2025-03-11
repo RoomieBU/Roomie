@@ -20,10 +20,13 @@ public class AuthController {
 
         String email = data.get("email");
         String pass = data.get("password");
+        pass = Utils.hashSHA256(pass);
 
+        // Looking for both plaintext and hashed passwords for the moment will remove
+        // once everyone updates their acc
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(email,pass)) {
+            if (DBUser.isUserLogin(email, pass)) {
                 return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(email) + "\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
@@ -50,6 +53,7 @@ public class AuthController {
 
         String email = data.get("email");
         String pass = data.get("password");
+        pass = Utils.hashSHA256(pass);
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());

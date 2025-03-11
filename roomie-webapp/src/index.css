@@ -14,8 +14,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
-body {
+html,body {
   height: 100vh;
   /* Ensure full viewport height */
   width: 100vw;
@@ -25,13 +24,6 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-}
-
-body {
-  background-image: url(assets/dashboard_bg.webp);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 
@@ -45,11 +37,10 @@ a:hover {
   color: #ffffff;
 }
 
-body {
-  margin: 0;
+.manBun {
   display: flex;
   place-items: center;
-  min-width: 320px;
+  width: 100vw;
   min-height: 100vh;
   background-image: url(assets/dashboard_bg.webp);
   background-size: cover;
