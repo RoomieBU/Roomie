@@ -200,6 +200,7 @@ public class AuthController {
         formData.put("about_me", data.get("about_me"));
         formData.put("date_of_birth", data.get("date_of_birth"));
         formData.put("registered", "true");
+        formData.put("school", data.get("school"));
 
         String userEnteredVerifyCode = data.get("code");
 

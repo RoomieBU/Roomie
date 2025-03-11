@@ -63,13 +63,23 @@ public class MatchController {
             response.put("message", "Unauthorized");
             return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
         }
-        // String userEmail = Auth.getEmailfromToken(token);
+        String email = Auth.getEmailfromToken(token);
 
 
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
 
-            List<User> users = DBUser.getAllUsers();
+            // Get the current users school
+            List<String> columns = new ArrayList<>();
+            columns.add("school");
+            Map<String, String> userData = new HashMap<>();
+            userData = DBUser.getData(columns, email);
+            String school = userData.get("school");
+
+
+            // get a list of all the users, where the user has the same school as the
+            // currently logged in user
+            List<User> users = DBUser.getAllUsersBySchool(school);
             User user;
             // Just got now get a random user (does no checking if it's the same user)
             Random rand = new Random();

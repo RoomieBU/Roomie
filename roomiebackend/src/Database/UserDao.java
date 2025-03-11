@@ -70,6 +70,43 @@ public class UserDao {
         return users;
     }
 
+    /**
+     * Returns a list of all users from the database who belong to the specified school.
+     *
+     * @param school The school to filter users by.
+     * @return A list of users from the same school.
+     */
+    public List<User> getAllUsersBySchool(String school) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered, school FROM Users WHERE school = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, school); // Set the school parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("about_me"),
+                            rs.getDate("date_of_birth"),
+                            rs.getTimestamp("created_at"),
+                            rs.getBoolean("registered")
+                    );
+                    // Add the school field to the User object (if your User class supports it)
+                    // If not, you can modify the User class to include a school field.
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving users by school", e);
+        }
+
+        return users;
+    }
+
 
     /**
      * Returns a user from the database based on their user_id

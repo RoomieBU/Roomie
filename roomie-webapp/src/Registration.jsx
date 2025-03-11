@@ -39,6 +39,7 @@ function Registration() {
                 last_name: data.last_name,
                 about_me: data.about_me,
                 date_of_birth: data.date_of_birth,
+                school: data.school,
                 code: data.code
             });
 
@@ -107,6 +108,16 @@ function Registration() {
                             {...register("date_of_birth", { required: "Date of birth is required" })}
                         />
                         {errors.date_of_birth && <div className="invalid-feedback">{errors.date_of_birth.message}</div>}
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">School</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.school ? "is-invalid" : ""}`}
+                            {...register("school", { required: "School is required" })}
+                        />
+                        {errors.school && <div className="invalid-feedback">{errors.school.message}</div>}
                     </div>
 
                     <div className="mb-3">

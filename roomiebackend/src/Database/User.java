@@ -20,6 +20,7 @@ public class User {
     private Date dateOfBirth;
     private Timestamp createdAt;
     private Boolean registered;
+    private String school;
 
     public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
         this.userId = userId;
@@ -31,6 +32,7 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         this.createdAt = createdAt;
         this.registered = registered;
+        this.school = school;
     }
 
     // Getters
@@ -43,6 +45,7 @@ public class User {
     public Date getDateOfBirth() { return dateOfBirth; }
     public Timestamp getCreatedAt() { return createdAt; }
     public Boolean getRegistered() { return registered; }
+    public String getSchool() { return school; }
 
     @Override
     public String toString() {
@@ -56,6 +59,7 @@ public class User {
                 ", dateOfBirth=" + dateOfBirth +
                 ", createdAt=" + createdAt +
                 ", registered =" + registered +
+                ", school =" + school +
                 '}';
     }
 
