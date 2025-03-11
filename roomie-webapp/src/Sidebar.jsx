@@ -10,11 +10,11 @@ function Sidebar({ currentView, onChatSelect }) {
     const chatContacts = [
         { id: 1, name: "Salvatore La Marca", lastMessage: "Hey, how are you?" },
         { id: 2, name: "Riley Simmons", lastMessage: "See you tomorrow!" },
-        { id: 3, name: "Samuel Kapp", lastMessage: "Thanks for the help" },
+        { id: 3, name: "Sam Kapp", lastMessage: "Thanks for the help" },
         { id: 4, name: "Emily Faso", lastMessage: "Did you get my email?" },
         { id: 5, name: "Matthew Yurkunas", lastMessage: "bruh"},
         { id: 6, name: "Riley Simmons", lastMessage: "See you tomorrow!" },
-        { id: 7, name: "Samuel Kapp", lastMessage: "Thanks for the help" },
+        { id: 7, name: "Sam Kapp", lastMessage: "Thanks for the help" },
         { id: 8, name: "Emily Faso", lastMessage: "Did you get my email?" },
         { id: 9, name: "Matthew Yurkunas", lastMessage: "bruh"},
         { id: 10, name: "John Doe", lastMessage: "l;kasdjf;lkjl"}

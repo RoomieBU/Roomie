@@ -20,13 +20,13 @@ public class AuthController {
 
         String email = data.get("email");
         String pass = data.get("password");
-        String hashPass = Utils.hashSHA256(pass);
+        String hashedPass = Utils.hashSHA256(pass);
 
-        // Looking for both plaintext and hashed passwords for the moment so
-        // existing users can login for now
+        // Looking for both plaintext and hashed passwords for the moment will remove
+        // once everyone updates their acc
         try {
             UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(email,pass) || DBUser.isUserLogin(email, hashPass)) {
+            if (DBUser.isUserLogin(email,pass) || DBUser.isUserLogin(email, hashedPass)) {
                 return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(email) + "\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
