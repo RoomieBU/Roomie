@@ -43,7 +43,7 @@ function Dashboard() {
         const deltaPercentage = (deltaX / containerWidth) * 100;
 
         // Calculate new width with constraints (minimum 10%, maximum 90%)
-        const newLeftWidth = Math.min(Math.max(startLeftWidthRef.current + deltaPercentage, 10), 90);
+        const newLeftWidth = Math.min(Math.max(startLeftWidthRef.current + deltaPercentage, 30), 40);
 
         setLeftWidth(newLeftWidth);
     }, []);
@@ -88,7 +88,7 @@ function Dashboard() {
 
                 return;
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.");
+                console.log("Redirecting to login due to invalid token.", error);
                 navigate("/login");
             }
         };

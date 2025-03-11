@@ -16,7 +16,8 @@ function Sidebar({ currentView, onChatSelect }) {
         { id: 6, name: "Riley Simmons", lastMessage: "See you tomorrow!" },
         { id: 7, name: "Samuel Kapp", lastMessage: "Thanks for the help" },
         { id: 8, name: "Emily Faso", lastMessage: "Did you get my email?" },
-        { id: 9, name: "Matthew Yurkunas", lastMessage: "bruh"}
+        { id: 9, name: "Matthew Yurkunas", lastMessage: "bruh"},
+        { id: 10, name: "John Doe", lastMessage: "l;kasdjf;lkjl"}
     ];
 
     useEffect(() => {
@@ -42,11 +43,12 @@ function Sidebar({ currentView, onChatSelect }) {
         if (onChatSelect && selectedContact) {
             onChatSelect(selectedContact);
         }
+
     }
 
     return (
         <div className="sidebar">
-            <h1>{activeView}</h1>
+            {/* <h1>{activeView}</h1> */}
             {(() => {
                 switch (activeView) {
                     case "Chat":
@@ -58,16 +60,23 @@ function Sidebar({ currentView, onChatSelect }) {
                                 <h3>{chat.name}</h3>
                             </div>
                         ));
-                    case "Match":
-                        return <div>Match now!</div>;
                     case "Profile":
-                        return <div>Profile stuff yk</div>;
+                        return (
+                            <div className="profileBox">
+                                <div className="settingTab">My Account</div>
+                                <div className="settingTab">Preferences</div>
+                                <div className="settingTab">Appearance</div>
+                                <div className="settingTab">Log Out</div>
+                            </div>
+                        );
+                    case "Match":
+                        return <div>Match Now!</div>;
                     default:
                         return <div>Welcome!</div>;
                 }
             })()}
         </div>
-    )
+    );
 }
 
 Sidebar.propTypes = {
