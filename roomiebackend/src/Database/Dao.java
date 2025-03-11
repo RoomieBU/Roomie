@@ -1,10 +1,8 @@
 package Database;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  * Consolidated DAO class.
  * Contains all methods needed for inserting, retrieving, setting, and deleting data
@@ -93,7 +91,7 @@ public class Dao {
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user info: ", e);
+            throw new RuntimeException("Error updating info: ", e);
         }
     }
 
@@ -135,25 +133,24 @@ public class Dao {
                 }
             }
 
-            stmt.setString(index, String.valueOf(id));
+            stmt.setInt(index, id);
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating user info: ", e);
+            throw new RuntimeException("Error updating info: ", e);
         }
     }
 
     /**
-     * Generic method for getting information about a user from the Users table.
-     * Aims to replace making new methods for specific data requests.
+     * Method for getting data from a record where an email is the unique identifier.
      *
      * @param columns Fields to be retrieved
      * @param email Unique email for specific user
      * @return A Map of the columns as the keys and their values as the values
      */
-    public Map<String, String> getData(List<String> columns, String email) {
+    public Map<String, String> getData(List<String> columns, String email, String table) {
         Map<String, String> data = new HashMap<>();
-        String query = "SELECT " + String.join(", ", columns) + " FROM Users WHERE email = ?";
+        String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
@@ -169,27 +166,25 @@ public class Dao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving user info: ", e);
+            throw new RuntimeException("Error retrieving info: ", e);
         }
 
         return data;
     }
 
-
     /**
-     * Generic method for getting information about a user from the Preferences table.
+     * Method for getting data from a record where an id is the unique identifier.
      *
      * @param columns Fields to be retrieved
-     * @param email Unique email for specific user
+     * @param id Unique id for record
      * @return A Map of the columns as the keys and their values as the values
      */
-    public Map<String, String> getPreferences(List<String> columns, String email) {
+    public Map<String, String> get(List<String> columns, int id, String table) {
         Map<String, String> data = new HashMap<>();
-        int userId = getIDfromEmail(email);
-        String query = "SELECT " + String.join(", ", columns) + " FROM UserPreferences WHERE user_id = ?";
+        String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, String.valueOf(userId));
+            stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     for (String col : columns) {
@@ -202,43 +197,102 @@ public class Dao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving user info: ", e);
+            throw new RuntimeException("Error retrieving info: ", e);
         }
 
         return data;
     }
 
     /**
-     * Checks if the given credentials are valid.
-     * @param email
-     * @param password
+     * Method for getting data from a given table, where the email is the unique identifier
+     *
+     * @param columns Fields to be retrieved
+     * @param email Unique email for specific user
+     * @return A Map of the columns as the keys and their values as the values
+     */
+    public Map<String, String> get(List<String> columns, String email, String table) {
+        Map<String, String> data = new HashMap<>();
+        String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    for (String col : columns) {
+                        if (col.equals("registered")) {
+                            data.put(col, Integer.toString(rs.getInt(col))); // Store as "0" or "1"
+                        } else {
+                            data.put(col, rs.getString(col));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving info: ", e);
+        }
+
+        return data;
+    }
+
+    /**
+     * Checks if at least one record exists with a given map of data. Aims to replace
+     * Dao methods similar to UserDao.isUserLogin
+     *
      * @return
      */
-    public boolean isUserLogin(String email, String password) {
-        String query = "SELECT user_id FROM Users WHERE email = ? AND hashed_password = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+    public boolean exists(Map<String, String> data, String table) {
+        if (data.isEmpty()) {
+            throw new IllegalArgumentException("Data map cannot be empty");
+        }
+
+        StringBuilder select = new StringBuilder("SELECT * FROM " + table + " WHERE ");
+        String[] keys = data.keySet().toArray(new String[0]);
+        select.append(String.join(" AND ", // scary
+                Arrays.stream(keys).map(k -> k + " = ?").toArray(String[]::new)));
+
+        try (PreparedStatement stmt = connection.prepareStatement(select.toString())) {
+            int index = 1;
+            for (String key : keys) {
+                stmt.setString(index++, data.get(key));
+            }
+
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return rs.next();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error querying for user", e);
+            throw new RuntimeException("Error querying for record", e);
         }
     }
 
-    public void removeUser(String email) {
-        String query = "DELETE FROM Users WHERE email = ?";
+    /**
+     * Removes a record from a given table where the email is the unique identifier
+     * @param email
+     * @param table
+     */
+    public void remove(String email, String table) {
+        String query = "DELETE FROM " + table + " WHERE email = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error removing user (Does user exist?)", e);
+            throw new RuntimeException("Error removing record", e);
+        }
+    }
+
+    /**
+     * Removes a record from a given table where the id is the unique identifier
+     * @param id
+     * @param table
+     */
+    public void remove(int id, String table) {
+        String query = "DELETE FROM " + table + " WHERE id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error removing record", e);
         }
     }
 
