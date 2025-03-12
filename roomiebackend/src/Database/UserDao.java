@@ -59,7 +59,7 @@ public class UserDao {
                         rs.getString("about_me"),
                         rs.getDate("date_of_birth"),
                         rs.getTimestamp("created_at"),
-                        rs.getBoolean("registered"),
+                        rs.getBoolean("registered")
                 );
                 users.add(user);
             }
@@ -93,7 +93,7 @@ public class UserDao {
                             rs.getString("about_me"),
                             rs.getDate("date_of_birth"),
                             rs.getTimestamp("created_at"),
-                            rs.getBoolean("registered"),
+                            rs.getBoolean("registered")
                     );
                     // Add the school field to the User object (if your User class supports it)
                     // If not, you can modify the User class to include a school field.
