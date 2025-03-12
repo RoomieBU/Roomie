@@ -108,11 +108,15 @@ public class FileController {
 
             if (true) {
                 // Store profile picture URL in userDao
-                userDao = new UserDao(SQLConnection.getConnection());
-                Map<String, String> updateData = new HashMap<>();
-                updateData.put("profile_picture_url", urlPath);
-                userDao.setData(updateData, userIdStr);
-                userDao.closeConnection();
+                Dao dao = new Dao(SQLConnection.getConnection());
+                Map<String, String> dataMap = new HashMap<>();
+                dataMap.put("profile_picture_url", urlPath);
+                boolean success = dao.set(dataMap, userEmail, "Users");
+
+                if (!success) {
+                    response.put("message", "Failed to update profile picture.");
+                    return Utils.assembleHTTPResponse(500, Utils.assembleJson(response));
+                }
             } else {
                 // Store image path in userImagesDao
                 UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
