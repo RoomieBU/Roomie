@@ -23,7 +23,7 @@ public class User {
     private String school;
     private String profilePicture;
 
-    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
+    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered, String profilePicture) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -34,7 +34,7 @@ public class User {
         this.createdAt = createdAt;
         this.registered = registered;
         this.school = school;
-        this.profilePicture = "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg";
+        this.profilePicture = profilePicture;
     }
 
     // Getters
@@ -63,7 +63,7 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", registered =" + registered +
                 ", school =" + school +
-                '}';
+                ", profileUrl =" + profilePicture + '}';
     }
 
 }
