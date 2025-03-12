@@ -51,7 +51,11 @@ p {
     width: max-content;
     text-align: left;
     margin-top: 97%;
-    margin-left: 5%;
+    margin-left: 3%;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: white;
 }
 
 .match-button-cluster {

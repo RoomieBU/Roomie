@@ -58,9 +58,19 @@ function Sidebar({ currentView, onChatSelect }) {
         {id: 3, name: "Jeff Man"}
     ]);
 
+    const [isMatchesVisible, setIsMatchesVisible] = useState(true);
+    const [isLikedVisible, setIsLikedVisible] = useState(true)
+
+    function toggleMatches() {
+        setIsMatchesVisible(!isMatchesVisible)
+    }
+
+    function toggleLiked() {
+        setIsLikedVisible(!isLikedVisible)
+    }
+
     return (
         <div className="sidebar">
-            {/* <h1>{activeView}</h1> */}
             {(() => {
                 switch (activeView) {
                     case "Chat":
@@ -84,19 +94,37 @@ function Sidebar({ currentView, onChatSelect }) {
                     case "Match":
                         return (
                             <div className="matchBox">
-                                <h4>Matches</h4>
+                               
+                                <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
+                                    {isMatchesVisible ? <i className="bi bi-chevron-down"/> : <i className="bi bi-chevron-right"/>}  
+                                    <h4 onClick={toggleMatches} > Matches</h4>
+                                </div>
+                                
                                 <div className="line"/>
-                                <div className="matchList">
+                                <div style={{
+                                        height: isMatchesVisible ? "auto" : "0px",
+                                        overflow: "scroll",
+                                        transition: "height 0.3s ease-in-out",
+                                        visibility: isMatchesVisible ? "visible" : "hidden"
+                                    }} className="matchList">
                                     {matches.map(match => (
                                         <div key={match.id} className="selectedBox">
                                             <h4>{match.name}</h4>
                                         </div>
                                     ))}
                                 </div>
-
-                                <h4>Liked</h4>
+                                
+                                <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
+                                {isLikedVisible ? <i className="bi bi-chevron-down"/> : <i className="bi bi-chevron-right"/>} 
+                                    <h4 onClick={toggleLiked}>Liked</h4>
+                                </div>
                                 <div className="line"/>
-                                <div className="matchList">
+                                <div style={{
+                                        height: isLikedVisible ? "auto" : "0px",
+                                        overflow: "scroll",
+                                        transition: "height 0.3s ease-in-out",
+                                        visibility: isLikedVisible ? "visible" : "hidden"
+                                    }} className="matchList">
                                     {likes.map(like => (
                                         <div key={like.id} className="selectedBox">
                                             <h4>{like.name}</h4>
