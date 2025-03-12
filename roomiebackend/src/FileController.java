@@ -106,7 +106,7 @@ public class FileController {
 
             int userId = Integer.parseInt(userIdStr);
 
-            if ("True".equals(isProfilePicture)) {
+            if (true) {
                 // Store profile picture URL in userDao
                 userDao = new UserDao(SQLConnection.getConnection());
                 Map<String, String> updateData = new HashMap<>();
