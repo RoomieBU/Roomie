@@ -88,6 +88,11 @@ function Matching() {
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
+                
+                console.log(roommate)
+
+                console.log("HELLOLOIDJFOIJ", roommate.profile_picture)
+                console.log(roommate.major)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -179,7 +184,10 @@ function Matching() {
             {isLoading ? (
                 <p>Loading potential roommate...</p>
             ): roommate ? (
-                <div onClick={swapSides} className={isFront ? "potential-roomate-front" : "potential-roomate-back"}>
+                <div 
+                    onClick={swapSides} 
+                    className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
+                    style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
                     {isFront ? (
                         <div className="user_info">
                             <p>{roommate.name}, {age}

@@ -89,19 +89,12 @@ public class MatchController {
 
             if (users.get(0) != null) {
                 response.put("message", "Next match found");
-                /**
-                response.put("user", Map.of(
-                    "email", user.getEmail(),
-                    "name", user.getFirstName() + " " + user.getLastName(),
-                    "date_of_birth", user.getDateOfBirth().toString(),
-                    "about_me", user.getAboutMe(),
-                    "major", user.major
-                ));**/
                 response.put("email", user.getEmail());
                 response.put("name", user.getFirstName() + " " + user.getLastName());
                 response.put("date_of_birth", user.getDateOfBirth().toString());
                 response.put("about_me", user.getAboutMe());
                 response.put("major", "Wumbology (Undergrad)");
+                response.put("profile_picture", user.getProfilePicture());
                 code = 200;
             } else {
                 response.put("message", "No registered users found");

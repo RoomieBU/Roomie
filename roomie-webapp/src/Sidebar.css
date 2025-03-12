@@ -53,12 +53,53 @@
     flex-grow: 1;
 }
 
-
-
 .settingTab {  
     text-align: center;
     width: 100%;
     background-color: lightgray;
     height: 50px;
     align-content: center;
+}
+
+.matchList {
+    width: 100%;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    gap:5px;
+    flex-grow: 1;
+
+     /* Add these properties */
+    max-height: 300px;     /* Set your desired maximum height */
+    overflow-y: auto;      /* Enable vertical scrolling when content exceeds max-height */
+    padding: 10px;   
+    min-height: 80px;
+    scrollbar-width: none;
+}
+
+.matchBox {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.selectedBox {
+    width: 95%;
+    border-color: black;
+    background-color: lightgray;
+    border-style: solid;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.line {
+    height: 1px;
+    width: 100%;
+    background-color: black;
 }

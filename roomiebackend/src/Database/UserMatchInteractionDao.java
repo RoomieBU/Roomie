@@ -18,8 +18,6 @@ public class UserMatchInteractionDao {
 
     public Boolean sendMatchInteraction(Map<String, String> data, String email) {
         String query = "INSERT INTO UserMatchInteractions (user, shown_user, relationship) VALUES (?, ?, ?)";
-    
-
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, data.get("user"));

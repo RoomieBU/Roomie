@@ -21,6 +21,7 @@ public class User {
     private Timestamp createdAt;
     private Boolean registered;
     private String school;
+    private String profilePicture;
 
     public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
         this.userId = userId;
@@ -33,6 +34,7 @@ public class User {
         this.createdAt = createdAt;
         this.registered = registered;
         this.school = school;
+        this.profilePicture = "https://upload.wikimedia.org/wikipedia/commons/1/15/Cat_August_2010-4.jpg";
     }
 
     // Getters
@@ -46,6 +48,7 @@ public class User {
     public Timestamp getCreatedAt() { return createdAt; }
     public Boolean getRegistered() { return registered; }
     public String getSchool() { return school; }
+    public String getProfilePicture() {return profilePicture;}
 
     @Override
     public String toString() {

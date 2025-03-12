@@ -13,11 +13,6 @@ function Sidebar({ currentView, onChatSelect }) {
         { id: 3, name: "Sam Kapp", lastMessage: "Thanks for the help" },
         { id: 4, name: "Emily Faso", lastMessage: "Did you get my email?" },
         { id: 5, name: "Matthew Yurkunas", lastMessage: "bruh"},
-        { id: 6, name: "Riley Simmons", lastMessage: "See you tomorrow!" },
-        { id: 7, name: "Sam Kapp", lastMessage: "Thanks for the help" },
-        { id: 8, name: "Emily Faso", lastMessage: "Did you get my email?" },
-        { id: 9, name: "Matthew Yurkunas", lastMessage: "bruh"},
-        { id: 10, name: "John Doe", lastMessage: "l;kasdjf;lkjl"}
     ];
 
     useEffect(() => {
@@ -43,8 +38,25 @@ function Sidebar({ currentView, onChatSelect }) {
         if (onChatSelect && selectedContact) {
             onChatSelect(selectedContact);
         }
-
     }
+
+    // Match section
+
+    const [matches, setMatches] = useState([
+        { id: 1, name: "Salvatore La Marca" },
+        { id: 2, name: "Salvatore La Marca" },
+        { id: 3, name: "Salvatore La Marca" },
+        { id: 4, name: "Salvatore La Marca" },
+        { id: 5, name: "Salvatore La Marca" },
+        { id: 6, name: "Salvatore La Marca" },
+        { id: 7, name: "Salvatore La Marca" }
+    ]);
+
+    const [likes, setLikes] = useState([
+        {id: 1, name: "John Smith"},
+        {id: 2, name: "John Doe"},
+        {id: 3, name: "Jeff Man"}
+    ]);
 
     return (
         <div className="sidebar">
@@ -70,7 +82,29 @@ function Sidebar({ currentView, onChatSelect }) {
                             </div>
                         );
                     case "Match":
-                        return <div>Match Now!</div>;
+                        return (
+                            <div className="matchBox">
+                                <h4>Matches</h4>
+                                <div className="line"/>
+                                <div className="matchList">
+                                    {matches.map(match => (
+                                        <div key={match.id} className="selectedBox">
+                                            <h4>{match.name}</h4>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <h4>Liked</h4>
+                                <div className="line"/>
+                                <div className="matchList">
+                                    {likes.map(like => (
+                                        <div key={like.id} className="selectedBox">
+                                            <h4>{like.name}</h4>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        );
                     default:
                         return <div>Welcome!</div>;
                 }
