@@ -45,7 +45,7 @@ public class UserDao {
      */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered, profile_picture_url FROM Users";
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered FROM Users";
 
         try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
@@ -60,7 +60,6 @@ public class UserDao {
                         rs.getDate("date_of_birth"),
                         rs.getTimestamp("created_at"),
                         rs.getBoolean("registered"),
-                        rs.getString("profile_picture_url")
                 );
                 users.add(user);
             }
@@ -79,7 +78,7 @@ public class UserDao {
      */
     public List<User> getAllUsersBySchool(String school) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered, profile_picture_url school FROM Users WHERE school = ?";
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered, school FROM Users WHERE school = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, school); // Set the school parameter
@@ -95,7 +94,6 @@ public class UserDao {
                             rs.getDate("date_of_birth"),
                             rs.getTimestamp("created_at"),
                             rs.getBoolean("registered"),
-                            rs.getString("profile_picture_url")
                     );
                     // Add the school field to the User object (if your User class supports it)
                     // If not, you can modify the User class to include a school field.
@@ -130,8 +128,7 @@ public class UserDao {
                             rs.getString("about_me"),
                             rs.getDate("date_of_birth"),
                             rs.getTimestamp("created_at"),
-                            rs.getBoolean("registered"),
-                            rs.getString("profile_picture_url")
+                            rs.getBoolean("registered")
                     );
                 }
             }
