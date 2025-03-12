@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 
 function Dashboard() {
     const navigate = useNavigate();
-    const [profilePictureUrl, setProfilePictureUrl] = useState("/default-profile.jpg"); // Default profile picture
+    const [profilePictureUrl, setProfilePictureUrl] = useState("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Default profile picture
 
     // Fetch profile picture URL on component mount
     useEffect(() => {

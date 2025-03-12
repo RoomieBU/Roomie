@@ -1,59 +1,56 @@
-
-
-
-  /* Split Panel Container */
-  .split-panel-container {
+/* Split Panel Container */
+.split-panel-container {
     display: flex;
     flex: 1;
     width: 100%;
-    height:93%;
+    height: 93%;
     margin: 0;
     border: none !important;
     border-radius: 0 !important;
-    position:absolute;
+    position: absolute;
     top: 50px;
     left: 0;
     right: 0;
     bottom: 0;
-  }
-  
-  /* No text selection during drag */
-  .no-select {
+}
+
+/* No text selection during drag */
+.no-select {
     user-select: none;
-  }
-  
-  /* Left Panel */
-  .left-panel {
+}
+
+/* Left Panel */
+.left-panel {
     overflow: auto;
     height: 100%;
     margin-right: 10px;
     scrollbar-width: none;
-  }
-  
-  /* Right Panel */
-  .right-panel {
+}
+
+/* Right Panel */
+.right-panel {
     overflow: auto;
     height: 100%;
     align-items: center;
     justify-content: center;
     display: flex;
-  }
-  
-  /* Divider */
-  .divider {
+}
+
+/* Divider */
+.divider {
     width: 4px;
     cursor: col-resize;
     transition: background-color 0.2s ease;
     height: 100%;
     flex-shrink: 0; /* Prevent divider from shrinking */
-  }
-  
-  /* Divider hover effect */
-  .divider-hover {
-    background-color: purple !important; /* Bootstrap primary color */
-  }
+}
 
-  .header {
+/* Divider hover effect */
+.divider-hover {
+    background-color: purple !important; /* Bootstrap primary color */
+}
+
+.header {
     width: 100%;
     height: 50px;
     background-color: purple;
@@ -63,50 +60,34 @@
     display: flex;
     align-items: center;
     justify-content: right;
-  }
+}
 
-  .profile-picture {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      object-fit: cover;
-      border: 2px solid #fff;
-      margin-left: 20px;
-  }
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid #fff;
+    margin-left: 20px;
+}
 
-  .profile-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-  }
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-  .profile-link {
-    height: 45px;
-    width: 45px;
-    background-image: url("assets/transparent.jpg");
-    margin-right: 2%;
-    border-radius: 100%;
-    border-width: 2px;
-    border-color: black;
-    border-style: solid;
-    margin-left:15px;
-  }
-
-  .profile-link:hover {
-    opacity: 90%;
-  }
-
-  .action-section {
-    width:max-content;
-    left:0;
+.action-section {
+    width: max-content;
+    left: 0;
     position: absolute;
     display: flex;
-  }
+}
 
-  .logo {
+.logo {
     font-weight: bold;
-    color:white;
+    color: white;
     height: auto;
-    margin:auto;
-  }
+    margin: auto;
+}

@@ -88,7 +88,7 @@ function Edit() {
                         fileName: selectedFile.name,
                         fileType: selectedFile.type,
                         data: base64Data,
-                        isProfilePic: "true",
+                        isProfilePic: "True",
                     });
 
                     const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
