@@ -58,6 +58,7 @@ public class Server {
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
+            router.addRoute("/profile/editProfile", ProfileController::editProfile);
             
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
