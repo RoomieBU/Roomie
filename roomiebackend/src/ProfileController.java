@@ -26,7 +26,7 @@ public class ProfileController {
 
         String userEmail = Auth.getEmailfromToken(token);
 
-        try (Connection conn = SQLConnection.getConnection()) { // Use try-with-resources
+        try (Connection conn = SQLConnection.getConnection()) {
             Dao dao = new Dao(conn);
 
             // Fetch user data
@@ -39,51 +39,54 @@ public class ProfileController {
             userDataColumns.add("school");
             Map<String, String> userData = dao.getData(userDataColumns, userEmail, "Users");
 
-            // Fetch user preferences
+            // Fetch user preferences (UPDATED TO MATCH YOUR SCHEMA)
             List<String> userPrefDataColumns = new ArrayList<>();
             userPrefDataColumns.add("preferred_gender");
             userPrefDataColumns.add("pet_friendly");
-            userPrefDataColumns.add("personality");
-            userPrefDataColumns.add("wakeup_time");
-            userPrefDataColumns.add("sleep_time");
-            userPrefDataColumns.add("quiet_hours");
+            userPrefDataColumns.add("introvert");
+            userPrefDataColumns.add("extrovert");
+            userPrefDataColumns.add("prefer_quiet");
             Map<String, String> userPrefData = dao.getData(userPrefDataColumns, userEmail, "UserPreferences");
-
 
             if (userData != null && userPrefData != null) {
                 response.put("message", "Profile found");
                 response.put("email", userEmail);
 
-                // Safely extract values
+                // Extract user data
                 String firstName = userData.get("first_name");
                 String lastName = userData.get("last_name");
                 String dateOfBirth = userData.get("date_of_birth");
                 String aboutMe = userData.get("about_me");
                 String profilePictureUrl = userData.get("profile_picture_url");
+                String school = userData.get("school"); // Added school
 
-                // Safely handle preferences (may be null)
-                String preferredGender = userPrefData != null ? userPrefData.get("preferred_gender") : null;
-                String petFriendly = userPrefData != null ? userPrefData.get("pet_friendly") : null;
-                String personality = userPrefData != null ? userPrefData.get("personality") : null;
-                String quietHours = userPrefData != null ? userPrefData.get("quiet_hours") : null;
+                // Extract preferences
+                String preferredGender = userPrefData.get("preferred_gender");
+                String petFriendly = userPrefData.get("pet_friendly");
+                String introvert = userPrefData.get("introvert");
+                String extrovert = userPrefData.get("extrovert");
+                String preferQuiet = userPrefData.get("prefer_quiet");
 
-                // Populate response
+                // Build response
                 response.put("name", (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : ""));
                 response.put("date_of_birth", dateOfBirth != null ? dateOfBirth : "N/A");
                 response.put("about_me", aboutMe != null ? aboutMe : "N/A");
-                response.put("major", "Wumbology (Undergrad)");
+                response.put("school", school != null ? school : "N/A"); // Include school
+                response.put("profile_picture_url", profilePictureUrl != null ? profilePictureUrl : "https://roomie.ddns.net/images/defaultProfilePic.jpg");
+
+                // Preference fields
                 response.put("preferred_gender", preferredGender != null ? preferredGender : "N/A");
                 response.put("pet_friendly", petFriendly != null ? petFriendly : "N/A");
-                response.put("personality", personality != null ? personality : "N/A");
-                response.put("quiet_hours", quietHours != null ? quietHours : "N/A");
-                response.put("profile_picture_url", profilePictureUrl != null ? profilePictureUrl : "https://roomie.ddns.net/images/defaultProfilePic.jpg");
+                response.put("introvert", introvert != null ? introvert : "N/A");
+                response.put("extrovert", extrovert != null ? extrovert : "N/A");
+                response.put("prefer_quiet", preferQuiet != null ? preferQuiet : "N/A");
 
                 return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
             } else {
                 response.put("message", "No profile found");
                 code = 404;
             }
-        } catch (Exception e) { // Catch all exceptions
+        } catch (Exception e) {
             System.err.println("[ProfileController] Error: " + e.getMessage());
             response.put("message", "Server error");
             code = 500;
