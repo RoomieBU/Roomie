@@ -46,7 +46,6 @@ public class MatchController {
             response.put("token", "");
         }
 
-
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 

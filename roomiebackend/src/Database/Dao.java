@@ -24,7 +24,7 @@ public class Dao {
      * @param table
      * @return
      */
-    public boolean insert(Map<String, Object> data, String table) {
+    public boolean insert(Map<String, String> data, String table) {
         if (data == null || data.isEmpty()) {
             return false;
         }

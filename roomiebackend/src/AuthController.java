@@ -1,3 +1,4 @@
+import Database.Dao;
 import Database.SQLConnection;
 import Database.UserDao;
 import Database.UserPreferencesDao;
@@ -17,17 +18,14 @@ public class AuthController {
         if (!method.equals("POST")) {
             return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
         }
+        Map<String, String> query = new HashMap<>();
+        query.put("email", data.get("email"));
+        query.put("hashed_password", Utils.hashSHA256(data.get("password")));
 
-        String email = data.get("email");
-        String pass = data.get("password");
-        pass = Utils.hashSHA256(pass);
-
-        // Looking for both plaintext and hashed passwords for the moment will remove
-        // once everyone updates their acc
         try {
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.isUserLogin(email, pass)) {
-                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(email) + "\"}");
+            Dao dao = new Dao(SQLConnection.getConnection());
+            if (dao.exists(query, "Users")) {
+                return Utils.assembleHTTPResponse(200, "{\"token\": \"" + Auth.getToken(data.get("email")) + "\"}");
             } else {
                 return Utils.assembleHTTPResponse(400, "{\"token\": \"\"}");
             }
@@ -51,22 +49,22 @@ public class AuthController {
             response.put("message", "Method not allowed!");
         }
 
-        String email = data.get("email");
-        String pass = data.get("password");
-        pass = Utils.hashSHA256(pass);
+        Map<String, String> query = new HashMap<>();
+        query.put("email", data.get("email"));
+        query.put("hashed_password", Utils.hashSHA256(data.get("password")));
 
         try {
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
-            if (DBUser.createUser(email, pass)) {
+            Dao dao = new Dao(SQLConnection.getConnection());
+            if (dao.insert(query, "Users")) {
                 String verifyCode = Utils.generateVerifyCode();
                 Map<String, String> verifyCodeFormatted = new HashMap<>();
                 verifyCodeFormatted.put("verify_code", verifyCode);
 
-                DBUser.setData(verifyCodeFormatted, email);
+                dao.set(verifyCodeFormatted, data.get("email"), "Users");
                 Mail emailer = new Mail();
-                emailer.send(email, "Roomie Verification Email", "Here is your verification code: " + verifyCode);
+                emailer.send(data.get("email"), "Roomie Verification Email", "Here is your verification code: " + verifyCode);
 
-                response.put("token", Auth.getToken(email));
+                response.put("token", Auth.getToken(data.get("email")));
                 code = 200;
             } else {
                 response.put("token", "");
@@ -145,13 +143,14 @@ public class AuthController {
         }
 
         String userEmail = Auth.getEmailfromToken(token);
+        List<String> query = List.of("registered");
         try {
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+            Dao dao = new Dao(SQLConnection.getConnection());
 
             ArrayList<String> columns = new ArrayList<>();
             columns.add("registered");
 
-            if (DBUser.getData(columns, userEmail).get("registered").equals("1")) {
+            if (dao.get(columns, userEmail, "Users").get("registered").equals("1")) {
                 response.put("message", "User Registered");
                 code = 200;
             } else {
@@ -190,9 +189,7 @@ public class AuthController {
 
         String email = Auth.getEmailfromToken(token);
 
-        // (FUCTIONALITY MISSING)
-        // Functionality for accepting profile pictures needs to happen...
-        // profile_picture = data.get("profile_picture");
+        // This is maybe where profile picture happens too?
 
         Map<String, String> formData = new HashMap<>();
         formData.put("first_name", data.get("first_name"));
@@ -205,10 +202,9 @@ public class AuthController {
         String userEnteredVerifyCode = data.get("code");
 
         try {
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
-
+            Dao dao = new Dao(SQLConnection.getConnection());
             if (Server.ALLOW_EMAIL_VERIFICATION) {
-                Map<String, String> codeReturn = DBUser.getData(List.of("verify_code"), email);
+                Map<String, String> codeReturn = dao.get(List.of("verify_code"), email, "Users");
                 String verifyCode = codeReturn.get("verify_code");
 
                 if (!userEnteredVerifyCode.equals(verifyCode)) {
@@ -218,7 +214,7 @@ public class AuthController {
                 }
             }
 
-            if (DBUser.setData(formData, email)) {
+            if (dao.set(formData, email, "Users")) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
             } else {
@@ -249,13 +245,12 @@ public class AuthController {
 
         String email = Auth.getEmailfromToken(token);
 
-        Map<String, String> formData = data;
-        formData.remove("token");
+        data.remove("token");
 
         try {
             UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
 
-            if (DBUser.createUserPreferences(formData, email)) {
+            if (DBUser.createUserPreferences(data, email)) {
                 response.put("message", "Set user data for " + email);
                 code = 200;
             } else {

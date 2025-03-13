@@ -67,7 +67,6 @@ public class UserPreferencesDao {
                 .contains(column);
     }
 
-
     public List<Map<String, Object>> getAllUserPreferences() throws SQLException {
         List<Map<String, Object>> userPreferences = new ArrayList<>();
         String query = "SELECT * FROM UserPreferences";
