@@ -68,7 +68,6 @@ function Profile() {
                 <p>Loading profile...</p>
             ) : profile ? (
                 <div className="profile-content">
-                    <h2>Profile Information</h2>
                     {/* Profile Picture */}
                     <img
                         src={profile.profile_picture_url}
@@ -76,66 +75,40 @@ function Profile() {
                         className="profile-picture-circle"
                     />
 
-                    {/* Profile Details */}
-                    <dl className="profile-details">
+                    {/* Profile Information */}
+                    <h2 className="profile-title">Profile Information</h2>
+
+                    {/* Profile Details Grid */}
+                    <div className="profile-details-grid">
                         <div className="detail-item">
-                            <dt>Name:</dt>
-                            <dd>{profile.name}</dd>
+                            <span className="detail-label">Name:</span>
+                            <span className="detail-value">{profile.name}</span>
                         </div>
 
                         <div className="detail-item">
-                            <dt>Email:</dt>
-                            <dd>{profile.email}</dd>
+                            <span className="detail-label">Email:</span>
+                            <span className="detail-value">{profile.email}</span>
+                        </div>
+
+                        {/* Add all other fields similarly */}
+                        <div className="detail-item">
+                            <span className="detail-label">School:</span>
+                            <span className="detail-value">{profile.school || "N/A"}</span>
                         </div>
 
                         <div className="detail-item">
-                            <dt>Age:</dt>
-                            <dd>{age !== "-1" ? age : "N/A"}</dd>
+                            <span className="detail-label">Preferred Gender:</span>
+                            <span className="detail-value">{profile.preferred_gender}</span>
                         </div>
 
-                        <div className="detail-item">
-                            <dt>School:</dt>
-                            <dd>{profile.school || "N/A"}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>About Me:</dt>
-                            <dd>{profile.about_me}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>Preferred Gender:</dt>
-                            <dd>{profile.preferred_gender}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>Pet Friendly:</dt>
-                            <dd>{profile.pet_friendly === "true" ? "Yes" : "No"}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>Introvert:</dt>
-                            <dd>{profile.introvert || "N/A"}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>Extrovert:</dt>
-                            <dd>{profile.extrovert || "N/A"}</dd>
-                        </div>
-
-                        <div className="detail-item">
-                            <dt>Prefers Quiet Hours:</dt>
-                            <dd>{profile.prefer_quiet || "N/A"}</dd>
-                        </div>
-                    </dl>
-
-                    {/* Edit Profile Button */}
-                    <button
-                        className="edit-profile-button"
-                        onClick={() => window.location.href = "https://roomie.ddns.net/profile/edit"}
-                    >
-                        Edit Profile
-                    </button>
+                        {/* Add Edit Profile Button */}
+                        <button
+                            className="edit-profile-btn"
+                            onClick={() => navigate("/profile/edit")}
+                        >
+                            Edit Profile
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <p>{error || "No profile data available."}</p>
