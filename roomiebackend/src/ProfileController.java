@@ -27,36 +27,45 @@ public class ProfileController {
         String userEmail = Auth.getEmailfromToken(token);
 
         try (Connection conn = SQLConnection.getConnection()) { // Use try-with-resources
-            UserDao DBUser = new UserDao(conn);
+            Dao dao = new Dao(conn);
 
             // Fetch user data
-            Map<String, String> userDataQuery = DBUser.getData(
-                    List.of("first_name", "last_name", "date_of_birth", "about_me", "profile_picture_url"),
-                    userEmail
-            );
+            List<String> userDataColumns = new ArrayList<>();
+            userDataColumns.add("first_name");
+            userDataColumns.add("last_name");
+            userDataColumns.add("about_me");
+            userDataColumns.add("date_of_birth");
+            userDataColumns.add("profile_picture_url");
+            userDataColumns.add("school");
+            Map<String, String> userData = dao.getData(userDataColumns, userEmail, "Users");
 
             // Fetch user preferences
-            Map<String, String> userPreferences = DBUser.getPreferences(
-                    List.of("preferred_gender", "pet_friendly", "personality", "quiet_hours"),
-                    userEmail
-            );
+            List<String> userPrefDataColumns = new ArrayList<>();
+            userPrefDataColumns.add("preferred_gender");
+            userPrefDataColumns.add("pet_friendly");
+            userPrefDataColumns.add("personality");
+            userPrefDataColumns.add("wakeup_time");
+            userPrefDataColumns.add("sleep_time");
+            userPrefDataColumns.add("quiet_hours");
+            Map<String, String> userPrefData = dao.getData(userPrefDataColumns, userEmail, "UserPreferences");
 
-            if (userDataQuery != null) {
+
+            if (userData != null && userPrefData != null) {
                 response.put("message", "Profile found");
                 response.put("email", userEmail);
 
                 // Safely extract values
-                String firstName = userDataQuery.get("first_name");
-                String lastName = userDataQuery.get("last_name");
-                String dateOfBirth = userDataQuery.get("date_of_birth");
-                String aboutMe = userDataQuery.get("about_me");
-                String profilePictureUrl = userDataQuery.get("profile_picture_url");
+                String firstName = userData.get("first_name");
+                String lastName = userData.get("last_name");
+                String dateOfBirth = userData.get("date_of_birth");
+                String aboutMe = userData.get("about_me");
+                String profilePictureUrl = userData.get("profile_picture_url");
 
                 // Safely handle preferences (may be null)
-                String preferredGender = userPreferences != null ? userPreferences.get("preferred_gender") : null;
-                String petFriendly = userPreferences != null ? userPreferences.get("pet_friendly") : null;
-                String personality = userPreferences != null ? userPreferences.get("personality") : null;
-                String quietHours = userPreferences != null ? userPreferences.get("quiet_hours") : null;
+                String preferredGender = userPrefData != null ? userPrefData.get("preferred_gender") : null;
+                String petFriendly = userPrefData != null ? userPrefData.get("pet_friendly") : null;
+                String personality = userPrefData != null ? userPrefData.get("personality") : null;
+                String quietHours = userPrefData != null ? userPrefData.get("quiet_hours") : null;
 
                 // Populate response
                 response.put("name", (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : ""));
