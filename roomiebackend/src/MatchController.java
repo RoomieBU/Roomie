@@ -143,7 +143,7 @@ public class MatchController {
             }
 
             if (totalCount > 0) {
-                similarity = totalValues / totalCount; // Normalize similarity score
+                similarity = 1 - (totalValues / totalCount); // Normalize similarity score
             }
 
         } catch (SQLException | ClassNotFoundException e) {
