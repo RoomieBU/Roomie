@@ -18,6 +18,7 @@ public class Console {
         commands.put("printusers", this::printUsers);
         commands.put("updateusers", this::updateUser);
         commands.put("sendemail", this::sendEmail);
+        commands.put("similarity", this::similarity);
     }
 
     public void start() {
@@ -139,5 +140,14 @@ public class Console {
             System.out.println("[Console] Didn't send email.");
         }
 
+    }
+
+    private void similarity() {
+        System.out.print("Enter user email 1: ");
+        String email1 = scan.nextLine().trim();
+        System.out.print("Enter user email 2: ");
+        String email2 = scan.nextLine().trim();
+
+        System.out.println("Similarity between users: " + MatchController.getSimilarity(email1, email2));
     }
 }

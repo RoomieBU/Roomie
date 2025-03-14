@@ -107,4 +107,15 @@ public class Utils {
         int code = 10000 + random.nextInt(90000); // Ensures a 5-digit number (10000 - 99999)
         return String.valueOf(code);
     }
+
+    // Scales 1-5 preferences
+    public static double getScaledDistance(double x,double y) {
+        float dist = Math.abs( (float) x - (float) y );
+        return dist / 5.0;
+    }
+
+    public static double getScaledDistance(boolean x, boolean y) {
+        if (x == y) return 1;
+        return 0;
+    }
 }

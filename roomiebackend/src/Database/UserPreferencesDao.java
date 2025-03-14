@@ -88,4 +88,39 @@ public class UserPreferencesDao {
         return userPreferences;
     }
 
+
+    public Map<String, Object> getUserPreferencesByEmail(String email) throws SQLException {
+        Map<String, Object> userPreferences = new HashMap<>();
+        String query = "SELECT * FROM UserPreferences WHERE email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userPreferences.put("email", rs.getString("email"));
+                    userPreferences.put("pet_friendly", rs.getBoolean("pet_friendly"));
+                    userPreferences.put("smoke", rs.getBoolean("smoke"));
+                    userPreferences.put("smoke_okay", rs.getBoolean("smoke_okay"));
+                    userPreferences.put("drugs", rs.getBoolean("drugs"));
+                    userPreferences.put("drugs_okay", rs.getBoolean("drugs_okay"));
+                    userPreferences.put("morning_person", rs.getInt("morning_person"));
+                    userPreferences.put("night_owl", rs.getInt("night_owl"));
+                    userPreferences.put("introvert", rs.getInt("introvert"));
+                    userPreferences.put("extrovert", rs.getInt("extrovert"));
+                    userPreferences.put("guests_often", rs.getInt("guests_often"));
+                    userPreferences.put("okay_with_guests", rs.getInt("okay_with_guests"));
+                    userPreferences.put("prefer_quiet", rs.getInt("prefer_quiet"));
+                    userPreferences.put("neat_tidy", rs.getInt("neat_tidy"));
+                    userPreferences.put("okay_with_mess", rs.getInt("okay_with_mess"));
+                    userPreferences.put("out_late", rs.getInt("out_late"));
+                    userPreferences.put("play_instruments", rs.getInt("play_instruments"));
+                    userPreferences.put("gamer", rs.getInt("gamer"));
+                    userPreferences.put("gender", rs.getString("gender"));
+                    userPreferences.put("preferred_gender", rs.getString("preferred_gender"));
+                }
+            }
+        }
+        return userPreferences;
+    }
+
 }

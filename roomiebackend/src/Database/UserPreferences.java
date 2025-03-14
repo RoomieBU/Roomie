@@ -1,53 +1,105 @@
 package Database;
 
-import java.sql.Time;
-
-/**
- * UserPreferences Class
- * serves as a model for the user entity, holding all the relevant information
- * provides getters for each attribute, and toString for readable version
- *
- * interacts with the database
- */
 public class UserPreferences {
-    private int userId;
-    private String preferredGender;
+    private String email;
     private boolean petFriendly;
-    private String personality;
-    private Time wakeupTime;
-    private Time sleepTime;
-    private String quietHours;
+    private boolean smoke;
+    private boolean smokeOkay;
+    private boolean drugs;
+    private boolean drugsOkay;
+    private int morningPerson;
+    private int nightOwl;
+    private int introvert;
+    private int extrovert;
+    private int guestsOften;
+    private int okayWithGuests;
+    private int preferQuiet;
+    private int neatTidy;
+    private int okayWithMess;
+    private int outLate;
+    private int playInstruments;
+    private int gamer;
+    private String gender;
+    private String preferredGender;
 
-    public UserPreferences(int userId, String preferredGender, boolean petFriendly, String personality, Time wakeupTime, Time sleepTime, String quietHours) {
-        this.userId = userId;
-        this.preferredGender = preferredGender;
-        this.petFriendly = petFriendly;
-        this.personality = personality;
-        this.wakeupTime = wakeupTime;
-        this.sleepTime = sleepTime;
-        this.quietHours = quietHours;
+    // Getters only
+    public String getEmail() {
+        return email;
     }
 
-    // Getters
-    public int getUserId() { return userId; }
-    public String getPreferredGender() { return preferredGender; }
-    public boolean getPetFriendly() { return petFriendly; }
-    public String getPersonality() { return personality; }
-    public Time getWakeupTime() { return wakeupTime; }
-    public Time getSleepTime() { return sleepTime; }
-    public String getQuietHours() { return quietHours; }
-
-    @Override
-    public String toString() {
-        return "UserPreferences{" +
-                "user_id=" + userId +
-                ", preferred_gender='" + preferredGender + '\'' +
-                ", pet_friendly=" + petFriendly +
-                ", personality='" + personality + '\'' +
-                ", wakeup_time=" + wakeupTime +
-                ", sleep_time=" + sleepTime +
-                ", quiet_hours='" + quietHours + '\'' +
-                '}';
+    public boolean isPetFriendly() {
+        return petFriendly;
     }
 
+    public boolean isSmoke() {
+        return smoke;
+    }
+
+    public boolean isSmokeOkay() {
+        return smokeOkay;
+    }
+
+    public boolean isDrugs() {
+        return drugs;
+    }
+
+    public boolean isDrugsOkay() {
+        return drugsOkay;
+    }
+
+    public int getMorningPerson() {
+        return morningPerson;
+    }
+
+    public int getNightOwl() {
+        return nightOwl;
+    }
+
+    public int getIntrovert() {
+        return introvert;
+    }
+
+    public int getExtrovert() {
+        return extrovert;
+    }
+
+    public int getGuestsOften() {
+        return guestsOften;
+    }
+
+    public int getOkayWithGuests() {
+        return okayWithGuests;
+    }
+
+    public int getPreferQuiet() {
+        return preferQuiet;
+    }
+
+    public int getNeatTidy() {
+        return neatTidy;
+    }
+
+    public int getOkayWithMess() {
+        return okayWithMess;
+    }
+
+    public int getOutLate() {
+        return outLate;
+    }
+
+    public int getPlayInstruments() {
+        return playInstruments;
+    }
+
+    public int getGamer() {
+        return gamer;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getPreferredGender() {
+        return preferredGender;
+    }
 }

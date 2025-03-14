@@ -104,4 +104,56 @@ public class MatchController {
         }
     return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
+
+    /**
+     * The complexity of this is awful
+     * @param email1
+     * @param email2
+     * @return
+     */
+    public static double getSimilarity(String email1, String email2) {
+        double similarity = 0;
+
+        try {
+            UserPreferencesDao upd = new UserPreferencesDao(SQLConnection.getConnection());
+
+            Map<String, Object> perf1 = upd.getUserPreferencesByEmail(email1);
+            Map<String, Object> perf2 = upd.getUserPreferencesByEmail(email2);
+
+            double totalValues = 0;
+            int totalCount = 0;
+
+            for (String column : perf1.keySet()) {
+                Object value1 = perf1.get(column);
+                Object value2 = perf2.get(column);
+
+                if (value1 instanceof Number && value2 instanceof Number) {
+                    // Convert to double for numerical values
+                    if (isBooleanColumn(column)) { // Handle boolean values stored as Integer (TINYINT)
+                        boolean bool1 = ((Number) value1).intValue() != 0;
+                        boolean bool2 = ((Number) value2).intValue() != 0;
+                        totalValues += (bool1 == bool2) ? 1.0 : 0.0;
+                    } else {
+                        double num1 = ((Number) value1).doubleValue();
+                        double num2 = ((Number) value2).doubleValue();
+                        totalValues += Utils.getScaledDistance(num1, num2);
+                    }
+                    totalCount++;
+                }
+            }
+
+            if (totalCount > 0) {
+                similarity = totalValues / totalCount; // Normalize similarity score
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL.");
+        }
+        return similarity;
+    }
+
+    private static boolean isBooleanColumn(String column) {
+        return Set.of("pet_friendly", "smoke", "smoke_okay", "drugs", "drugs_okay").contains(column);
+    }
+
 }
