@@ -1,3 +1,4 @@
+import Database.Dao;
 import Database.SQLConnection;
 import Database.User;
 import Database.UserDao;
@@ -19,6 +20,7 @@ public class Console {
         commands.put("updateusers", this::updateUser);
         commands.put("sendemail", this::sendEmail);
         commands.put("similarity", this::similarity);
+        commands.put("populatesimilarity", this::populateSimilarityTable);
     }
 
     public void start() {
@@ -149,5 +151,34 @@ public class Console {
         String email2 = scan.nextLine().trim();
 
         System.out.println("Similarity between users: " + MatchController.getSimilarity(email1, email2));
+    }
+
+    private void populateSimilarityTable() {
+        long startTime = System.nanoTime();
+
+        try {
+            List<User> userList;
+            UserDao uDao = new UserDao(SQLConnection.getConnection());
+            Dao dao = new Dao(SQLConnection.getConnection());
+            userList = uDao.getAllUsers();
+            for (User u : userList) {
+                for (User b : userList) {
+                    if (u.getEmail().equals(b.getEmail())) {
+                        continue;
+                    }
+                    dao.insert(
+                            Map.of("email1", u.getEmail(),
+                                    "email2", b.getEmail(),
+                                    "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
+                            "UserSimilarities");
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+        System.out.println("Populated in " + duration + " milliseconds");
     }
 }

@@ -127,6 +127,7 @@ public class MatchController {
                 Object value1 = perf1.get(column);
                 Object value2 = perf2.get(column);
 
+                // Right now only considers ints and booleans (no gender preferences)
                 if (value1 instanceof Number && value2 instanceof Number) {
                     // Convert to double for numerical values
                     if (isBooleanColumn(column)) { // Handle boolean values stored as Integer (TINYINT)
