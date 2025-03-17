@@ -153,6 +153,37 @@ public class MatchController {
         return similarity;
     }
 
+    /**
+     * Calculates all similarities from one user to every other user and adds it to the database.
+     *
+     * Note: This is for testing, and actually takes a really long time to calculate.
+     *
+     * @param email
+     * @return
+     */
+    public static boolean calculateAllSimilaritiesForEmail(String email) {
+        try {
+            List<User> userList;
+            UserDao uDao = new UserDao(SQLConnection.getConnection());
+            Dao dao = new Dao(SQLConnection.getConnection());
+            userList = uDao.getAllUsers();
+            for (User b : userList) {
+                if (email.equals(b.getEmail())) {
+                    continue;
+                }
+                dao.insert(
+                        Map.of("email1", email,
+                                "email2", b.getEmail(),
+                                "similarity_score", String.valueOf(MatchController.getSimilarity(email, b.getEmail()))),
+                        "UserSimilarities");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     private static boolean isBooleanColumn(String column) {
         return Set.of("pet_friendly", "smoke", "smoke_okay", "drugs", "drugs_okay").contains(column);
     }

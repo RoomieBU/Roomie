@@ -21,6 +21,7 @@ public class Console {
         commands.put("sendemail", this::sendEmail);
         commands.put("similarity", this::similarity);
         commands.put("populatesimilarity", this::populateSimilarityTable);
+        commands.put("populatesimilarityforuser", this::simForEmail);
     }
 
     public void start() {
@@ -178,7 +179,17 @@ public class Console {
         }
 
         long endTime = System.nanoTime();
-        long duration = endTime - startTime;
+        double duration = (endTime - startTime) / 1_000_000.0;
         System.out.println("Populated in " + duration + " milliseconds");
+    }
+
+    private void simForEmail() {
+        System.out.print("Enter user email 1: ");
+        String email = scan.nextLine().trim();
+        long startTime = System.nanoTime();
+        MatchController.calculateAllSimilaritiesForEmail(email); // Maybe there's a better name for this?
+        long endTime = System.nanoTime();
+        double duration = (endTime - startTime) / 1_000_000.0;
+        System.out.println("Calculated in " + duration + " milliseconds");
     }
 }
