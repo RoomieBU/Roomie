@@ -27,7 +27,6 @@ public class MatchingPriorityController extends Thread{
                         synchronized (lock) {
                             while (shouldWait) {
                                 try {
-                                    System.out.println("Thread waiting...");
                                     lock.wait();
                                 } catch (InterruptedException e) {
                                     Thread.currentThread().interrupt();
