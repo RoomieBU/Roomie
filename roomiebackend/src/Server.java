@@ -1,4 +1,9 @@
-import Database.UserMatchInteractionDao;
+import Controller.*;
+
+import Tools.Console;
+import Tools.Router;
+import Tools.Utils;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
@@ -20,6 +25,7 @@ public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
     static private final boolean DEV_CONSOLE = true;
     static public final boolean ALLOW_EMAIL_VERIFICATION = true;
+    static public final boolean SYNC_OPS = true;
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
 
@@ -65,6 +71,17 @@ public class Server {
                 new Thread(() -> {
                     Console c = new Console();
                     c.start();
+                }).start();
+            }
+
+            if (SYNC_OPS) {
+                System.out.println("[Notice] Sync operations are active.");
+                new Thread(() -> {
+                    try {
+                        SyncController sc = new SyncController();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).start();
             }
 
@@ -170,8 +187,6 @@ public class Server {
             }
         }
 
-        // Read in the rest of the request
-        // Read the body in chunks to handle large files
         StringBuilder body = new StringBuilder();
         char[] buffer = new char[4096];  // Read in chunks of 4KB (adjust if needed)
         int bytesRead;
@@ -182,7 +197,6 @@ public class Server {
             totalBytesRead += bytesRead;
         }
 
-        // If body size is still not fully read, you may want to log or handle that case
         if (totalBytesRead < requestLength) {
             System.out.println("[Warning] Body was not completely read, size mismatch.");
         }
