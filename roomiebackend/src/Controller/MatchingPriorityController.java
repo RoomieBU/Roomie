@@ -44,8 +44,7 @@ public class MatchingPriorityController extends Thread{
                     }
                 }
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException ignored) {
         }
     }
 
