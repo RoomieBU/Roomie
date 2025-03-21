@@ -43,8 +43,7 @@ public class Dao {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException("Error updating info: ", e);
         }
     }
 
