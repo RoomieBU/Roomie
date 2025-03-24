@@ -43,19 +43,11 @@ function Sidebar({ currentView, onChatSelect }) {
     // Match section
 
     const [matches, setMatches] = useState([
-        { id: 1, name: "Salvatore La Marca" },
-        { id: 2, name: "Salvatore La Marca" },
-        { id: 3, name: "Salvatore La Marca" },
-        { id: 4, name: "Salvatore La Marca" },
-        { id: 5, name: "Salvatore La Marca" },
-        { id: 6, name: "Salvatore La Marca" },
-        { id: 7, name: "Salvatore La Marca" }
+        { id: 1, name: "Salvatore La Marca" }
     ]);
 
     const [likes, setLikes] = useState([
         {id: 1, name: "John Smith"},
-        {id: 2, name: "John Doe"},
-        {id: 3, name: "Jeff Man"}
     ]);
 
     const [isMatchesVisible, setIsMatchesVisible] = useState(true);
@@ -63,10 +55,39 @@ function Sidebar({ currentView, onChatSelect }) {
 
     function toggleMatches() {
         setIsMatchesVisible(!isMatchesVisible)
+        getLikedList()
     }
 
     function toggleLiked() {
         setIsLikedVisible(!isLikedVisible)
+    }
+
+    const [likedUsers, setLikedUsers] = useState(null)
+
+    function getLikedList() {
+        const getMatchList = async () => {
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch potential roommate");
+                }
+
+                const result = await response.json();
+                setLikedUsers(result)
+
+            } catch (error) {
+                console.error("Error fetching potential roommate:", error);
+                // setError(error.message);
+            }
+        };
+
+        getMatchList();
+        console.log(likedUsers)
     }
 
     return (

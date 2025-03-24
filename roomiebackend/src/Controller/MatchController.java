@@ -3,7 +3,6 @@ package Controller;
 import Database.*;
 import Tools.Auth;
 import Tools.Utils;
-
 import java.sql.SQLException;
 import java.util.*;
 
@@ -106,8 +105,46 @@ public class MatchController {
             response.put("message", "Database error");
             code = 500;
         }
-    return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
+
+    public static String getLikedList(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+        if(!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        String token = data.get("token");
+        if (!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+        String email = Auth.getEmailfromToken(token);
+
+
+        try {
+            // This must be DBUser to get list of users
+            // ** Don't change this to dao class
+            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+
+            // Get liked users
+            List<String> columns = new ArrayList<>();
+            columns.add("shown_user");
+            Map<String, String> userData = new HashMap<>();
+            String  user = userData.get("shown_user");
+
+            
+
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Tools.Auth Controller] Unable to connect to MySQL.");
+            response.put("message", "Database error");
+            code = 500;
+        }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
 
     /**
      * The complexity of this is awful

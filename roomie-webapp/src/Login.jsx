@@ -45,10 +45,10 @@ function Login() {
             });
 
             // Show "success toast" notification before navigating to next page (Dashboard)
-            toast.success("Login successful!", {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 2000,
-            });
+            // toast.success("Login successful!", {
+            //     position: toast.POSITION.TOP_RIGHT,
+            //     autoClose: 2000,
+            // });
 
             // Delay navigation a bit so the user can see the toast
             setTimeout(() => {
@@ -105,7 +105,7 @@ function Login() {
                     </button>
                 </form>
             </div>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </div>
     );
 }

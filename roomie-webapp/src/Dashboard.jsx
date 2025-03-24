@@ -39,8 +39,8 @@ function Dashboard() {
     };
 
     // Action area states
-    const [hideMatching, setHideMatching] = useState(true);
-    const [hideDefault, setHideDefault] = useState(false);
+    const [hideMatching, setHideMatching] = useState(false);
+    const [hideDefault, setHideDefault] = useState(true);
     const [hideChat, setHideChat] = useState(true);
     const [hideProfile, setHideProfile] = useState(true);
 
@@ -117,7 +117,7 @@ function Dashboard() {
     }, [navigate]);
 
     // Add this new state for tracking the current view
-    const [currentView, setCurrentView] = useState("Chat");
+    const [currentView, setCurrentView] = useState("Match");
 
     // Add this handler function
     const handleViewChange = (viewName) => {

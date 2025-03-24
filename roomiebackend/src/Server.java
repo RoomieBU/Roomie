@@ -1,22 +1,18 @@
 import Controller.*;
-
 import Tools.Console;
 import Tools.Router;
 import Tools.Utils;
-
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.security.KeyStore;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
-import java.security.KeyStore;
-import java.io.FileInputStream;
 
 /**
  * This is the main server class for the backend of Roomie.
@@ -58,9 +54,10 @@ public class Server {
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
 
-            // Matches routes??
+            // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
+            router.addRoute("/matches/getMatchList", MatchController::getLikedList);
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
