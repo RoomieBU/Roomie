@@ -36,15 +36,20 @@ public class MatchingPriorityController extends Thread{
                         if (u.getEmail().equals(b.getEmail())) {
                             continue;
                         }
-                        dao.insert(
+                        boolean success = dao.insert(
                                 Map.of("email1", u.getEmail(),
                                         "email2", b.getEmail(),
                                         "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
                                 "UserSimilarities");
+                        if (!success) {
+                            System.out.println("[Sim] Unable to update record: Primary key already exists");
+                        }
                     }
                 }
             }
         } catch (SQLException | ClassNotFoundException ignored) {
+            System.out.println("[Sim] SQL Error: Starting over");
+            start(); // Just start over and try again
         }
     }
 

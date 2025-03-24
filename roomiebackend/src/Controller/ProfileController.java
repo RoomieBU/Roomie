@@ -1,6 +1,7 @@
 package Controller;
 
 import Database.Dao;
+import Database.MatchingPriorityDao;
 import Database.SQLConnection;
 import Tools.Auth;
 import Tools.Utils;
@@ -30,7 +31,7 @@ public class ProfileController {
         String userEmail = Auth.getEmailfromToken(token);
 
         try (Connection conn = SQLConnection.getConnection()) {
-            Dao dao = new Dao(conn);
+            MatchingPriorityDao dao = new MatchingPriorityDao(conn);
 
             // Fetch user data
             List<String> userDataColumns = new ArrayList<>();
