@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -53,7 +53,6 @@ function Registration() {
                 throw new Error("Registration failed. Please try again.");
             }
 
-            alert("Registration successful!");
             navigate("/dashboard");
         } catch (error) {
             setRegistrationError(error.message);

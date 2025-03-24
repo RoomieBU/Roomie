@@ -87,7 +87,6 @@ function Preferences() {
                 throw new Error("Sending Preferences failed. Please try again.");
             }
 
-            alert("Sending Preferences successful!");
             navigate("/dashboard");
         } catch (error) {
             setRegistrationError(error.message);

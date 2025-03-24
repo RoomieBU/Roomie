@@ -1,95 +1,139 @@
-:root {
-  font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  height: 100%;
+/* updated css for index page/landing page */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html,body {
-  height: 100vh;
-  /* Ensure full viewport height */
-  width: 100vw;
-  /* Ensure full viewport width */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-family: 'Inter', sans-serif;
+  --primary-color: purple;
+  --black: #000000;
+  --white: #ffffff;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--black);
+  background-color: var(--white);
+}
+
+.navbar {
   display: flex;
-  justify-content: center;
   align-items: center;
-  overflow: hidden;
+  justify-content: space-between;
+  background-color: var(--white);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #dddddd;
 }
 
-
-a {
-  font-weight: 500;
-  color: #ffffff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #ffffff;
-}
-
-.manBun {
-  display: flex;
-  place-items: center;
-  width: 100vw;
-  min-height: 100vh;
-  background-image: url(assets/dashboard_bg.webp);
-  background-size: cover;
-  background-position: center;
-}
-
-.dashboard-h1 {
-  font-size: 3.2em;
-  line-height: 0.8;
-  color: white
-}
-
-.dashboard-p {
-  font-size: 0.8em;
-  color: #ffffff
-}
-
-button {
-  border-radius: 8px;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  background-color: transparent;
-  border-color: transparent;
+.navbar-left .logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--black);
   cursor: pointer;
-  transition: border-color 0.25s;
 }
 
-button:hover {
-  border-radius: 8px;
-  background-color: #ffffff3d;
+.navbar-right {
+  display: flex;
+  align-items: center !important;
+  gap: 2rem !important;
+  margin-top: 1rem;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.navbar-right a:hover {
+  color: #897389 !important;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.navbar-right ul {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.navbar-right li a {
+  text-decoration: none;
+  border-radius: 10px;
+  color: #bb8db1;
+  padding: 2px;
+  font-size: 1.1rem;
+}
+
+.navbar-right li a:hover {
+  text-decoration: underline;
+}
+
+.hero {
+  position: relative;
+  min-height: calc(100vh - 70px);
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  color: var(--black);
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.signup-button {
+  background-color: #fff1fc;
+  border: none;
+  color: #4a4a4a;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'League Spartan';
+}
+
+.signup-button:hover {
+  background-color: #410041;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(-50%, 0);
   }
 
-  a:hover {
-    color: #747bff;
+  40% {
+    transform: translate(-50%, -10px);
   }
 
-  button {
-    background-color: #f9f9f9;
+  60% {
+    transform: translate(-50%, -5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-right {
+    gap: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
   }
 }

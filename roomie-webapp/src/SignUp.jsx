@@ -29,7 +29,6 @@ function SignUp() {
             }
 
             const responseData = await response.json();
-            alert("Account created successfully!");
 
             // Save token to local storage (optional)
             localStorage.setItem("token", responseData.token);

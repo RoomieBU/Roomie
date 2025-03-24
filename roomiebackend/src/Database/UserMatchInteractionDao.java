@@ -3,6 +3,7 @@ package Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -32,6 +33,28 @@ public class UserMatchInteractionDao {
             return false;
         }
     }
-    
 
+    public double getUserSimilarity(String email1, String email2) {
+        // Get some users similarities
+        String query = "SELECT similarity_score FROM UserSimilarities WHERE (email1 = ? AND email2 = ?) OR (email1 = ? AND email2 = ?)";
+        double sim = 2;
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, email1);
+            pstmt.setString(2, email2);
+            pstmt.setString(3, email1);
+            pstmt.setString(4, email2);
+
+            ResultSet rs = pstmt.executeQuery(query);
+            if (rs.next()) {sim = rs.getDouble("similarity_score");}
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return sim;
+        }
+
+
+        return sim;
+    }
 }

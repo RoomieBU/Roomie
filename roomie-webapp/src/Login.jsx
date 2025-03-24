@@ -25,7 +25,6 @@ function Login() {
             }
 
             const responseData = await response.json();
-            alert("Login successful!");
 
             // Save token to local storage or context for authentication
             localStorage.setItem("token", responseData.token);
@@ -49,6 +48,7 @@ function Login() {
                 navigate("/dashboard"); // Redirect to dashboard
             }
 
+        // Catch any possible errors and display error message if any login errors occur
         } catch (error) {
             setLoginError(error.message);
         }

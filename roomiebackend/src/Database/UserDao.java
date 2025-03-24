@@ -11,13 +11,14 @@ import java.util.Map;
  *
  *  Work in progress, add methods as needed
  */
-public class UserDao {
+public class UserDao extends Dao{
     private Connection connection;
 
     /**
      * Takes the connection given to connect to the database
      */
     public UserDao(Connection connection) throws SQLException {
+        super(connection);
         this.connection = connection;
     }
 
@@ -67,6 +68,34 @@ public class UserDao {
             throw new RuntimeException("Error retrieving users", e);
         }
 
+        return users;
+    }
+
+    /**
+     * Returns a list of all users from the database who have a true relationship with the user
+     * 
+     * @param 
+     * @return A list of users that are liked by the current user
+     */
+    public List<User> getAllLikedUsers(String email) throws SQLException {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT shown_user FROM UserMatchInteractions WHERE user = ? AND relationship = true";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                int userID = getIDfromEmail(rs.getString("shown_user"));
+                User user = getUserById(userID);
+
+                if(user != null)
+                    users.add(user);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving liked users", e);
+        }
+        
         return users;
     }
 
@@ -134,6 +163,33 @@ public class UserDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving user by ID", e);
+        }
+        return user;
+    }
+
+    public User getUserByEmail(String email) {
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered FROM Users WHERE email = ?";
+        User user = null;
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("about_me"),
+                            rs.getDate("date_of_birth"),
+                            rs.getTimestamp("created_at"),
+                            rs.getBoolean("registered")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user by email", e);
         }
         return user;
     }
@@ -310,4 +366,11 @@ public class UserDao {
     public void closeConnection() throws SQLException {
         connection.close();
     }
+
+    
+    
+
+
 }
+
+

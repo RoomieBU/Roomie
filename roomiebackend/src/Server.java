@@ -1,11 +1,17 @@
+import Controller.*;
 import Database.UserMatchInteractionDao;
+import Tools.Console;
+import Tools.Router;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.security.KeyStore;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +26,7 @@ public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
     static private final boolean DEV_CONSOLE = true;
     static public final boolean ALLOW_EMAIL_VERIFICATION = true;
+    static public final boolean SYNC_OPS = true;
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
 
@@ -58,6 +65,7 @@ public class Server {
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
+            router.addRoute("/profile/editProfile", ProfileController::editProfile);
 
             // Messaging routes
             /**
@@ -67,12 +75,23 @@ public class Server {
              *      * Sends a chat to go groupchat / person
              */
 
-            
+
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
                     Console c = new Console();
                     c.start();
+                }).start();
+            }
+
+            if (SYNC_OPS) {
+                System.out.println("[Notice] Sync operations are active.");
+                new Thread(() -> {
+                    try {
+                        SyncController sc = new SyncController();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }).start();
             }
 

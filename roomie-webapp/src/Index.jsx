@@ -1,27 +1,48 @@
+/* main dashboard page */
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import "./index.css"
 
 function Index() {
     const navigate = useNavigate();
 
     return (
-        <div className="manBun">
-            <div className="container d-flex flex-column align-items-center vw-100 vh-100 justify-content-center">
-                <h1 className="dashboard-h1">Roomie.</h1>
-                <p className="dashboard-p">Find your perfect roommate.</p>
+        <>
+            <section className="hero">
+                <div className="hero-content">
+                    <h1>roomie.</h1>
+                    <p>Find your dream roommate.</p>
+                    <button className="signup-button" onClick={() => navigate("/signup")}>
+                        Join Now!
+                    </button>
 
-                <div className="d-flex gap-3 mt-4">
-                    <button className="button" onClick={() => navigate("/login")}>
-                        Login
-                    </button>
-                    <button className="button" onClick={() => navigate("/signup")}>
-                        Sign Up
-                    </button>
+                    <div className="arrow-down">
+                        <a href="#features">↓</a>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
+
+            <section id="features" className="features-section">
+                <div className="column">
+                    <div className="text-box">
+                        <h3>MATCH.</h3>
+                        <p>Short description of this feature will go here.</p>
+                    </div>
+                </div>
+                <div className="column">
+                    <div className="text-box">
+                        <h3>CHAT.</h3>
+                        <p>Short description of this feature will go here.</p>
+                    </div>
+                </div>
+                <div className="column">
+                    <div className="text-box">
+                        <h3>BUILD LIFELONG CONNECTIONS.</h3>
+                        <p>Short description of this feature will go here.</p>
+                    </div>
+                </div>
+            </section>
+        </>
     );
 }
 

@@ -10,7 +10,7 @@ import java.util.*;
  * Allows flexibility in retrieving and setting data fields of different data types.
  */
 public class Dao {
-    private Connection connection;
+    Connection connection;
 
 
     public Dao(Connection connection) throws SQLException {
@@ -24,7 +24,7 @@ public class Dao {
      * @param table
      * @return
      */
-    public boolean insert(Map<String, Object> data, String table) {
+    public boolean insert(Map<String, String> data, String table) {
         if (data == null || data.isEmpty()) {
             return false;
         }
@@ -43,7 +43,7 @@ public class Dao {
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            //throw new RuntimeException("Error updating info: ", e);
             return false;
         }
     }
