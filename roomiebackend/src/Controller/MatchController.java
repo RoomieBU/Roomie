@@ -78,29 +78,28 @@ public class MatchController {
             userData = DBUser.getData(columns, email);
             String school = userData.get("school");
 
-
+/**         //For debugging: This block just sends a random user
+ *
             // get a list of all the users, where the user has the same school as the
             List<User> users = DBUser.getAllUsersBySchool(school);
             User user;
-            // Just got now get a random user (does no checking if it's the same user)
             Random rand = new Random();
             do {
                 user = users.get(rand.nextInt(0, users.size() - 1));
             } while (!user.getRegistered() || user.getDateOfBirth() == null || user.getEmail().equals(email));
+**/
 
-            if (users.get(0) != null) {
-                response.put("message", "Next match found");
-                response.put("email", user.getEmail());
-                response.put("name", user.getFirstName() + " " + user.getLastName());
-                response.put("date_of_birth", user.getDateOfBirth().toString());
-                response.put("about_me", user.getAboutMe());
-                response.put("major", "Wumbology (Undergrad)");
-                response.put("profile_picture", user.getProfilePicture());
-                code = 200;
-            } else {
-                response.put("message", "No registered users found");
-                code = 404;
-            }
+            User user = getNextSimilarUser(email);
+
+            response.put("message", "Next match found");
+            response.put("email", user.getEmail());
+            response.put("name", user.getFirstName() + " " + user.getLastName());
+            response.put("date_of_birth", user.getDateOfBirth().toString());
+            response.put("about_me", user.getAboutMe());
+            response.put("major", "Ski ball (Undergrad)");
+            response.put("profile_picture", user.getProfilePicture());
+            code = 200;
+
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Tools.Auth Controller] Unable to connect to MySQL.");
             response.put("message", "Database error");
@@ -188,8 +187,25 @@ public class MatchController {
         return true;
     }
 
+    public static User getNextSimilarUser(String email) {
+        User u = null;
+        try {
+            UserDao userDao = new UserDao(SQLConnection.getConnection());
+            MatchingPriorityDao MPDao = new MatchingPriorityDao(SQLConnection.getConnection());
+            int step = 0;
+            String mostSimilarEmail = MPDao.getMostSimilar(email, step++);
+            while (MPDao.exists(Map.of("shown_user", mostSimilarEmail, "user", email), "UserMatchInteractions")) {
+                mostSimilarEmail = MPDao.getMostSimilar(email, step++);
+            }
+            u = userDao.getUserByEmail(mostSimilarEmail);
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return u;
+    }
+
     private static boolean isBooleanColumn(String column) {
         return Set.of("pet_friendly", "smoke", "smoke_okay", "drugs", "drugs_okay").contains(column);
     }
-
 }
