@@ -53,7 +53,6 @@ function Registration() {
                 throw new Error("Registration failed. Please try again.");
             }
 
-            alert("Registration successful!");
             navigate("/dashboard");
         } catch (error) {
             setRegistrationError(error.message);
