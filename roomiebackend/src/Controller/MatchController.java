@@ -107,42 +107,61 @@ public class MatchController {
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 
-    public static String getLikedList(Map<String, String> data, String method) {
-        int code = 400;
-        Map<String, String> response = new HashMap<>();
-        if(!method.equals("POST")) {
-            response.put("message", "Method not allowed!");
-        }
+    // public static String getLikedList(Map<String, String> data, String method) {
+    //     int code = 400;
+    //     Map<String, String> response = new HashMap<>();
+    //     if(!method.equals("POST")) {
+    //         response.put("message", "Method not allowed!");
+    //     }
 
-        String token = data.get("token");
-        if (!Auth.isValidToken(token)) {
-            response.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
-        }
-        String email = Auth.getEmailfromToken(token);
+    //     String token = data.get("token");
+    //     if (!Auth.isValidToken(token)) {
+    //         response.put("message", "Unauthorized");
+    //         return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+    //     }
+    //     String email = Auth.getEmailfromToken(token);
 
 
-        try {
-            // This must be DBUser to get list of users
-            // ** Don't change this to dao class
-            UserDao DBUser = new UserDao(SQLConnection.getConnection());
+    //     try {
+    //         // This must be DBUser to get list of users
+    //         // ** Don't change this to dao class
+    //         UserDao DBUser = new UserDao(SQLConnection.getConnection());
 
-            // Get liked users
-            List<String> columns = new ArrayList<>();
-            columns.add("shown_user");
-            Map<String, String> userData = new HashMap<>();
-            String  user = userData.get("shown_user");
+    //         // Get liked users
+    //         List<String> columns = new ArrayList<>();
+    //         columns.add("shown_user");
+    //         Map<String, String> userData = new HashMap<>();
+    //         String  user = userData.get("shown_user");
 
+    //         List<User> users = DBUser.getAllLikedUsers(email);
+
+    //         if(!users.isEmpty()) {
+    //             List<Map<String, String>> userMatches = new ArrayList<>();
+
+    //             for(User u : users) {
+    //                 Map<String, String> userInfo = new HashMap<>();
+    //                 userInfo.put("email", u.getEmail());
+    //                 userInfo.put("first_name", u.getFirstName());
+    //                 userInfo.put("last_name", u.getLastName());
+    //                 userInfo.put("profile_picture_url", u.getProfilePicture());
+
+    //                 userMatches.add(userInfo);
+    //             }
+
+    //             response.put("message", "Liked found");
+    //             response.put("matches", Utils.assembleJson(userMatches));
+    //         }
+            
             
 
             
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("[Tools.Auth Controller] Unable to connect to MySQL.");
-            response.put("message", "Database error");
-            code = 500;
-        }
-        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
-    }
+    //     } catch (SQLException | ClassNotFoundException e) {
+    //         System.out.println("[Tools.Auth Controller] Unable to connect to MySQL.");
+    //         response.put("message", "Database error");
+    //         code = 500;
+    //     }
+    //     return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    // }
 
 
     /**
