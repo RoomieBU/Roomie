@@ -1,52 +1,219 @@
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* updated css for index page/landing page */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+}
+
+.navbar-left .logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(181, 181, 181, 1) 91%);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.navbar-right ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar-right li {
+  cursor: pointer;
+  font-size: 1rem;
+  color: #333333;
+  transition: color 0.2s ease;
+}
+
+.hero {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-} */
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  background: rgb(195, 34, 161);
+  background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(181, 181, 181, 1) 91%);
+  background-size: cover;
+  padding: 3rem;
 }
 
-h1 {
-  color: #333;
+.hero-content {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  max-width: 600px;
+}
+
+.hero-content h1 {
+  font-size: 7rem;
+  margin-bottom: 1rem;
+  font-family: "Chewy";
+}
+
+.hero-content p {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-family: "League Spartan", sans-serif;
+  color: white;
+}
+
+.signup-button {
+  background-color: #fff1fc !important;
+  border: none !important;
+  color: #4a4a4a !important;
+  font-size: 1rem !important;
+  padding: 0.8rem 1.5rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  font-family: 'League Spartan' !important;
+}
+
+.signup-button:hover {
+  background-color: #ebc6eb !important;
 }
 
 a {
-  color: #6c0277;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  padding: 2px !important;
+  color: #c26fb0;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-10px);
+  }
+
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-right ul {
+    gap: 1rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+    color: white;
+  }
+}
+
+.arrow-down {
+  margin-top: 40px;
+}
+
+.arrow-down a {
+  font-size: 2.5rem !important;
+  color: #cdcdcd !important;
   text-decoration: none;
-  font-weight: bold;
+  transition: color 0.3s ease;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.arrow-down a:hover {
+  color: #a8a8a8 !important;
+}
+
+.arrow-down a {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
   }
-  to {
-    transform: rotate(360deg);
+
+  40% {
+    transform: translateY(10px);
+  }
+
+  60% {
+    transform: translateY(5px);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.features-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.card {
-  padding: 2em;
+.column {
+  flex: 1;
+  max-width: 300px;
+  text-align: center;
+  border: 1px solid #fffdfd;
+  background-color: #eddbf1;
+  background-size: cover;
+  border-radius: 15px;
+  padding: 35px;
 }
 
-.read-the-docs {
-  color: #888;
+.text-box {
+  margin-top: 1rem !important;
+}
+
+.text-box h3 {
+  margin-bottom: 0.5rem !important;
+  color: #c26fb0 !important;
+  font-family: "Chewy" !important;
+}
+
+.text-box p {
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;
+  color: #5d495b !important;
 }
