@@ -168,7 +168,7 @@ public class UserDao extends Dao{
     }
 
     public User getUserByEmail(String email) {
-        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at FROM Users WHERE email = ?";
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at, registered FROM Users WHERE email = ?";
         User user = null;
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -189,7 +189,7 @@ public class UserDao extends Dao{
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving user by ID", e);
+            throw new RuntimeException("Error retrieving user by email", e);
         }
         return user;
     }

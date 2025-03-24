@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class AuthController {
-
+    private static final boolean ALLOW_EMAIL_VERIFICATION = false;
     /**
      * Logic for logging in.
      *
@@ -209,7 +209,7 @@ public class AuthController {
 
         try {
             Dao dao = new Dao(SQLConnection.getConnection());
-            //if (Server.ALLOW_EMAIL_VERIFICATION) {
+            if (ALLOW_EMAIL_VERIFICATION) {
                 Map<String, String> codeReturn = dao.get(List.of("verify_code"), email, "Users");
                 String verifyCode = codeReturn.get("verify_code");
 
@@ -218,7 +218,7 @@ public class AuthController {
                     code = 422;
                     return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
                 }
-            //}
+            }
 
             if (dao.set(formData, email, "Users")) {
                 response.put("message", "Set user data for " + email);
