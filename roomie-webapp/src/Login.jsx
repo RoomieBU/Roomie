@@ -30,16 +30,16 @@ function Login() {
             localStorage.setItem("token", responseData.token);
 
 
-            // // Check if user is registered and redirect on response
-            // const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify({
-            //         token: localStorage.getItem("token")
-            //     }),
-            // });
+            // Check if user is registered and redirect on response
+            const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    token: localStorage.getItem("token")
+                }),
+            });
 
         // Catch any possible errors and display error message if any login errors occur
         } catch (error) {
