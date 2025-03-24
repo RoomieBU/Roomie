@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-// Utilize React Toastify as a different way to show alerts that is more aesthetically-pleasing for users (and not quite as annoying)
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -57,15 +54,9 @@ function Edit() {
         setSelectedFile(file);
     };
 
-    // Function that shows a "success toast" notification and navigates after a delay
-    const showSuccessAndNavigate = () => {
-        toast.success("Profile updated successfully!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2000,
-        });
-        setTimeout(() => {
-            navigate("/dashboard");
-        }, 2200);
+    // Navigate to dashboard after profile is successfully updated
+    const navigateToDashboard = () => {
+        navigate("/dashboard");
     };
 
     // Handle form submission (profile update + file upload)
@@ -115,12 +106,12 @@ function Edit() {
                         throw new Error("Profile picture upload failed.");
                     }
 
-                    // Call the function that shows toast and navigates
-                    showSuccessAndNavigate();
+                    // Navigate to dashboard after successful update
+                    navigateToDashboard();
                 };
             } else {
-                // Call the function that shows toast and navigates
-                showSuccessAndNavigate();
+                // Navigate to dashboard
+                navigateToDashboard();
             }
         } catch (error) {
             setProfileError(error.message);
@@ -184,7 +175,6 @@ function Edit() {
                     </button>
                 </form>
             </div>
-            <ToastContainer />
         </div>
     );
 }

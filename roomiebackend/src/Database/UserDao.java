@@ -11,13 +11,14 @@ import java.util.Map;
  *
  *  Work in progress, add methods as needed
  */
-public class UserDao {
+public class UserDao extends Dao{
     private Connection connection;
 
     /**
      * Takes the connection given to connect to the database
      */
     public UserDao(Connection connection) throws SQLException {
+        super(connection);
         this.connection = connection;
     }
 
@@ -145,6 +146,33 @@ public class UserDao {
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("username"),
+                            rs.getString("email"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("about_me"),
+                            rs.getDate("date_of_birth"),
+                            rs.getTimestamp("created_at"),
+                            rs.getBoolean("registered")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving user by ID", e);
+        }
+        return user;
+    }
+
+    public User getUserByEmail(String email) {
+        String query = "SELECT user_id, username, email, first_name, last_name, about_me, date_of_birth, created_at FROM Users WHERE email = ?";
+        User user = null;
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     user = new User(

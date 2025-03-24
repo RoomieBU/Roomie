@@ -1,6 +1,7 @@
 package Controller;
 
 import Database.Dao;
+import Database.MatchingPriorityDao;
 import Database.SQLConnection;
 import Database.UserPreferencesDao;
 import Tools.Auth;
@@ -254,9 +255,11 @@ public class AuthController {
 
         try {
             UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
+            MatchingPriorityDao MPDao = new MatchingPriorityDao(SQLConnection.getConnection());
 
             if (DBUser.createUserPreferences(data, email)) {
                 response.put("message", "Set user data for " + email);
+                MPDao.removeIfExists(email);
                 code = 200;
             } else {
                 response.put("message", "Unable to set user data for " + email);

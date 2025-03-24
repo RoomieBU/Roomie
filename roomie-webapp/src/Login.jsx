@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-// Utilize React Toastify as a different way to show alerts that is more aesthetically-pleasing for users (and not quite as annoying)
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
     const navigate = useNavigate();
@@ -33,33 +30,17 @@ function Login() {
             localStorage.setItem("token", responseData.token);
 
 
-            // Check if user is registered and redirect on response
-            const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    token: localStorage.getItem("token")
-                }),
-            });
-
-            // Show "success toast" notification before navigating to next page (Dashboard)
-            // toast.success("Login successful!", {
-            //     position: toast.POSITION.TOP_RIGHT,
-            //     autoClose: 2000,
+            // // Check if user is registered and redirect on response
+            // const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //         token: localStorage.getItem("token")
+            //     }),
             // });
 
-            // Delay navigation a bit so the user can see the toast
-            setTimeout(() => {
-                // If login response is invalid, redirect to registration page
-                if (!response2.ok) {
-                    navigate("/registration");
-                // Else, redirect user to dashboard
-                } else {
-                    navigate("/dashboard");
-                }
-            }, 2200);
         // Catch any possible errors and display error message if any login errors occur
         } catch (error) {
             setLoginError(error.message);
@@ -105,7 +86,6 @@ function Login() {
                     </button>
                 </form>
             </div>
-            {/* <ToastContainer /> */}
         </div>
     );
 }

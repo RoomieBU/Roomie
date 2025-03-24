@@ -45,6 +45,8 @@ public class MatchingPriorityController extends Thread{
                 }
             }
         } catch (SQLException | ClassNotFoundException ignored) {
+            System.out.println("[Sim] SQL Error: Starting over");
+            start(); // Just start over and try again
         }
     }
 
