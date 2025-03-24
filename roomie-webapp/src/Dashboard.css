@@ -92,6 +92,18 @@
     margin: auto;
 }
 
+.header-button {
+    background-color: purple;
+    border-width: 0px;
+    padding: 10px;
+}
+
+.header-button:hover {
+    background-color: rgba(0,0,0,0.1);
+    color: white;
+}
+
+
 /* Profile Component Styles */
 .profile-container {
     width: 100%;

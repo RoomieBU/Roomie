@@ -41,6 +41,13 @@ function Login() {
                 }),
             });
 
+            if (!response2.ok) {
+                navigate("/registration"); // Redirect to registration page
+            }
+            else {
+                navigate("/dashboard"); // Redirect to dashboard
+            }
+
         // Catch any possible errors and display error message if any login errors occur
         } catch (error) {
             setLoginError(error.message);

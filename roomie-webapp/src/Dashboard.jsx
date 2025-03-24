@@ -156,11 +156,11 @@ function Dashboard() {
         <div>
             <div className="header">
                 <div className="action-section">
-                    <button onClick={() => navigate("/")}>
+                    <button className="header-button" onClick={() => navigate("/")}>
                         <h4 className="logo">Roomie.</h4>
                     </button>
-                    <button onClick={() => handleViewChange("Match")}>Match.</button>
-                    <button onClick={() => handleViewChange("Chat")}>Chat.</button>
+                    <button className="header-button" onClick={() => handleViewChange("Match")}>Match.</button>
+                    <button className="header-button" onClick={() => handleViewChange("Chat")}>Chat.</button>
                 </div>
                 <div className="profile-section">
                     <img
@@ -169,7 +169,7 @@ function Dashboard() {
                         className="profile-picture"
                         onClick={() => handleViewChange("Profile")}
                     />
-                    <button style={{ borderRadius: 0 }} onClick={handleLogout}>
+                    <button className="header-button" style={{ borderRadius: 0 }} onClick={handleLogout}>
                         Log Out.
                     </button>
                 </div>
