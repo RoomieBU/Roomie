@@ -2,6 +2,7 @@ import Controller.*;
 import Database.UserMatchInteractionDao;
 import Tools.Console;
 import Tools.Router;
+import Tools.Utils;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -75,6 +76,7 @@ public class Server {
              *      * Sends a chat to go groupchat / person
              */
 
+            
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
