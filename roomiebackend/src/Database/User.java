@@ -23,7 +23,7 @@ public class User {
     private String school;
     private String profilePicture;
 
-    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
+    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered, String profilePicture) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -34,7 +34,9 @@ public class User {
         this.createdAt = createdAt;
         this.registered = registered;
         this.school = school;
-        this.profilePicture = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg";
+
+        this.profilePicture = profilePicture;
+        // "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg"
     }
 
     // Getters
