@@ -119,16 +119,16 @@ function Edit() {
     };
 
     return (
-        <div className="manBun">
-            <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-                <h1 className="fw-bold">Edit Your Profile</h1>
-                <p>
+        <div className="container-fluid d-flex align-items-center justify-content-center">
+            <div className="col-12 col-md-6 col-lg-4 text-center">
+                <h1 className="fw-bold mb-4">Edit Your Profile</h1>
+                {/* <p className="mb-4">
                     Go back to{" "}
                     <a href="" onClick={() => navigate("/dashboard")}>
                         Dashboard
                     </a>
-                </p>
-                <form onSubmit={handleSubmit(onSubmit)} className="w-50">
+                </p> */}
+                <form onSubmit={handleSubmit(onSubmit)} className="w-100">
                     <div className="mb-3">
                         <label className="form-label">First Name</label>
                         <input
@@ -138,7 +138,6 @@ function Edit() {
                         />
                         {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">Last Name</label>
                         <input
@@ -148,7 +147,6 @@ function Edit() {
                         />
                         {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">About Me</label>
                         <textarea
@@ -157,7 +155,6 @@ function Edit() {
                         />
                         {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">Profile Picture</label>
                         <input
@@ -167,10 +164,11 @@ function Edit() {
                             className="form-control"
                         />
                     </div>
-
                     {profileError && <div className="text-danger mb-3">{profileError}</div>}
-
-                    <button type="submit" className="btn btn-primary w-100" style={{ position: "fixed", bottom: "0", left: "0", right: "0", borderRadius: "0" }}>
+                    <button 
+                        type="submit" 
+                        className="btn btn-primary w-100 mt-3"
+                    >
                         Save Changes
                     </button>
                 </form>

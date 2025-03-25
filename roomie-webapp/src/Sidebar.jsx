@@ -103,15 +103,15 @@ function Sidebar({ currentView, onChatSelect }) {
                                 <h3>{chat.name}</h3>
                             </div>
                         ));
-                    case "Profile":
-                        return (
-                            <div className="profileBox">
-                                <div className="settingTab">My Account</div>
-                                <div className="settingTab">Preferences</div>
-                                <div className="settingTab">Appearance</div>
-                                <div className="settingTab">Log Out</div>
-                            </div>
-                        );
+                    // case "Profile":
+                    //     return (
+                    //         <div className="profileBox">
+                    //             <div className="settingTab">My Account</div>
+                    //             <div className="settingTab">Preferences</div>
+                    //             <div className="settingTab">Appearance</div>
+                    //             <div className="settingTab">Log Out</div>
+                    //         </div>
+                    //     );
                     case "Match":
                         return (
                             <div className="matchBox">

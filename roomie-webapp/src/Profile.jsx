@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function Profile() {
+function Profile({ onEditProfile }) {
+    Profile.propTypes = {
+        onEditProfile: PropTypes.func.isRequired,
+    };
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,7 +69,15 @@ function Profile() {
     return (
         <div className="profile-container">
             {isLoading ? (
-                <p>Loading profile...</p>
+                <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
+                <div className="text-center">
+                    <p className="fs-4">Loading profile...</p>
+                    {/* Optional: Add a spinner for better visual feedback */}
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
             ) : profile ? (
                 <div className="profile-content">
                     {/* Profile Picture */}
@@ -104,7 +116,7 @@ function Profile() {
                         {/* Add Edit Profile Button */}
                         <button
                             className="edit-profile-btn"
-                            onClick={() => navigate("/profile/edit")}
+                            onClick={onEditProfile}
                         >
                             Edit Profile
                         </button>
