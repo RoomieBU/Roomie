@@ -49,10 +49,15 @@ function Edit() {
                 if (!response.ok) throw new Error("Failed to fetch profile");
                 const result = await response.json();
 
+                // Split the combined name into first and last name
+                const nameParts = result.name ? result.name.split(' ') : ['', ''];
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || ''; // Handle multiple last names
+
                 // Reset form with fetched data
                 reset({
-                    first_name: result.first_name || '',
-                    last_name: result.last_name || '',
+                    first_name: firstName,
+                    last_name: lastName,
                     about_me: result.about_me || ''
                 });
             } catch (error) {
