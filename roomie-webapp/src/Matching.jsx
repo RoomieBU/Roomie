@@ -11,6 +11,17 @@ function Matching() {
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
     const [age, setAge] = useState("-1")
 
+    const [isTimeout, setIsTimeout] = useState(false)
+
+    useEffect(() => {
+        if(isLoading) {
+            const timer = setTimeout(() => setIsTimeout(true), 5000)
+            return () => clearTimeout(timer)
+        } else {
+            setIsTimeout(false)
+        }
+    }, [isLoading])
+
     const navigate = useNavigate();
 
     // Verify that the user is currently logged in and has a valid token
@@ -113,7 +124,7 @@ function Matching() {
 
                 console.log(roommate)
 
-                console.log("HELLOLOIDJFOIJ", roommate.profile_picture)
+                console.log("This is the profile Picture", roommate.profile_picture)
                 console.log(roommate.major)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
@@ -203,45 +214,59 @@ function Matching() {
                 <p>Error: {error}</p>
             )}
 
-            {isLoading ? (
-                <p>Loading potential roommate...</p>
-            ) : roommate ? (
-                <div
-                    onClick={swapSides}
-                    className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
-                    style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-                    {isFront ? (
-                        <div className="user_info">
-                            <p>{roommate.name}, {age}
-                                <br />
-                                Bloomsburg University
-                            </p>
+            { isLoading ? (
+                isTimeout ? (
+                    <p>No more matches at this time. Please try again later!</p>
+                ) : (
+                    <>
+                        <p>Loading potential roommate...</p>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
                         </div>
-                    ) : (
-                        <div className="more-user-info">
-                            <h3>More about {roommate.name}</h3>
-                            <dl>
-                                <dt>Major</dt>
-                                <dd>{roommate.major}</dd>
-                                <dt>Bio:</dt>
-                                <dd>{roommate.about_me}</dd>
-                            </dl>
-                        </div>
-                    )}
-                </div>
+                    </>
+                )
+            ) : roommate != null ? (
+                <>
+                    <div
+                        onClick={swapSides}
+                        className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
+                        style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                    >
+                        {isFront ? (
+                            <div className="user_info">
+                                <p>{roommate.name}, {roommate.age}
+                                    <br />
+                                    Bloomsburg University
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="more-user-info">
+                                <h3>More about {roommate.name}</h3>
+                                <dl>
+                                    <dt>Major</dt>
+                                    <dd>{roommate.major}</dd>
+                                    <dt>Bio:</dt>
+                                    <dd>{roommate.about_me}</dd>
+                                </dl>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="match-button-cluster">
+                        <button onClick={declined} className="deny-icon">
+                            <i className="bi bi-x-lg" />
+                        </button>
+
+                        <button onClick={matched} className="match-icon">
+                            <i className="bi bi-check-lg" />
+                        </button>
+                    </div>
+                </>
             ) : (
                 <p>No potential roommate found.</p>
             )}
 
-            <div className="match-button-cluster">
-                <button onClick={declined} className="deny-icon">
-                    <i className="bi bi-x-lg" />
-                </button>
-
-                <button onClick={matched} className="match-icon">
-                    <i className="bi bi-check-lg" />
-                </button>
-            </div>
+            
         </div>
     );
 }

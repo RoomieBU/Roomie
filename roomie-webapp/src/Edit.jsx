@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-function Edit() {
+function Edit({onProfile}) {
     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [profileError, setProfileError] = useState("");
@@ -207,16 +208,25 @@ function Edit() {
                         />
                     </div>
                     {profileError && <div className="text-danger mb-3">{profileError}</div>}
-                    <button 
-                        type="submit" 
-                        className="btn btn-primary w-100 mt-3"
-                    >
-                        Save Changes
-                    </button>
+                    <div style={{display: "flex", flexDirection: "row", gap: "20px"}}>
+                        <button className="btn btn-primary w-100 mt-3" onClick={onProfile}>
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="btn btn-primary w-100 mt-3"
+                            onClick={onProfile}
+                        >
+                            Save Changes
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     );
 }
+Edit.propTypes = {
+    onProfile: PropTypes.func.isRequired,
+};
 
 export default Edit;

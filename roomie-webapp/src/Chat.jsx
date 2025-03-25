@@ -63,9 +63,9 @@ function Chat({ selectedChat }) {
                 <h5 className="chatNote" >You are chatting with {name}</h5>
                 {conversation.map((item, index) => (
                     item.type === 'message' ? (
-                        <p key={index} className="messageBubble">{item.content}</p>
+                        <p key={index} className="right bubble">{item.content}</p>
                     ) : (
-                        <p key={index} className="responseBubble">{item.content}</p>
+                        <p key={index} className="left bubble">{item.content}</p>
                     )
                 ))}
             </div>

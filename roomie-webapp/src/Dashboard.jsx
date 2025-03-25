@@ -217,7 +217,7 @@ function Dashboard() {
 
                 {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")}/>}
 
-                {!hideEdit && <Edit />}
+                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")}/>}
 
 
             </div>
