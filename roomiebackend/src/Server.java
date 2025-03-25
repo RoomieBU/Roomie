@@ -20,7 +20,6 @@ import javax.net.ssl.*;
 public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
     static private final boolean DEV_CONSOLE = true;
-    static public final boolean ALLOW_EMAIL_VERIFICATION = true;
     static public final boolean SYNC_OPS = true;
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
@@ -49,6 +48,7 @@ public class Server {
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
+            router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);

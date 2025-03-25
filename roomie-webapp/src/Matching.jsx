@@ -35,6 +35,28 @@ function Matching() {
         verifyToken();
     }, [navigate]);
 
+    // Verify that the user has filled out their preferences (So matching actually works)
+    useEffect(() => {
+        const verifyPrefs = async () => {
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/auth/hasPreferences", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("No Preferences");
+                }
+            } catch (error) {
+                console.log("Redirecting to preferences page");
+                navigate("/preferences");
+            }
+        };
+
+        verifyPrefs();
+    }, [navigate]);
+
     // Fetch the next potential roommate
     useEffect(() => {
         const getPotentialRoommate = async () => {
@@ -88,7 +110,7 @@ function Matching() {
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
-                
+
                 console.log(roommate)
 
                 console.log("HELLOLOIDJFOIJ", roommate.profile_picture)
@@ -153,25 +175,25 @@ function Matching() {
     function calculateAge(dateString) {
         // Parse the input date string
         const [year, month, day] = dateString.split('-').map(Number);
-        
+
         // Create a Date object using the parsed values
         const birthDate = new Date(year, month - 1, day); // month is 0-indexed in JS Date
-        
+
         // Get current date
         const currentDate = new Date();
-        
+
         // Calculate the difference in years
         let age = currentDate.getFullYear() - birthDate.getFullYear();
-        
+
         // Check if birthday hasn't occurred yet this year
         const currentMonth = currentDate.getMonth();
         const birthMonth = birthDate.getMonth();
-        
-        if (currentMonth < birthMonth || 
+
+        if (currentMonth < birthMonth ||
             (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
-          age--;
+            age--;
         }
-        
+
         return age
     }
 
@@ -183,9 +205,9 @@ function Matching() {
 
             {isLoading ? (
                 <p>Loading potential roommate...</p>
-            ): roommate ? (
-                <div 
-                    onClick={swapSides} 
+            ) : roommate ? (
+                <div
+                    onClick={swapSides}
                     className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
                     style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
                     {isFront ? (
