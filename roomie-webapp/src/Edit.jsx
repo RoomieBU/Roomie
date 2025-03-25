@@ -6,9 +6,10 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 function Edit() {
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [profileError, setProfileError] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Verify that the user is currently logged in and has a valid token
     useEffect(() => {
@@ -33,6 +34,35 @@ function Edit() {
 
         verifyToken();
     }, [navigate]);
+
+    // Fetch profile data and autofill form
+    useEffect(() => {
+        const getProfile = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/profile/getProfile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch profile");
+                const result = await response.json();
+
+                // Reset form with fetched data
+                reset({
+                    first_name: result.first_name || '',
+                    last_name: result.last_name || '',
+                    about_me: result.about_me || ''
+                });
+            } catch (error) {
+                setProfileError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getProfile();
+    }, [reset]);
 
     // Handle file input change
     const handleFileChange = (event) => {
@@ -75,7 +105,7 @@ function Edit() {
                 headers: { "Content-Type": "application/json" },
                 body: profilePayload,
             });
-            
+
             if (!profileResponse.ok) {
                 throw new Error("Profile update failed. Please try again.");
             }
@@ -118,16 +148,23 @@ function Edit() {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
+                <div className="text-center">
+                    <p className="fs-4">Loading profile data...</p>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="container-fluid d-flex align-items-center justify-content-center">
             <div className="col-12 col-md-6 col-lg-4 text-center">
                 <h1 className="fw-bold mb-4">Edit Your Profile</h1>
-                {/* <p className="mb-4">
-                    Go back to{" "}
-                    <a href="" onClick={() => navigate("/dashboard")}>
-                        Dashboard
-                    </a>
-                </p> */}
                 <form onSubmit={handleSubmit(onSubmit)} className="w-100">
                     <div className="mb-3">
                         <label className="form-label">First Name</label>
