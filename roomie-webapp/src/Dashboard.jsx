@@ -168,7 +168,7 @@ function Dashboard() {
             <div className="header">
                 <div className="action-section">
                     <button className="header-button" onClick={() => navigate("/")}>
-                        <h4 className="logo">Roomie.</h4>
+                        <h4 className="logo">CHANGE.</h4>
                     </button>
                     <button className="header-button" onClick={() => handleViewChange("Match")}>Match.</button>
                     <button className="header-button" onClick={() => handleViewChange("Chat")}>Chat.</button>
