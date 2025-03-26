@@ -90,4 +90,17 @@ public class UserMatchInteractionDao extends Dao{
 
         return total;
     }
+
+    public boolean removeAllForUser(String email) {
+        String query = "DELETE FROM UserMatchInteractions WHERE user = ?";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery(query);
+            if (rs.next()) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
