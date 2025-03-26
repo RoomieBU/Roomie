@@ -85,6 +85,8 @@ function Matching() {
                 }
 
                 const result = await response.json();
+
+
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
             } catch (error) {
