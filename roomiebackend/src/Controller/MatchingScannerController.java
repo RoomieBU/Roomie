@@ -25,6 +25,7 @@ public class MatchingScannerController extends Thread{
                     if (!dao.exists(Map.of("email1", u.getUser(), "email2", u.getShownUser()), "UserMatches") &&
                         !dao.exists(Map.of("email1", u.getShownUser(), "email2", u.getUser()), "UserMatches")) {
                         dao.insert(Map.of("email1", u.getUser(), "email2", u.getShownUser()), "UserMatches");
+                        dao.insert(Map.of("email1", u.getUser(), "email2", u.getShownUser()), "GroupChats");
                     }
                 }
                 Thread.sleep(15000); // 15 seconds
