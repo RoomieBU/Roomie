@@ -96,8 +96,8 @@ public class UserMatchInteractionDao extends Dao{
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery(query);
-            if (rs.next()) return true;
+            pstmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
