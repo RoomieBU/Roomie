@@ -90,12 +90,14 @@
 .selectedBox {
     width: 95%;
     border-color: black;
-    background-color: lightgray;
+    background-color: purple;
     border-style: solid;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 15px;
+    color: white;
 }
 
 .line {

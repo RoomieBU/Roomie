@@ -212,14 +212,15 @@ function Edit({onProfile}) {
                         <button className="btn btn-primary w-100 mt-3" onClick={onProfile}>
                             Cancel
                         </button>
-                        <button 
+                        
+                    </div>
+                    <button 
                             type="submit" 
                             className="btn btn-primary w-100 mt-3"
                             onClick={onProfile}
                         >
                             Save Changes
                         </button>
-                    </div>
                 </form>
             </div>
         </div>

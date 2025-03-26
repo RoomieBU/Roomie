@@ -33,41 +33,49 @@
     margin-right: 20px;
     gap: 30px;
     align-items: center;
+    justify-content: center;
     position: sticky;
 }
 
+.messageTextBox {
+  border-radius: 25px;
+  padding: 10px 15px;
+  width:600px;
+  height: 50px;
+  overflow-y: auto; /* Shows scrollbar only when max-height is reached */
+  display: flex;
+  align-items: center; /* Vertically centers */
+  text-align: left; /* Aligns text from the left */
+  word-wrap: break-word; /* Prevents text from overflowing horizontally */
+}
+.messageTextBox:focus {
+  /* border-color: #ff5733; Example: Orange border */
+  /* box-shadow: 0 0 0 0.25rem rgba(255, 87, 51, 0.25); Orange glow */
+  box-shadow: none;
+  border-color: lightgray;
+}
+
 .sendButton {
-    height: max-content;
-    width: max-content;
+  min-height: 45px;
+  min-width: 45px;
+  border-radius: 50%; /* Perfect circle */
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  background-color: purple; /* Optional: Change the background color */
+  border: none; /* Optional: Remove button border */
+  color: white; /* Icon color */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-/* .messageBubble {
-    margin-left: auto;
-    width: 300px;
-    overflow: visible;
-    height:fit-content;
-    padding:20px;
-    background-color: purple;
-    border-radius: 15px;
-    color:white;
-    word-wrap: break-word;
-    white-space: normal;
-    text-align: left;
+.sendButton:hover {
+  background-color: rgba(128, 0, 128, 0.72);
 }
 
-.responseBubble {
-    margin-right: auto;
-    width: 300px;
-    overflow: visible;
-    height:fit-content;
-    padding:20px;
-    background-color: grey;
-    border-radius: 15px;
-    color:white;
-    word-wrap: break-word;
-    white-space: normal;
-    text-align: left;
-} */
+.sendButton i {
+  font-size: 18px; /* Adjust the icon size if needed */
+}
 
 .chatNote {
     align-self: center;
@@ -80,7 +88,7 @@
     --r: 1em;  /* the radius */
     --t: .5em; /* the size of the tail */
     
-    max-width: 300px;
+    max-width: 400px;
     padding-top: 8px;
     padding-bottom: 10px;
     padding-left: 20px;
