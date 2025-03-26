@@ -5,6 +5,7 @@ import Matching from "./Matching";
 import Chat from "./Chat";
 import Profile from "./Profile";
 import Sidebar from "./Sidebar";
+import Edit from "./Edit";
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -43,6 +44,9 @@ function Dashboard() {
     const [hideDefault, setHideDefault] = useState(true);
     const [hideChat, setHideChat] = useState(true);
     const [hideProfile, setHideProfile] = useState(true);
+    const [hideEdit, setHideEdit] = useState(true);
+
+    const [splitScreen, setSplitScreen] = useState(true);
 
     // Set chat name
     const [selectedChat, setSelectedChat] = useState(null);
@@ -135,6 +139,8 @@ function Dashboard() {
         setHideDefault(true);
         setHideChat(true);
         setHideProfile(true);
+        setHideEdit(true);
+        setSplitScreen(true);
 
         switch (action) {
             case "match":
@@ -146,6 +152,11 @@ function Dashboard() {
                 break;
             case "profile":
                 setHideProfile(false);
+                setSplitScreen(false);
+                break;
+            case "edit":
+                setSplitScreen(false)
+                setHideEdit(false);
                 break;
             default:
                 setHideDefault(false);
@@ -156,7 +167,7 @@ function Dashboard() {
         <div>
             <div className="header">
                 <div className="action-section">
-                    <button className="header-button" onClick={() => navigate("/")}>
+                    <button className="header-button" onClick={() => window.location.reload()}>
                         <h4 className="logo">Roomie.</h4>
                     </button>
                     <button className="header-button" onClick={() => handleViewChange("Match")}>Match.</button>
@@ -179,27 +190,36 @@ function Dashboard() {
                 ref={containerRef}
                 className={`split-panel-container border rounded ${isDraggingRef.current ? "no-select" : ""}`}
             >
-                {/* Left Panel */}
-                <div className="left-panel " style={{ width: `${leftWidth}%` }}>
-                    <Sidebar onChatSelect={handleChatSelect} currentView={currentView} />
-                </div>
+                
 
-                {/* Divider */}
-                <div
-                    ref={dividerRef}
-                    className="divider bg-secondary"
-                    onMouseDown={handleMouseDown}
-                    onMouseOver={() => dividerRef.current.classList.add("divider-hover")}
-                    onMouseOut={() => dividerRef.current.classList.remove("divider-hover")}
-                />
+                {splitScreen && (
+                <>
+                    {/* Left Panel */}
+                    <div className="left-panel" style={{ width: `${leftWidth}%` }}>
+                        <Sidebar onChatSelect={handleChatSelect} currentView={currentView} />
+                    </div>
+                    {/* Divider */}
+                    <div
+                        ref={dividerRef}
+                        className="divider bg-secondary"
+                        onMouseDown={handleMouseDown}
+                        onMouseOver={() => dividerRef.current.classList.add("divider-hover")}
+                        onMouseOut={() => dividerRef.current.classList.remove("divider-hover")}
+                    />
+                    {/* Right Panel */}
+                    <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
+                        {hideDefault ? null : <p>Roomie.</p>}
+                        {hideMatching ? null : <Matching />}
+                        {hideChat ? null : <Chat selectedChat={selectedChat} />}
+                    </div>
+                </>
+                )}
 
-                {/* Right Panel */}
-                <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
-                    {hideDefault ? null : <p>Roomie.</p>}
-                    {hideMatching ? null : <Matching />}
-                    {hideChat ? null : <Chat selectedChat={selectedChat} />}
-                    {hideProfile ? null : <Profile />}
-                </div>
+                {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")}/>}
+
+                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")}/>}
+
+
             </div>
         </div>
     );

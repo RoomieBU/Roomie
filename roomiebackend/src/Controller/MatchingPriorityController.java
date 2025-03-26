@@ -24,6 +24,7 @@ public class MatchingPriorityController extends Thread{
                 List<User> allUsers = userDao.getAllUsers();
                 for (User u : allUsers) {
                     for (User b : allUsers) {
+                        Thread.sleep(50);
                         synchronized (lock) {
                             while (shouldWait) {
                                 try {
@@ -47,6 +48,8 @@ public class MatchingPriorityController extends Thread{
         } catch (SQLException | ClassNotFoundException ignored) {
             System.out.println("[Sim] SQL Error: Starting over");
             start(); // Just start over and try again
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-function Edit() {
+function Edit({onProfile}) {
     const navigate = useNavigate();
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [profileError, setProfileError] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Verify that the user is currently logged in and has a valid token
     useEffect(() => {
@@ -33,6 +35,40 @@ function Edit() {
 
         verifyToken();
     }, [navigate]);
+
+    // Fetch profile data and autofill form
+    useEffect(() => {
+        const getProfile = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/profile/getProfile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch profile");
+                const result = await response.json();
+
+                // Split the combined name into first and last name
+                const nameParts = result.name ? result.name.split(' ') : ['', ''];
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || ''; // Handle multiple last names
+
+                // Reset form with fetched data
+                reset({
+                    first_name: firstName,
+                    last_name: lastName,
+                    about_me: result.about_me || ''
+                });
+            } catch (error) {
+                setProfileError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getProfile();
+    }, [reset]);
 
     // Handle file input change
     const handleFileChange = (event) => {
@@ -75,7 +111,7 @@ function Edit() {
                 headers: { "Content-Type": "application/json" },
                 body: profilePayload,
             });
-            
+
             if (!profileResponse.ok) {
                 throw new Error("Profile update failed. Please try again.");
             }
@@ -118,17 +154,24 @@ function Edit() {
         }
     };
 
+    if (isLoading) {
+        return (
+            <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
+                <div className="text-center">
+                    <p className="fs-4">Loading profile data...</p>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="manBun">
-            <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
-                <h1 className="fw-bold">Edit Your Profile</h1>
-                <p>
-                    Go back to{" "}
-                    <a href="" onClick={() => navigate("/dashboard")}>
-                        Dashboard
-                    </a>
-                </p>
-                <form onSubmit={handleSubmit(onSubmit)} className="w-50">
+        <div className="container-fluid d-flex align-items-center justify-content-center">
+            <div className="col-12 col-md-6 col-lg-4 text-center">
+                <h1 className="fw-bold mb-4">Edit Your Profile</h1>
+                <form onSubmit={handleSubmit(onSubmit)} className="w-100">
                     <div className="mb-3">
                         <label className="form-label">First Name</label>
                         <input
@@ -138,7 +181,6 @@ function Edit() {
                         />
                         {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">Last Name</label>
                         <input
@@ -148,7 +190,6 @@ function Edit() {
                         />
                         {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">About Me</label>
                         <textarea
@@ -157,7 +198,6 @@ function Edit() {
                         />
                         {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
                     </div>
-
                     <div className="mb-3">
                         <label className="form-label">Profile Picture</label>
                         <input
@@ -167,16 +207,28 @@ function Edit() {
                             className="form-control"
                         />
                     </div>
-
                     {profileError && <div className="text-danger mb-3">{profileError}</div>}
-
-                    <button type="submit" className="btn btn-primary w-100" style={{ position: "fixed", bottom: "0", left: "0", right: "0", borderRadius: "0" }}>
-                        Save Changes
-                    </button>
+                    <div style={{display: "flex", flexDirection: "row", gap: "20px"}}>
+                        <button className="btn btn-primary w-100 mt-3" onClick={onProfile}>
+                            Cancel
+                        </button>
+                        
+                    </div>
+                    <button 
+                            type="submit" 
+                            className="btn btn-primary w-100 mt-3"
+                            onClick={onProfile}
+                        >
+                            Save Changes
+                        </button>
                 </form>
             </div>
         </div>
     );
+    // 6f42c1
 }
+Edit.propTypes = {
+    onProfile: PropTypes.func.isRequired,
+};
 
 export default Edit;

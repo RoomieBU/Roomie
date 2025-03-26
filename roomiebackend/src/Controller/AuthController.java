@@ -271,4 +271,33 @@ public class AuthController {
         }
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
+
+    public static String hasPreferences(Map<String, String> data, String method) {
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
+        if (!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        // Get the user from the token value
+        String token = data.get("token");
+
+        if (!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+        String email = Auth.getEmailfromToken(token);
+
+        try {
+            Dao dao = new Dao(SQLConnection.getConnection());
+            if (dao.exists(Map.of("email", email), "UserPreferences")) {
+                response.put("message", "User preferences exist.");
+                return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+        }
+
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
 }

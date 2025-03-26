@@ -103,21 +103,12 @@ function Sidebar({ currentView, onChatSelect }) {
                                 <h3>{chat.name}</h3>
                             </div>
                         ));
-                    case "Profile":
-                        return (
-                            <div className="profileBox">
-                                <div className="settingTab">My Account</div>
-                                <div className="settingTab">Preferences</div>
-                                <div className="settingTab">Appearance</div>
-                                <div className="settingTab">Log Out</div>
-                            </div>
-                        );
                     case "Match":
                         return (
                             <div className="matchBox">
                                
                                 <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
-                                    {isMatchesVisible ? <i className="bi bi-chevron-down"/> : <i className="bi bi-chevron-right"/>}  
+                                    {isMatchesVisible ? <i style={{marginTop: "3px"}} className="bi bi-chevron-down"/> : <i style={{marginTop: "3px"}} className="bi bi-chevron-right"/>}  
                                     <h4 onClick={toggleMatches} > Matches</h4>
                                 </div>
                                 
@@ -136,7 +127,7 @@ function Sidebar({ currentView, onChatSelect }) {
                                 </div>
                                 
                                 <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
-                                {isLikedVisible ? <i className="bi bi-chevron-down"/> : <i className="bi bi-chevron-right"/>} 
+                                {isLikedVisible ? <i style={{marginTop: "3px"}} className="bi bi-chevron-down"/> : <i style={{marginTop: "3px"}} className="bi bi-chevron-right"/>} 
                                     <h4 onClick={toggleLiked}>Liked</h4>
                                 </div>
                                 <div className="line"/>
@@ -154,6 +145,7 @@ function Sidebar({ currentView, onChatSelect }) {
                                 </div>
                             </div>
                         );
+                    
                     default:
                         return <div>Welcome!</div>;
                 }

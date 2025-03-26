@@ -33,40 +33,48 @@
     margin-right: 20px;
     gap: 30px;
     align-items: center;
+    justify-content: center;
     position: sticky;
 }
 
+.messageTextBox {
+  border-radius: 25px;
+  padding: 10px 15px;
+  width:600px;
+  height: 50px;
+  overflow-y: auto; /* Shows scrollbar only when max-height is reached */
+  display: flex;
+  align-items: center; /* Vertically centers */
+  text-align: left; /* Aligns text from the left */
+  word-wrap: break-word; /* Prevents text from overflowing horizontally */
+}
+.messageTextBox:focus {
+  /* border-color: #ff5733; Example: Orange border */
+  /* box-shadow: 0 0 0 0.25rem rgba(255, 87, 51, 0.25); Orange glow */
+  box-shadow: none;
+  border-color: lightgray;
+}
+
 .sendButton {
-    height: max-content;
-    width: max-content;
+  min-height: 45px;
+  min-width: 45px;
+  border-radius: 50%; /* Perfect circle */
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  background-color: #6f42c1; /* Optional: Change the background color */
+  border: none; /* Optional: Remove button border */
+  color: white; /* Icon color */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
 }
 
-.messageBubble {
-    margin-left: auto;
-    width: 300px;
-    overflow: visible;
-    height:fit-content;
-    padding:20px;
-    background-color: purple;
-    border-radius: 15px;
-    color:white;
-    word-wrap: break-word;
-    white-space: normal;
-    text-align: left;
+.sendButton:hover {
+  background-color: rgba(128, 0, 128, 0.72);
 }
 
-.responseBubble {
-    margin-right: auto;
-    width: 300px;
-    overflow: visible;
-    height:fit-content;
-    padding:20px;
-    background-color: grey;
-    border-radius: 15px;
-    color:white;
-    word-wrap: break-word;
-    white-space: normal;
-    text-align: left;
+.sendButton i {
+  font-size: 18px; /* Adjust the icon size if needed */
 }
 
 .chatNote {
@@ -75,3 +83,44 @@
     color: lightgray;
     margin-bottom: 30px;
 }
+
+.bubble {
+    --r: 1em;  /* the radius */
+    --t: .5em; /* the size of the tail */
+    
+    max-width: 400px;
+    padding-top: 8px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-inline: var(--t) solid #0000;
+    border-radius: calc(var(--r) + var(--t))/var(--r);
+    mask: 
+      radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%) 
+        var(--_p) 100%/var(--t) var(--t) no-repeat,
+      linear-gradient(#000 0 0) padding-box;
+    /* background: linear-gradient(135deg,#FE6D00,#1384C5) border-box; */
+    color: #fff;
+  }
+  .left {
+    --_p: 0;
+    border-bottom-left-radius: 0 0;
+    place-self: start;
+    background-color: gray;
+  }
+  .right {
+    --_p: 100%;
+    border-bottom-right-radius: 0 0;
+    place-self: end;
+    background-color: #6f42c1;
+  }
+  
+  /* body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    gap: 20px;
+    font-family: system-ui, sans-serif;
+    font-size: 20px;
+  } */

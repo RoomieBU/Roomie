@@ -11,6 +11,17 @@ function Matching() {
     const [isFront, setIsFront] = useState(true); // Controls front/back swap
     const [age, setAge] = useState("-1")
 
+    const [isTimeout, setIsTimeout] = useState(false)
+
+    useEffect(() => {
+        if(isLoading) {
+            const timer = setTimeout(() => setIsTimeout(true), 5000)
+            return () => clearTimeout(timer)
+        } else {
+            setIsTimeout(false)
+        }
+    }, [isLoading])
+
     const navigate = useNavigate();
 
     // Verify that the user is currently logged in and has a valid token
@@ -35,6 +46,28 @@ function Matching() {
         verifyToken();
     }, [navigate]);
 
+    // Verify that the user has filled out their preferences (So matching actually works)
+    useEffect(() => {
+        const verifyPrefs = async () => {
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/auth/hasPreferences", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) {
+                    throw new Error("No Preferences");
+                }
+            } catch (error) {
+                console.log("Redirecting to preferences page");
+                navigate("/preferences");
+            }
+        };
+
+        verifyPrefs();
+    }, [navigate]);
+
     // Fetch the next potential roommate
     useEffect(() => {
         const getPotentialRoommate = async () => {
@@ -52,6 +85,8 @@ function Matching() {
                 }
 
                 const result = await response.json();
+
+
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
             } catch (error) {
@@ -88,10 +123,10 @@ function Matching() {
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
-                
+
                 console.log(roommate)
 
-                console.log("HELLOLOIDJFOIJ", roommate.profile_picture)
+                console.log("This is the profile Picture", roommate.profile_picture)
                 console.log(roommate.major)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
@@ -153,25 +188,25 @@ function Matching() {
     function calculateAge(dateString) {
         // Parse the input date string
         const [year, month, day] = dateString.split('-').map(Number);
-        
+
         // Create a Date object using the parsed values
         const birthDate = new Date(year, month - 1, day); // month is 0-indexed in JS Date
-        
+
         // Get current date
         const currentDate = new Date();
-        
+
         // Calculate the difference in years
         let age = currentDate.getFullYear() - birthDate.getFullYear();
-        
+
         // Check if birthday hasn't occurred yet this year
         const currentMonth = currentDate.getMonth();
         const birthMonth = birthDate.getMonth();
-        
-        if (currentMonth < birthMonth || 
+
+        if (currentMonth < birthMonth ||
             (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())) {
-          age--;
+            age--;
         }
-        
+
         return age
     }
 
@@ -181,45 +216,59 @@ function Matching() {
                 <p>Error: {error}</p>
             )}
 
-            {isLoading ? (
-                <p>Loading potential roommate...</p>
-            ): roommate ? (
-                <div 
-                    onClick={swapSides} 
-                    className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
-                    style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
-                    {isFront ? (
-                        <div className="user_info">
-                            <p>{roommate.name}, {age}
-                                <br />
-                                Bloomsburg University
-                            </p>
+            { isLoading ? (
+                isTimeout ? (
+                    <p>No more matches at this time. Please try again later!</p>
+                ) : (
+                    <>
+                        <p>Loading potential roommate...</p>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
                         </div>
-                    ) : (
-                        <div className="more-user-info">
-                            <h3>More about {roommate.name}</h3>
-                            <dl>
-                                <dt>Major</dt>
-                                <dd>{roommate.major}</dd>
-                                <dt>Bio:</dt>
-                                <dd>{roommate.about_me}</dd>
-                            </dl>
-                        </div>
-                    )}
-                </div>
+                    </>
+                )
+            ) : roommate != null ? (
+                <>
+                    <div
+                        onClick={swapSides}
+                        className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
+                        style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                    >
+                        {isFront ? (
+                            <div className="user_info">
+                                <p>{roommate.name}, {roommate.age}
+                                    <br />
+                                    Bloomsburg University
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="more-user-info">
+                                <h3>More about {roommate.name}</h3>
+                                <dl>
+                                    <dt>Major</dt>
+                                    <dd>{roommate.major}</dd>
+                                    <dt>Bio:</dt>
+                                    <dd>{roommate.about_me}</dd>
+                                </dl>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="match-button-cluster">
+                        <button onClick={declined} className="deny-icon">
+                            <i className="bi bi-x-lg" />
+                        </button>
+
+                        <button onClick={matched} className="match-icon">
+                            <i className="bi bi-check-lg" />
+                        </button>
+                    </div>
+                </>
             ) : (
                 <p>No potential roommate found.</p>
             )}
 
-            <div className="match-button-cluster">
-                <button onClick={declined} className="deny-icon">
-                    <i className="bi bi-x-lg" />
-                </button>
-
-                <button onClick={matched} className="match-icon">
-                    <i className="bi bi-check-lg" />
-                </button>
-            </div>
+            
         </div>
     );
 }
