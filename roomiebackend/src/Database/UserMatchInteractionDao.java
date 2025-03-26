@@ -69,7 +69,7 @@ public class UserMatchInteractionDao extends Dao{
      */
     public List<UserMatchInteraction> getAllMatchedUsers() {
         List<UserMatchInteraction> total = new ArrayList<>();
-        String query = "SELECT um1.* FROM UserMatchInteractions um1 JOIN UserMatchInterations um2 " +
+        String query = "SELECT um1.* FROM UserMatchInteractions um1 JOIN UserMatchInteractions um2 " +
                 "ON um1.user = um2.shown_user AND um1.shown_user = um2.user WHERE um1.relationship " +
                 "= 'true' AND um2.relationship = 'true'";
         try {
