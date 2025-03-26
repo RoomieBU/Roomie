@@ -225,6 +225,7 @@ function Edit({onProfile}) {
             </div>
         </div>
     );
+    // 6f42c1
 }
 Edit.propTypes = {
     onProfile: PropTypes.func.isRequired,

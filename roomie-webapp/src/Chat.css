@@ -62,7 +62,7 @@
   display: flex; /* Use flexbox for centering */
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  background-color: purple; /* Optional: Change the background color */
+  background-color: #6f42c1; /* Optional: Change the background color */
   border: none; /* Optional: Remove button border */
   color: white; /* Icon color */
   cursor: pointer; /* Pointer on hover */
@@ -112,7 +112,7 @@
     --_p: 100%;
     border-bottom-right-radius: 0 0;
     place-self: end;
-    background-color: purple;
+    background-color: #6f42c1;
   }
   
   /* body {
