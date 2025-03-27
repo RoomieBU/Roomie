@@ -63,7 +63,17 @@ public class Server {
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
             router.addRoute("/profile/editProfile", ProfileController::editProfile);
-            
+
+            // Messaging routes
+            /**
+             * /messages/chathistory
+             *      * Gets all chats when you open a chat / groupchat
+             * /messages/sendchat
+             *      * Sends a chat to go groupchat / person
+             */
+            router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
+            router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
