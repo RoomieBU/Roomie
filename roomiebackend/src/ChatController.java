@@ -1,5 +1,6 @@
 import Database.ChatDao;
 import Database.Dao;
+import Database.GroupChat;
 import Database.SQLConnection;
 import Tools.Auth;
 import Tools.Utils;
@@ -69,11 +70,33 @@ public class ChatController {
                 }
             }
             Gson gson = new Gson();
-            return Utils.assembleHTTPResponse(code, gson.toJson(messageList));
+            return Utils.assembleHTTPResponse(200, gson.toJson(messageList));
         } catch (SQLException | ClassNotFoundException e) {
             code = 500;
         }
         Gson gson = new Gson();
         return Utils.assembleHTTPResponse(400, Utils.assembleJson(Map.of("message", "message not sent")));
+    }
+
+
+    public static String sendGroupChats(Map<String, String> data, String method) {
+        if(!method.equals("POST")) {
+            return Utils.assembleHTTPResponse(405, "{\"message\": \"Method Not Allowed\"}");
+        }
+        int code = 400;
+        HashMap<String, String> response = new HashMap<>();
+
+        try {
+            ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+            String email = Auth.getEmailfromToken(data.get("token"));
+            List<GroupChat> groupChats = dao.getGroupchats(email);
+            Gson gson = new Gson();
+            return Utils.assembleHTTPResponse(200, gson.toJson(groupChats));
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            code = 500; // Some error?
+        }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(Map.of("message", "Some error occured")));
     }
 }

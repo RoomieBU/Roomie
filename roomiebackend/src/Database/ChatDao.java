@@ -17,7 +17,7 @@ public class ChatDao extends Dao {
         List<Message> messageList = new ArrayList<>();
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, String.valueOf(groupchat_id));
+            stmt.setInt(1, groupchat_id);
             try (ResultSet rs = stmt.executeQuery()) {
                 while(rs.next()) {
                     Message m = new Message(rs.getString("sender_email"), rs.getInt("groupchat_id"), rs.getString("message"), rs.getString("timestamp"));
@@ -29,5 +29,35 @@ public class ChatDao extends Dao {
             e.printStackTrace();
         }
         return messageList;
+    }
+
+    public List<GroupChat> getGroupchats(String email) {
+        String query = "SELECT * FROM GroupChats WHERE email1 = ? OR email2 = ? OR email3 = ? OR email4 = ? OR email5 = ? OR email6 = ?";
+
+        List<GroupChat> chatList = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, email);
+            stmt.setString(3, email);
+            stmt.setString(4, email);
+            stmt.setString(5, email);
+            stmt.setString(6, email);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    GroupChat gc = new GroupChat(
+                        rs.getInt("id"), 
+                        rs.getString("email1"), 
+                        rs.getString("email2"), 
+                        rs.getString("email3"), 
+                        rs.getString("email4"), 
+                        rs.getString("email5"), 
+                        rs.getString("email6"));
+                    chatList.add(gc);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatList;
     }
 }
