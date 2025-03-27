@@ -1,7 +1,11 @@
 import Controller.*;
+import Database.UserMatchInteractionDao;
 import Tools.Console;
 import Tools.Router;
 import Tools.Utils;
+
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +17,8 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
+import java.security.KeyStore;
+import java.io.FileInputStream;
 
 /**
  * This is the main server class for the backend of Roomie.
@@ -54,9 +60,10 @@ public class Server {
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
 
-            // Matches routes
+            // Matches routes??
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
+
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             // router.addRoute("/matches/getMatchList", MatchController::getLikedList);
 
@@ -195,6 +202,8 @@ public class Server {
             }
         }
 
+        // Read in the rest of the request
+        // Read the body in chunks to handle large files
         StringBuilder body = new StringBuilder();
         char[] buffer = new char[4096];  // Read in chunks of 4KB (adjust if needed)
         int bytesRead;
@@ -205,6 +214,7 @@ public class Server {
             totalBytesRead += bytesRead;
         }
 
+        // If body size is still not fully read, you may want to log or handle that case
         if (totalBytesRead < requestLength) {
             System.out.println("[Warning] Body was not completely read, size mismatch.");
         }

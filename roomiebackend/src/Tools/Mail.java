@@ -27,9 +27,9 @@ public class Mail {
         });
 
         try {
-            Message message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
+            message.setRecipients(MimeMessage.RecipientType.TO,
                     InternetAddress.parse(recipient));
             message.setSubject(subject);
             message.setText(body);
