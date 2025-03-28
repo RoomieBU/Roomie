@@ -76,7 +76,7 @@ function Profile({ onEditProfile }) {
     useEffect(() => {
         const getUserImages = async () => {
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/profile/getUserImages", {
+                const response = await fetch("https://roomie.ddns.net:8080/user/images", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
