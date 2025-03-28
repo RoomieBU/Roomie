@@ -171,7 +171,7 @@ function Profile({ onEditProfile }) {
 
                         <div className="detail-item">
                             <span className="detail-label">About Me:</span>
-                            <span className="detail-value">{decodeURIComponent(result.about_me)}</span>
+                            <span className="detail-value">{decodeURIComponent(profile.about_me)}</span>
                         </div>
 
                         {/* Add Edit Profile Button */}
