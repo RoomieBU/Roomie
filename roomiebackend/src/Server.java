@@ -74,8 +74,8 @@ public class Server {
              * /messages/sendchat
              *      * Sends a chat to go groupchat / person
              */
-            // router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
-            // router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+            router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
+            router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
