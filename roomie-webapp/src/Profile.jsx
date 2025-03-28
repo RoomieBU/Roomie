@@ -59,10 +59,12 @@ function Profile({ onEditProfile }) {
                 if (!response.ok) throw new Error("Failed to fetch profile");
                 const result = await response.json();
 
+                console.log("Fetched profile data:", result); // Debugging: log profile data
                 setProfile(result);
                 setAge(calculateAge(result.date_of_birth));
             } catch (error) {
                 setError(error.message);
+                console.error("Error fetching profile:", error); // Debugging: log error
             } finally {
                 setIsLoading(false);
             }
@@ -83,12 +85,15 @@ function Profile({ onEditProfile }) {
                 if (!response.ok) throw new Error("Failed to fetch images");
                 const result = await response.json();
 
-                // Set the user's images if there are any
+                console.log("Fetched user images:", result.images); // Debugging: log images array
                 if (result.images) {
-                    setUserImages(result.images.split(","));
+                    const imageArray = result.images.split(",");
+                    setUserImages(imageArray);
+                    console.log("Processed user images:", imageArray); // Debugging: log processed images
                 }
             } catch (error) {
                 setError(error.message);
+                console.error("Error fetching images:", error); // Debugging: log error
             }
         };
         getUserImages();
@@ -96,13 +101,23 @@ function Profile({ onEditProfile }) {
 
     // Function to go to the next image
     const nextImage = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % userImages.length);
+        console.log("Next image clicked"); // Debugging: log when next image is clicked
+        setCurrentIndex((prevIndex) => {
+            const nextIndex = (prevIndex + 1) % userImages.length;
+            console.log("Current index (next):", nextIndex); // Debugging: log the new index
+            return nextIndex;
+        });
     };
 
     // Function to go to the previous image
     const prevImage = () => {
+        console.log("Previous image clicked"); // Debugging: log when previous image is clicked
         setCurrentIndex(
-            (prevIndex) => (prevIndex - 1 + userImages.length) % userImages.length
+            (prevIndex) => {
+                const prevIndexUpdated = (prevIndex - 1 + userImages.length) % userImages.length;
+                console.log("Current index (previous):", prevIndexUpdated); // Debugging: log the new index
+                return prevIndexUpdated;
+            }
         );
     };
 
@@ -130,7 +145,7 @@ function Profile({ onEditProfile }) {
                     <h2 className="profile-title">Profile Information</h2>
 
                     {/* Custom Image Carousel */}
-                    {userImages.length > 0 && (
+                    {userImages.length > 0 ? (
                         <div className="custom-carousel">
                             <button onClick={prevImage} className="carousel-btn prev-btn">
                                 &#10094; {/* Left arrow */}
@@ -144,6 +159,8 @@ function Profile({ onEditProfile }) {
                                 &#10095; {/* Right arrow */}
                             </button>
                         </div>
+                    ) : (
+                        <p>No images available</p>
                     )}
 
                     {/* Profile Details Grid */}
