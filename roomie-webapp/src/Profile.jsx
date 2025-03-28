@@ -142,17 +142,12 @@ function Profile({ onEditProfile }) {
                                 className="carousel-image"
                                 src={userImages[currentIndex]}
                                 alt={`User Image ${currentIndex + 1}`}
-                                style={{
-                                    width: "300px", // Adjust the width of the image
-                                    height: "auto", // Keep aspect ratio
-                                    borderRadius: "5px",
-                                    objectFit: "cover", // Make sure the image fits nicely
-                                }}
                             />
                             <button onClick={nextImage} className="carousel-btn next-btn">
                                 &#10095; {/* Right arrow */}
                             </button>
                         </div>
+
                     ) : (
                         <p>No images available</p>
                     )}
@@ -176,7 +171,7 @@ function Profile({ onEditProfile }) {
 
                         <div className="detail-item">
                             <span className="detail-label">About Me:</span>
-                            <span className="detail-value">{profile.about_me}</span>
+                            <span className="detail-value">{decodeURIComponent(result.about_me)}</span>
                         </div>
 
                         {/* Add Edit Profile Button */}

@@ -1,0 +1,27 @@
+.custom-carousel {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+    justify-content: center; /* Horizontally center the content */
+    position: relative;
+    gap: 20px; /* Space between buttons and image */
+}
+
+.carousel-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.carousel-btn:hover {
+    transform: scale(1.2);
+}
+
+.carousel-image {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 5px;
+}

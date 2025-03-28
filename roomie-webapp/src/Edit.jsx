@@ -9,7 +9,8 @@ function Edit({ onProfile }) {
     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [profileError, setProfileError] = useState("");
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedProfilePicture, setSelectedProfilePicture] = useState(null);
+    const [selectedUserImages, setSelectedUserImages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     // Verify that the user is currently logged in and has a valid token
@@ -54,7 +55,7 @@ function Edit({ onProfile }) {
                 reset({
                     first_name: firstName,
                     last_name: lastName,
-                    about_me: result.about_me || ''
+                    about_me: result.about_me ? decodeURIComponent(result.about_me) : ''
                 });
             } catch (error) {
                 setProfileError(error.message);
@@ -65,8 +66,8 @@ function Edit({ onProfile }) {
         getProfile();
     }, [reset]);
 
-    // Handle file input change
-    const handleFileChange = (event) => {
+    // Handle file input change for profile picture
+    const handleProfilePictureChange = (event) => {
         const file = event.target.files[0];
 
         if (!file) return;
@@ -82,7 +83,28 @@ function Edit({ onProfile }) {
             return;
         }
 
-        setSelectedFile(file);
+        setSelectedProfilePicture(file);
+    };
+
+    // Handle file input change for additional user images
+    const handleUserImagesChange = (event) => {
+        const files = Array.from(event.target.files);
+
+        if (files.length === 0) return;
+
+        const validTypes = ["image/jpeg", "image/png", "image/webp"];
+        for (let file of files) {
+            if (!validTypes.includes(file.type)) {
+                setProfileError("Unsupported image format.");
+                return;
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                setProfileError("Image file is too large. Please upload a smaller image.");
+                return;
+            }
+        }
+
+        setSelectedUserImages(files);
     };
 
     // Navigate to dashboard after profile is successfully updated
@@ -110,18 +132,18 @@ function Edit({ onProfile }) {
                 throw new Error("Profile update failed. Please try again.");
             }
 
-            // Only proceed to file upload if there is a selected file
-            if (selectedFile) {
+            // Upload profile picture if selected
+            if (selectedProfilePicture) {
                 const reader = new FileReader();
-                reader.readAsDataURL(selectedFile);
+                reader.readAsDataURL(selectedProfilePicture);
                 reader.onload = async () => {
                     let base64Data = reader.result.split(",")[1];
                     base64Data = base64Data.replace(/\s+/g, "");
 
                     const filePayload = JSON.stringify({
                         token: localStorage.getItem("token"),
-                        fileName: selectedFile.name,
-                        fileType: selectedFile.type,
+                        fileName: selectedProfilePicture.name,
+                        fileType: selectedProfilePicture.type,
                         data: base64Data,
                         isProfilePicture: "True",
                     });
@@ -135,12 +157,40 @@ function Edit({ onProfile }) {
                     if (!fileResponse.ok) {
                         throw new Error("Profile picture upload failed.");
                     }
-                    navigateToDashboard();
                 };
-            } else {
-                // Navigate to dashboard if no file is selected
-                navigateToDashboard();
             }
+
+            // Upload user images if selected
+            if (selectedUserImages.length > 0) {
+                for (let file of selectedUserImages) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = async () => {
+                        let base64Data = reader.result.split(",")[1];
+                        base64Data = base64Data.replace(/\s+/g, "");
+
+                        const filePayload = JSON.stringify({
+                            token: localStorage.getItem("token"),
+                            fileName: file.name,
+                            fileType: file.type,
+                            data: base64Data,
+                            isProfilePicture: "False", // For user images
+                        });
+
+                        const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: filePayload,
+                        });
+
+                        if (!fileResponse.ok) {
+                            throw new Error("User image upload failed.");
+                        }
+                    };
+                }
+            }
+
+            navigateToDashboard();
         } catch (error) {
             setProfileError(error.message);
         }
@@ -195,15 +245,30 @@ function Edit({ onProfile }) {
                         />
                         {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
                     </div>
+
+                    {/* Profile Picture Input */}
                     <div className="mb-3">
                         <label className="form-label">Profile Picture</label>
                         <input
                             type="file"
                             accept="image/*"
-                            onChange={handleFileChange}
+                            onChange={handleProfilePictureChange}
                             className="form-control"
                         />
                     </div>
+
+                    {/* User Images Input */}
+                    <div className="mb-3">
+                        <label className="form-label">Additional User Images</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleUserImagesChange}
+                            className="form-control"
+                        />
+                    </div>
+
                     {profileError && <div className="text-danger mb-3">{profileError}</div>}
                     <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
                         <button
