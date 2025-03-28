@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import "./Sidebar.css"
 
+
 function Sidebar({ currentView, onChatSelect }) {
     
     const [selectedChat, setSelectedChat] = useState(null)
@@ -14,6 +15,8 @@ function Sidebar({ currentView, onChatSelect }) {
         { id: 4, name: "Emily Faso", lastMessage: "Did you get my email?" },
         { id: 5, name: "Matthew Yurkunas", lastMessage: "bruh"},
     ];
+
+    
 
     useEffect(() => {
         // Update activeView when currentView prop changes
@@ -42,13 +45,13 @@ function Sidebar({ currentView, onChatSelect }) {
 
     // Match section
 
-    const [matches, setMatches] = useState([
-        { id: 1, name: "Salvatore La Marca" }
-    ]);
+    // const [matches, setMatches] = useState([
+    //     { id: 1, name: "Salvatore La Marca" }
+    // ]);
 
-    const [likes, setLikes] = useState([
-        {id: 1, name: "John Smith"},
-    ]);
+    // const [likes, setLikes] = useState([
+    //     {id: 1, name: "John Smith"},
+    // ]);
 
     const [isMatchesVisible, setIsMatchesVisible] = useState(true);
     const [isLikedVisible, setIsLikedVisible] = useState(true)
@@ -62,7 +65,7 @@ function Sidebar({ currentView, onChatSelect }) {
         setIsLikedVisible(!isLikedVisible)
     }
 
-    const [likedUsers, setLikedUsers] = useState(null)
+    // const [likedUsers, setLikedUsers] = useState(null)
 
     // function getLikedList() {
     //     const getMatchList = async () => {
@@ -119,11 +122,11 @@ function Sidebar({ currentView, onChatSelect }) {
                                         transition: "height 0.3s ease-in-out",
                                         visibility: isMatchesVisible ? "visible" : "hidden"
                                     }} className="matchList">
-                                    {matches.map(match => (
+                                    {/* {matches.map(match => (
                                         <div key={match.id} className="selectedBox">
                                             <h4>{match.name}</h4>
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                                 
                                 <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
@@ -137,11 +140,11 @@ function Sidebar({ currentView, onChatSelect }) {
                                         transition: "height 0.3s ease-in-out",
                                         visibility: isLikedVisible ? "visible" : "hidden"
                                     }} className="matchList">
-                                    {likes.map(like => (
+                                    {/* {likes.map(like => (
                                         <div key={like.id} className="selectedBox">
                                             <h4>{like.name}</h4>
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </div>
                         );
