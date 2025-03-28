@@ -119,7 +119,17 @@ function FileSubmit({ isProfilePic = false }) {
         <div>
             <h2>Upload Image</h2>
             <input type="file" accept="image/*" onChange={handleFileChange} />
-            {preview && <img src={preview} alt="Preview" style={{ width: "200px", marginTop: "10px" }} />}
+            {preview && (
+                <img
+                    src={preview}
+                    alt="Preview"
+                    style={{
+                        width: isProfilePic ? "150px" : "auto",
+                        height: isProfilePic ? "150px" : "auto",
+                        marginTop: "10px",
+                    }}
+                />
+            )}
             <button onClick={handleUpload}>Upload</button>
             {uploadStatus && <p>{uploadStatus}</p>}
         </div>

@@ -109,86 +109,124 @@ function Profile({ onEditProfile }) {
         });
     };
 
-return (
-    <div className="profile-container">
-        {isLoading ? (
-            <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
-                <div className="text-center">
-                    <p className="fs-4">Loading profile...</p>
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
+    return (
+        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+            {isLoading ? (
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+                    <div style={{ textAlign: "center" }}>
+                        <p style={{ fontSize: "20px" }}>Loading profile...</p>
+                        <div className="spinner-border" style={{ color: "#007bff" }} role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        ) : profile ? (
-            <div className="profile-content">
-                {/* Profile Picture */}
-                <img
-                    src={profile.profile_picture_url || "/default-profile-pic.jpg"} // Fallback image if the URL is missing
-                    alt="Profile"
-                    className="profile-picture"
-                />
+            ) : profile ? (
+                <div>
+                    {/* Profile Picture */}
+                    <img
+                        src={profile.profile_picture_url || "/default-profile-pic.jpg"} // Fallback image if the URL is missing
+                        alt="Profile"
+                        style={{
+                            width: "150px",
+                            height: "150px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            marginBottom: "20px"
+                        }}
+                    />
 
-                {/* Profile Information */}
-                <h2 className="profile-title">Profile Information</h2>
+                    {/* Profile Information */}
+                    <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "20px" }}>Profile Information</h2>
 
-                {/* Custom Image Carousel */}
-                {userImages.length > 0 ? (
-                    <div className="custom-carousel">
-                        <button onClick={prevImage} className="carousel-btn prev-btn">
-                            &#10094; {/* Left arrow */}
-                        </button>
-                        <img
-                            className="carousel-image"
-                            src={userImages[currentIndex]}
-                            alt={`User Image ${currentIndex + 1}`}
-                        />
-                        <button onClick={nextImage} className="carousel-btn next-btn">
-                            &#10095; {/* Right arrow */}
-                        </button>
-                    </div>
-                ) : (
-                    <p>No images available</p>
-                )}
+                    {/* Custom Image Carousel */}
+                    {userImages.length > 0 ? (
+                        <div style={{ position: "relative", width: "400px", height: "300px", marginBottom: "20px" }}>
+                            <button
+                                onClick={prevImage}
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "10px",
+                                    transform: "translateY(-50%)",
+                                    background: "none",
+                                    border: "none",
+                                    fontSize: "24px",
+                                    color: "#007bff"
+                                }}
+                            >
+                                &#10094; {/* Left arrow */}
+                            </button>
+                            <img
+                                src={userImages[currentIndex]}
+                                alt={`User Image ${currentIndex + 1}`}
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                    borderRadius: "8px"
+                                }}
+                            />
+                            <button
+                                onClick={nextImage}
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    right: "10px",
+                                    transform: "translateY(-50%)",
+                                    background: "none",
+                                    border: "none",
+                                    fontSize: "24px",
+                                    color: "#007bff"
+                                }}
+                            >
+                                &#10095; {/* Right arrow */}
+                            </button>
+                        </div>
+                    ) : (
+                        <p>No images available</p>
+                    )}
 
-                {/* Profile Details Grid */}
-                <div className="profile-details-grid">
-                    <div className="detail-item">
-                        <span className="detail-label">Name:</span>
-                        <span className="detail-value">{profile.name}</span>
-                    </div>
-
-                    <div className="detail-item">
-                        <span className="detail-label">Email:</span>
-                        <span className="detail-value">{profile.email}</span>
-                    </div>
-
-                    <div className="detail-item">
-                        <span className="detail-label">School:</span>
-                        <span className="detail-value">{profile.school || "N/A"}</span>
-                    </div>
-
-                    <div className="detail-item">
-                        <span className="detail-label">About Me:</span>
-                        <span className="detail-value">{decodeURIComponent(profile.about_me)}</span>
+                    {/* Profile Details Grid */}
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "20px" }}>
+                        <div>
+                            <span style={{ fontWeight: "bold" }}>Name:</span>
+                            <span>{profile.name}</span>
+                        </div>
+                        <div>
+                            <span style={{ fontWeight: "bold" }}>Email:</span>
+                            <span>{profile.email}</span>
+                        </div>
+                        <div>
+                            <span style={{ fontWeight: "bold" }}>School:</span>
+                            <span>{profile.school || "N/A"}</span>
+                        </div>
+                        <div>
+                            <span style={{ fontWeight: "bold" }}>About Me:</span>
+                            <span>{decodeURIComponent(profile.about_me)}</span>
+                        </div>
                     </div>
 
                     {/* Add Edit Profile Button */}
                     <button
-                        className="edit-profile-btn"
                         onClick={onEditProfile}
+                        style={{
+                            padding: "10px 20px",
+                            backgroundColor: "#007bff",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            fontSize: "16px"
+                        }}
                     >
                         Edit Profile
                     </button>
                 </div>
-            </div>
-        ) : (
-            <p>{error || "No profile data available."}</p>
-        )}
-    </div>
-);
-
-
+            ) : (
+                <p>{error || "No profile data available."}</p>
+            )}
+        </div>
+    );
 }
 
 export default Profile;
