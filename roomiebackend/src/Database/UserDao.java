@@ -100,6 +100,23 @@ public class UserDao extends Dao{
         return users;
     }
 
+
+    // Testing
+    public String getUserProfilePicture(String email) {
+        String url = "";
+        String query = "SELECT profile_picture_url FROM Users WHERE email = ?";
+        try (PreparedStatement stmt = connection.prepareStatement((query))) {
+            stmt.setString(1, email);
+            try(ResultSet rs = stmt.executeQuery()) {
+                url = rs.getString("profile_picture_url");
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException("Error retrieving given user's profile picture", e);
+        }
+
+        return url;
+    }
+
     /**
      * Returns a list of all users from the database who belong to the specified school.
      *

@@ -26,15 +26,14 @@ public class MatchController {
             return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
         }
     
-        List<String> columns = new ArrayList<>();
-        columns.add("profile_picture_url");
-    
         try {
-            Dao dao = new Dao(SQLConnection.getConnection());
-            Map<String, String> dbResponse = dao.getData(columns, email, "Users");
+            UserDao dao = new UserDao(SQLConnection.getConnection());
+            String url = dao.getUserProfilePicture(email);
+            Map<String, String> d = new HashMap<>();
+            d.put("profile_picture_url", url);
     
-            if (dbResponse.containsKey("profile_picture_url")) {
-                response.putAll(dbResponse); // Add database response to main response
+            if (url != null) {
+                response.putAll(d); // Add database response to main response
                 response.put("message", "Profile picture URL retrieved successfully.");
                 code = 200;
             } else {

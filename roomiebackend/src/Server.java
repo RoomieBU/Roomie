@@ -1,11 +1,7 @@
 import Controller.*;
-import Database.UserMatchInteractionDao;
 import Tools.Console;
 import Tools.Router;
 import Tools.Utils;
-
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,8 +13,6 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
-import java.security.KeyStore;
-import java.io.FileInputStream;
 
 /**
  * This is the main server class for the backend of Roomie.
@@ -63,7 +57,7 @@ public class Server {
             // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
-            router.addRoute("/matches/getProfilePicture", MatchController::sendProfilePicture);
+            router.addRoute("/matches/getProfilePicture", MatchController::sendProfilePicture); // <---- HERE
 
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             // router.addRoute("/matches/getMatchList", MatchController::getLikedList);
@@ -79,8 +73,8 @@ public class Server {
              * /messages/sendchat
              *      * Sends a chat to go groupchat / person
              */
-            router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
-            router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+            // router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
+            // router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
