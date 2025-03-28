@@ -53,6 +53,9 @@ function Edit({ onProfile }) {
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || ''; // Handle multiple last names
 
+                console.log("Fetched Profile Data:", result); // Log fetched profile data
+                console.log("Resetting form with:", firstName, lastName, result.about_me);
+
                 // Reset form with fetched data
                 reset({
                     first_name: firstName,
@@ -94,6 +97,8 @@ function Edit({ onProfile }) {
     };
 
     const onSubmit = async (data) => {
+        console.log("Form Data Submitted:", data); // Log the data before submission
+
         try {
             // Update profile data
             const profilePayload = JSON.stringify({
