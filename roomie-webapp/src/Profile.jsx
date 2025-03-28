@@ -127,6 +127,7 @@ function Profile({ onEditProfile }) {
                         src={profile.profile_picture_url}
                         alt="Profile"
                         className="profile-picture-circle"
+                        style={{ width: '120px', height: '120px', objectFit: 'cover' }} // Smaller profile picture
                     />
 
                     {/* Profile Information */}
@@ -142,6 +143,7 @@ function Profile({ onEditProfile }) {
                                 className="carousel-image"
                                 src={userImages[currentIndex]}
                                 alt={`User Image ${currentIndex + 1}`}
+                                style={{ width: '300px', height: '200px', objectFit: 'cover' }} // Resized user images
                             />
                             <button onClick={nextImage} className="carousel-btn next-btn">
                                 &#10095; {/* Right arrow */}

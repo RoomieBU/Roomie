@@ -190,10 +190,11 @@ function Edit({ onProfile }) {
                 }
             }
 
-            navigateToDashboard();
+                navigateToDashboard();
         } catch (error) {
             setProfileError(error.message);
         }
+        navigateToDashboard();
     };
 
     const handleCancel = (e) => {

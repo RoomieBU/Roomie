@@ -1,27 +1,51 @@
+.profile-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.profile-picture-circle {
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ddd;
+}
+
 .custom-carousel {
     display: flex;
-    align-items: center; /* Vertically center the content */
-    justify-content: center; /* Horizontally center the content */
+    justify-content: center;
+    align-items: center;
     position: relative;
-    gap: 20px; /* Space between buttons and image */
+    margin-top: 20px;
 }
 
 .carousel-btn {
-    background: none;
+    background-color: transparent;
     border: none;
-    font-size: 30px;
-    color: #333;
+    font-size: 2rem;
     cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.carousel-btn:hover {
-    transform: scale(1.2);
+    color: #007bff;
 }
 
 .carousel-image {
-    max-width: 100%;
-    max-height: 400px;
-    object-fit: cover;
+    margin: 0 10px;
+}
+
+.profile-details-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-profile-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 5px;
+    margin-top: 20px;
 }
