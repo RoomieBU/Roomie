@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Carousel } from "react-bootstrap"; // Import Carousel component from React Bootstrap
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
         onEditProfile: PropTypes.func.isRequired,
     };
+
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [age, setAge] = useState("-1");
+    const [userImages, setUserImages] = useState([]); // State to store user images
     const navigate = useNavigate();
 
     // Calculate age from date of birth
@@ -42,6 +45,7 @@ function Profile({ onEditProfile }) {
         verifyToken();
     }, [navigate]);
 
+    // Fetch profile and images on load
     useEffect(() => {
         const getProfile = async () => {
             setIsLoading(true);
@@ -66,18 +70,41 @@ function Profile({ onEditProfile }) {
         getProfile();
     }, []);
 
+    // Fetch images for the user
+    useEffect(() => {
+        const getUserImages = async () => {
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/profile/getUserImages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch images");
+                const result = await response.json();
+
+                // Set the user's images if there are any
+                if (result.images) {
+                    setUserImages(result.images.split(","));
+                }
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+        getUserImages();
+    }, []); // Run once when the component is mounted
+
     return (
         <div className="profile-container">
             {isLoading ? (
                 <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
-                <div className="text-center">
-                    <p className="fs-4">Loading profile...</p>
-                    {/* Optional: Add a spinner for better visual feedback */}
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                    <div className="text-center">
+                        <p className="fs-4">Loading profile...</p>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
-            </div>
             ) : profile ? (
                 <div className="profile-content">
                     {/* Profile Picture */}
@@ -89,6 +116,21 @@ function Profile({ onEditProfile }) {
 
                     {/* Profile Information */}
                     <h2 className="profile-title">Profile Information</h2>
+
+                    {/* Carousel for User Images */}
+                    {userImages.length > 0 && (
+                        <Carousel>
+                            {userImages.map((imageUrl, index) => (
+                                <Carousel.Item key={index}>
+                                    <img
+                                        className="d-block w-100"
+                                        src={imageUrl}
+                                        alt={`User Image ${index + 1}`}
+                                    />
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    )}
 
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
@@ -102,15 +144,14 @@ function Profile({ onEditProfile }) {
                             <span className="detail-value">{profile.email}</span>
                         </div>
 
-                        {/* Add all other fields similarly */}
                         <div className="detail-item">
                             <span className="detail-label">School:</span>
                             <span className="detail-value">{profile.school || "N/A"}</span>
                         </div>
 
                         <div className="detail-item">
-                            <span className="detail-label">Preferred Gender:</span>
-                            <span className="detail-value">{profile.preferred_gender}</span>
+                            <span className="detail-label">About Me:</span>
+                            <span className="detail-value">{profile.about_me}</span>
                         </div>
 
                         {/* Add Edit Profile Button */}
