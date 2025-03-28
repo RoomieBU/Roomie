@@ -162,9 +162,9 @@ function Sidebar({ currentView, onChatSelect }) {
 
             // search for nonUserEmail's profile picture here
 
-            const getProfilePicture = async () => {
+            const getChatInformation = async () => {
                 try {
-                    const response = await fetch("https://roomie.ddns.net:8080/matches/getProfilePicture", {
+                    const response = await fetch("https://roomie.ddns.net:8080/matches/getChatInformation", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email: nonUserEmail })
@@ -181,10 +181,10 @@ function Sidebar({ currentView, onChatSelect }) {
                 }
             };
     
-            const profilePic = getProfilePicture();
+            const chatInformation = getChatInformation();
 
             // create chat object
-            userChats.push(new Chat(nonUserEmail, profilePic.profile_picture_url, groupchatId))
+            userChats.push(new Chat(nonUserEmail, chatInformation.profile_picture_url, groupchatId))
         }
 
         console.log("Helloooooo", userChats)

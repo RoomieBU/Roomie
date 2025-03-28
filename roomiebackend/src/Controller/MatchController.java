@@ -9,7 +9,7 @@ import java.util.*;
 
 public class MatchController {
 
-    public static String sendProfilePicture(Map<String, String> data, String method) {
+    public static String sendChatInformation(Map<String, String> data, String method) {
         int code = 400;
         Map<String, String> response = new HashMap<>();
     
@@ -34,14 +34,9 @@ public class MatchController {
             d.put("last_name", chatInfo.getLastName());
             d.put("profile_picture_url", chatInfo.getProfilePicture());
     
-            if (!chatInfo.getFirstName().equals("no first name")) {
-                response.putAll(d); // Add database response to main response
-                response.put("message", "Profile picture URL retrieved successfully.");
-                code = 200;
-            } else {
-                response.put("message", "Profile picture not found.");
-                code = 404;
-            }
+            code = 200;
+
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(d));
     
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Match Controller] Unable to connect to MySQL.");
