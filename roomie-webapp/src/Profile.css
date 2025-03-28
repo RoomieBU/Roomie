@@ -9,6 +9,17 @@
     border: 2px solid #ddd;
 }
 
+.profile-picture {
+    width: 100%; /* Ensures the image doesn't get too large */
+    max-width: 600px; /* Limits the image size */
+    height: auto; /* Maintains aspect ratio */
+    aspect-ratio: 4 / 3; /* Sets aspect ratio to 4:3 */
+    display: block; /* Centers the image */
+    margin-left: auto; /* Centering horizontally */
+    margin-right: auto; /* Centering horizontally */
+}
+
+
 .custom-carousel {
     display: flex;
     justify-content: center;

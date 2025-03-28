@@ -107,11 +107,6 @@ function Edit({ onProfile }) {
         setSelectedUserImages(files);
     };
 
-    // Navigate to dashboard after profile is successfully updated
-    const navigateToDashboard = () => {
-        navigate("/dashboard");
-    };
-
     const onSubmit = async (data) => {
         try {
             // Update profile data
@@ -190,11 +185,10 @@ function Edit({ onProfile }) {
                 }
             }
 
-                navigateToDashboard();
+                navigate("/dashboard");
         } catch (error) {
             setProfileError(error.message);
         }
-        navigateToDashboard();
     };
 
     const handleCancel = (e) => {

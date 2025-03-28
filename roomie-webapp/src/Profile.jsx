@@ -109,87 +109,86 @@ function Profile({ onEditProfile }) {
         });
     };
 
-    return (
-        <div className="profile-container">
-            {isLoading ? (
-                <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
-                    <div className="text-center">
-                        <p className="fs-4">Loading profile...</p>
-                        <div className="spinner-border text-primary" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
+return (
+    <div className="profile-container">
+        {isLoading ? (
+            <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
+                <div className="text-center">
+                    <p className="fs-4">Loading profile...</p>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>
                 </div>
-            ) : profile ? (
-                <div className="profile-content">
-                    {/* Profile Picture */}
-                    <img
-                        src={profile.profile_picture_url}
-                        alt="Profile"
-                        className="profile-picture-circle"
-                        style={{ width: '120px', height: '120px', objectFit: 'cover' }} // Smaller profile picture
-                    />
+            </div>
+        ) : profile ? (
+            <div className="profile-content">
+                {/* Profile Picture */}
+                <img
+                    src={profile.profile_picture_url}
+                    alt="Profile"
+                    className="profile-picture"
+                />
 
-                    {/* Profile Information */}
-                    <h2 className="profile-title">Profile Information</h2>
+                {/* Profile Information */}
+                <h2 className="profile-title">Profile Information</h2>
 
-                    {/* Custom Image Carousel */}
-                    {userImages.length > 0 ? (
-                        <div className="custom-carousel">
-                            <button onClick={prevImage} className="carousel-btn prev-btn">
-                                &#10094; {/* Left arrow */}
-                            </button>
-                            <img
-                                className="carousel-image"
-                                src={userImages[currentIndex]}
-                                alt={`User Image ${currentIndex + 1}`}
-                                style={{ width: '300px', height: '200px', objectFit: 'cover' }} // Resized user images
-                            />
-                            <button onClick={nextImage} className="carousel-btn next-btn">
-                                &#10095; {/* Right arrow */}
-                            </button>
-                        </div>
-
-                    ) : (
-                        <p>No images available</p>
-                    )}
-
-                    {/* Profile Details Grid */}
-                    <div className="profile-details-grid">
-                        <div className="detail-item">
-                            <span className="detail-label">Name:</span>
-                            <span className="detail-value">{profile.name}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">Email:</span>
-                            <span className="detail-value">{profile.email}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">School:</span>
-                            <span className="detail-value">{profile.school || "N/A"}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">About Me:</span>
-                            <span className="detail-value">{decodeURIComponent(profile.about_me)}</span>
-                        </div>
-
-                        {/* Add Edit Profile Button */}
-                        <button
-                            className="edit-profile-btn"
-                            onClick={onEditProfile}
-                        >
-                            Edit Profile
+                {/* Custom Image Carousel */}
+                {userImages.length > 0 ? (
+                    <div className="custom-carousel">
+                        <button onClick={prevImage} className="carousel-btn prev-btn">
+                            &#10094; {/* Left arrow */}
+                        </button>
+                        <img
+                            className="carousel-image"
+                            src={userImages[currentIndex]}
+                            alt={`User Image ${currentIndex + 1}`}
+                        />
+                        <button onClick={nextImage} className="carousel-btn next-btn">
+                            &#10095; {/* Right arrow */}
                         </button>
                     </div>
+
+                ) : (
+                    <p>No images available</p>
+                )}
+
+                {/* Profile Details Grid */}
+                <div className="profile-details-grid">
+                    <div className="detail-item">
+                        <span className="detail-label">Name:</span>
+                        <span className="detail-value">{profile.name}</span>
+                    </div>
+
+                    <div className="detail-item">
+                        <span className="detail-label">Email:</span>
+                        <span className="detail-value">{profile.email}</span>
+                    </div>
+
+                    <div className="detail-item">
+                        <span className="detail-label">School:</span>
+                        <span className="detail-value">{profile.school || "N/A"}</span>
+                    </div>
+
+                    <div className="detail-item">
+                        <span className="detail-label">About Me:</span>
+                        <span className="detail-value">{decodeURIComponent(profile.about_me)}</span>
+                    </div>
+
+                    {/* Add Edit Profile Button */}
+                    <button
+                        className="edit-profile-btn"
+                        onClick={onEditProfile}
+                    >
+                        Edit Profile
+                    </button>
                 </div>
-            ) : (
-                <p>{error || "No profile data available."}</p>
-            )}
-        </div>
-    );
+            </div>
+        ) : (
+            <p>{error || "No profile data available."}</p>
+        )}
+    </div>
+);
+
 }
 
 export default Profile;
