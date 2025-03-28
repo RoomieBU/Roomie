@@ -84,14 +84,11 @@ public class FileController {
 
         try {
             // Decode Base64
-            System.out.println("[FileController] Decoding base64 image data...");
             byte[] decodedImage = Base64.getDecoder().decode(base64Image);
 
             // Check for large image size
             if (decodedImage.length > 10 * 1024 * 1024) {
                 response.put("message", "Image too large.");
-                // Debug log: Log image size check
-                System.out.println("[FileController] Image too large. Responding with 413");
                 return Utils.assembleHTTPResponse(413, Utils.assembleJson(response));
             }
 
@@ -104,23 +101,17 @@ public class FileController {
             File directory = new File("/var/www/images");
             if (!directory.exists()) {
                 directory.mkdirs();
-                // Debug log: Log directory creation
-                System.out.println("[FileController] Created directory /var/www/images");
             }
 
             // Write image file
             try (FileOutputStream fos = new FileOutputStream(filePath)) {
                 fos.write(decodedImage);
-                // Debug log: Log successful image writing
-                System.out.println("[FileController] Image saved successfully: " + filePath);
             }
 
             // Get user ID from token
             String userEmail = Auth.getEmailfromToken(token);
             if (userEmail == null) {
                 response.put("message", "Invalid token.");
-                // Debug log: Log invalid token retrieval
-                System.out.println("[FileController] User email is null. Responding with 401");
                 return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
             }
 
@@ -131,8 +122,6 @@ public class FileController {
 
             if (userIdStr == null) {
                 response.put("message", "User not found.");
-                // Debug log: Log user not found
-                System.out.println("[FileController] User not found. Responding with 404");
                 return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
             }
 
@@ -177,7 +166,6 @@ public class FileController {
             response.put("message", "Error saving image.");
             code = 500;
         } catch (Exception e) {
-            System.err.println("[Controller.FileController] Unexpected error: " + e.getMessage());
             e.printStackTrace();
             response.put("message", "Unexpected error.");
             code = 500;
