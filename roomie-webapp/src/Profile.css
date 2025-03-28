@@ -1,14 +1,27 @@
+/* Profile Container */
 .profile-container {
     padding: 20px;
     text-align: center;
 }
 
+/* Profile Picture */
 .profile-picture-circle {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #ddd;
 }
 
+.profile-picture {
+    width: auto;
+    max-width: 200px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Carousel Images */
 .custom-carousel {
     display: flex;
     justify-content: center;
@@ -25,18 +38,18 @@
     color: #007bff;
 }
 
-
 .carousel-image {
-    width: 100%; /* Ensures the carousel images are responsive */
-    max-width: 300px; /* Limits carousel image size */
-    height: auto; /* Maintains aspect ratio */
-    aspect-ratio: 4 / 3; /* Sets aspect ratio to 4:3 for carousel images */
-    margin: 0 10px; /* Adds spacing between images */
-    display: block; /* Centers the image */
-    margin-left: auto; /* Centers horizontally */
-    margin-right: auto; /* Centers horizontally */
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    margin: 0 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+/* Profile Details Grid */
 .profile-details-grid {
     margin-top: 30px;
     display: grid;
@@ -49,6 +62,7 @@
     justify-content: space-between;
 }
 
+/* Edit Profile Button */
 .edit-profile-btn {
     background-color: #007bff;
     color: white;

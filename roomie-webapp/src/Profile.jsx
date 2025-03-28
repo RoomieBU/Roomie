@@ -124,7 +124,7 @@ return (
             <div className="profile-content">
                 {/* Profile Picture */}
                 <img
-                    src={profile.profile_picture_url}
+                    src={profile.profile_picture_url || "/default-profile-pic.jpg"} // Fallback image if the URL is missing
                     alt="Profile"
                     className="profile-picture"
                 />
@@ -147,7 +147,6 @@ return (
                             &#10095; {/* Right arrow */}
                         </button>
                     </div>
-
                 ) : (
                     <p>No images available</p>
                 )}
@@ -188,6 +187,7 @@ return (
         )}
     </div>
 );
+
 
 }
 
