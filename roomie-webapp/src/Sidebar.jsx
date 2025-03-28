@@ -185,7 +185,7 @@ function Sidebar({ currentView, onChatSelect }) {
 
 
             // create chat object
-            userChats.push(new Chat(nonUserEmail, profilePic, groupChatId))
+            userChats.push(new Chat(nonUserEmail, profilePic.getItem("profile_picture_url"), groupChatId))
         }
 
         console.log("Helloooooo", userChats)
