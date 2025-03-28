@@ -67,34 +67,46 @@ function Edit({ onProfile }) {
     }, [reset]);
 
     // Function to resize images
-    const resizeImage = (file, width, height) => {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            const reader = new FileReader();
+const resizeImage = (file, maxWidth, maxHeight) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
 
-            reader.onload = () => {
-                img.src = reader.result;
-            };
+        reader.onload = () => {
+            img.src = reader.result;
+        };
 
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
 
-            img.onload = () => {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
 
-                canvas.width = width;
-                canvas.height = height;
+            // Calculate the aspect ratio
+            const aspectRatio = img.width / img.height;
 
-                // Draw the image on the canvas, resizing it
-                ctx.drawImage(img, 0, 0, width, height);
+            // Set new width and height while maintaining the aspect ratio
+            if (img.width > img.height) {
+                // Landscape
+                canvas.width = maxWidth;
+                canvas.height = maxWidth / aspectRatio;
+            } else {
+                // Portrait
+                canvas.height = maxHeight;
+                canvas.width = maxHeight * aspectRatio;
+            }
 
-                // Convert the canvas to a base64 string
-                const resizedDataUrl = canvas.toDataURL(file.type);
-                resolve(resizedDataUrl);
-            };
-        });
-    };
+            // Draw the image on the canvas, resizing it
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Convert the canvas to a base64 string
+            const resizedDataUrl = canvas.toDataURL(file.type);
+            resolve(resizedDataUrl);
+        };
+    });
+};
+
 
     // Handle file input change for profile picture
     const handleProfilePictureChange = (event) => {
