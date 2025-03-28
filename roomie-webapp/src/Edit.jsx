@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-function Edit({onProfile}) {
+function Edit({ onProfile }) {
     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [profileError, setProfileError] = useState("");
@@ -25,8 +25,6 @@ function Edit({onProfile}) {
                 if (!response.ok) {
                     throw new Error("Invalid token");
                 }
-
-                return;
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.");
                 navigate("/login");
@@ -95,7 +93,6 @@ function Edit({onProfile}) {
         navigate("/dashboard");
     };
 
-    // Handle form submission (profile update + file upload)
     const onSubmit = async (data) => {
         try {
             // Update profile data
@@ -116,7 +113,7 @@ function Edit({onProfile}) {
                 throw new Error("Profile update failed. Please try again.");
             }
 
-            // Upload profile picture if a file is selected
+            // Only proceed to file upload if there is a selected file
             if (selectedFile) {
                 const reader = new FileReader();
                 reader.readAsDataURL(selectedFile);
@@ -141,17 +138,20 @@ function Edit({onProfile}) {
                     if (!fileResponse.ok) {
                         throw new Error("Profile picture upload failed.");
                     }
-
-                    // Navigate to dashboard after successful update
                     navigateToDashboard();
                 };
             } else {
-                // Navigate to dashboard
+                // Navigate to dashboard if no file is selected
                 navigateToDashboard();
             }
         } catch (error) {
             setProfileError(error.message);
         }
+    };
+
+    const handleCancel = (e) => {
+        e.preventDefault();  // Prevent form submission on cancel
+        onProfile();  // Call the provided onProfile callback
     };
 
     if (isLoading) {
@@ -208,25 +208,26 @@ function Edit({onProfile}) {
                         />
                     </div>
                     {profileError && <div className="text-danger mb-3">{profileError}</div>}
-                    <div style={{display: "flex", flexDirection: "row", gap: "20px"}}>
-                        <button className="btn btn-primary w-100 mt-3" onClick={onProfile}>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                        <button
+                            className="btn btn-secondary w-100 mt-3"
+                            onClick={handleCancel}
+                        >
                             Cancel
                         </button>
-                        
                     </div>
-                    <button 
-                            type="submit" 
-                            className="btn btn-primary w-100 mt-3"
-                            onClick={onProfile}
-                        >
-                            Save Changes
-                        </button>
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100 mt-3"
+                    >
+                        Save Changes
+                    </button>
                 </form>
             </div>
         </div>
     );
-    // 6f42c1
 }
+
 Edit.propTypes = {
     onProfile: PropTypes.func.isRequired,
 };
