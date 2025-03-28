@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Carousel } from "react-bootstrap"; // Import Carousel component from React Bootstrap
+//import { Carousel } from "react-bootstrap"; // Import Carousel component from React Bootstrap
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
@@ -12,7 +12,7 @@ function Profile({ onEditProfile }) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [age, setAge] = useState("-1");
-    const [userImages, setUserImages] = useState([]); // State to store user images
+    //const [userImages, setUserImages] = useState([]); // State to store user images
     const navigate = useNavigate();
 
     // Calculate age from date of birth
@@ -117,20 +117,20 @@ function Profile({ onEditProfile }) {
                     {/* Profile Information */}
                     <h2 className="profile-title">Profile Information</h2>
 
-                    {/* Carousel for User Images */}
-                    {userImages.length > 0 && (
-                        <Carousel>
-                            {userImages.map((imageUrl, index) => (
-                                <Carousel.Item key={index}>
-                                    <img
-                                        className="d-block w-100"
-                                        src={imageUrl}
-                                        alt={`User Image ${index + 1}`}
-                                    />
-                                </Carousel.Item>
-                            ))}
-                        </Carousel>
-                    )}
+{/*                      */}{/* Carousel for User Images */}
+{/*                     {userImages.length > 0 && ( */}
+{/*                         <Carousel> */}
+{/*                             {userImages.map((imageUrl, index) => ( */}
+{/*                                 <Carousel.Item key={index}> */}
+{/*                                     <img */}
+{/*                                         className="d-block w-100" */}
+{/*                                         src={imageUrl} */}
+{/*                                         alt={`User Image ${index + 1}`} */}
+{/*                                     /> */}
+{/*                                 </Carousel.Item> */}
+{/*                             ))} */}
+{/*                         </Carousel> */}
+{/*                     )} */}
 
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
