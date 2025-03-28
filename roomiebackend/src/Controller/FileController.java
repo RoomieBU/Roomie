@@ -103,6 +103,8 @@ public class FileController {
             String userIdStr = userData.get("user_id");
             userDao.closeConnection();
 
+            System.out.println("Past GetUserId"); 
+
             if (userIdStr == null) {
                 response.put("message", "User not found.");
                 return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
@@ -112,6 +114,7 @@ public class FileController {
 
             if (isProfilePicture.equals("True")) {
                 // Store profile picture URL in userDao
+                System.out.println("Profile Picture: File Controller");
                 Dao dao = new Dao(SQLConnection.getConnection());
                 Map<String, String> dataMap = new HashMap<>();
                 dataMap.put("profile_picture_url", urlPath);
@@ -123,6 +126,7 @@ public class FileController {
                 }
             } else {
                 // Store image path in userImagesDao
+                System.out.println("User Image: File Controller");
                 UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
                 userImageDao.uploadUserImage(userId, urlPath);
                 userImageDao.closeConnection();

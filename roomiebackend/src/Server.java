@@ -55,7 +55,7 @@ public class Server {
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
             router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
-            
+
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
