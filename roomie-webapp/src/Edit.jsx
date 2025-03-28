@@ -26,7 +26,6 @@ function Edit({ onProfile }) {
                     throw new Error("Invalid token");
                 }
             } catch (error) {
-                console.log("Redirecting to login due to invalid token.");
                 navigate("/login");
             }
         };
@@ -48,12 +47,10 @@ function Edit({ onProfile }) {
                 if (!response.ok) throw new Error("Failed to fetch profile");
                 const result = await response.json();
 
-                // Split the combined name into first and last name
                 const nameParts = result.name ? result.name.split(' ') : ['', ''];
                 const firstName = nameParts[0] || '';
                 const lastName = nameParts.slice(1).join(' ') || ''; // Handle multiple last names
 
-                // Reset form with fetched data
                 reset({
                     first_name: firstName,
                     last_name: lastName,
@@ -100,7 +97,7 @@ function Edit({ onProfile }) {
                 token: localStorage.getItem("token"),
                 first_name: data.first_name,
                 last_name: data.last_name,
-                about_me: data.about_me,
+                about_me: encodeURIComponent(data.about_me),
             });
 
             const profileResponse = await fetch("https://roomie.ddns.net:8080/profile/editProfile", {
