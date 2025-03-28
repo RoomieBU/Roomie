@@ -130,7 +130,7 @@ public class FileController {
             // Debug log: Log user ID retrieval
             System.out.println("[FileController] User ID retrieved: " + userId);
 
-            if (isProfilePicture.equals("True")) {
+            if (true) {
                 // Store profile picture URL in userDao
                 Dao dao = new Dao(SQLConnection.getConnection());
                 Map<String, String> dataMap = new HashMap<>();
