@@ -49,6 +49,27 @@ public class MatchController {
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 
+    public static String resetMatchInteractions(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+        if(!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        try {
+            UserMatchInteractionDao dao = new UserMatchInteractionDao(SQLConnection.getConnection());
+            if (dao.removeAllForUser(email)) {
+                response.put("message", "Match Interactions Reset");
+                return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL");
+        }
+
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
 
     public static String getNextMatch(Map<String, String> data, String method) {
         int code = 400;

@@ -41,6 +41,8 @@ function Sidebar({ currentView, onChatSelect }) {
         if (onChatSelect && selectedContact) {
             onChatSelect(selectedContact);
         }
+
+        console.log(groupChats)
     }
 
     // Match section
@@ -53,7 +55,7 @@ function Sidebar({ currentView, onChatSelect }) {
     //     {id: 1, name: "John Smith"},
     // ]);
 
-    const [isMatchesVisible, setIsMatchesVisible] = useState(true);
+    const [isMatchesVisible, setIsMatchesVisible] = useState(true)
     const [isLikedVisible, setIsLikedVisible] = useState(true)
 
     function toggleMatches() {
@@ -68,30 +70,64 @@ function Sidebar({ currentView, onChatSelect }) {
     // const [likedUsers, setLikedUsers] = useState(null)
 
     // function getLikedList() {
-    //     const getMatchList = async () => {
-    //         try {
-    //             const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
-    //                 method: "POST",
-    //                 headers: { "Content-Type": "application/json" },
-    //                 body: JSON.stringify({ token: localStorage.getItem("token") })
-    //             });
+        // const getMatchList = async () => {
+        //     try {
+        //         const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" },
+        //             body: JSON.stringify({ token: localStorage.getItem("token") })
+        //         });
 
-    //             if (!response.ok) {
-    //                 throw new Error("Failed to fetch potential roommate");
-    //             }
+        //         if (!response.ok) {
+        //             throw new Error("Failed to fetch potential roommate");
+        //         }
 
-    //             const result = await response.json();
-    //             setLikedUsers(result)
+        //         const result = await response.json();
+        //         setLikedUsers(result)
 
-    //         } catch (error) {
-    //             console.error("Error fetching potential roommate:", error);
-    //             // setError(error.message);
-    //         }
-    //     };
+        //     } catch (error) {
+        //         console.error("Error fetching potential roommate:", error);
+        //         // setError(error.message);
+        //     }
+        // };
 
     //     getMatchList();
     //     console.log(likedUsers)
     // }
+
+
+    // Get list of groupchats
+
+    const [groupChats, setGroupChats] = useState([]);
+
+    const getGroupchats = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getGroupchats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") })
+            });
+
+            if(!response.ok) {
+                throw new Error("Failed to fetch groupchats");
+            }
+
+            const result = await response.json();
+
+        } catch(error) {
+            console.error("Error fetching groupchats: ", error)
+        }
+    }
+
+    useEffect(() => {
+        if (activeView === "Chat") {
+            const fetchChats = async () => {
+                const chats = await getGroupchats();
+                setGroupChats(chats);  // Store the data
+            };
+            fetchChats();
+        }
+    }, [activeView]);
 
     return (
         <div className="sidebar">

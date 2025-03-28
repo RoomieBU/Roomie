@@ -14,7 +14,7 @@ function Matching() {
     const [isTimeout, setIsTimeout] = useState(false)
 
     useEffect(() => {
-        if(isLoading) {
+        if (isLoading) {
             const timer = setTimeout(() => setIsTimeout(true), 5000)
             return () => clearTimeout(timer)
         } else {
@@ -99,6 +99,31 @@ function Matching() {
 
         getPotentialRoommate();
     }, []);
+
+
+
+    const resetMatchInteractions = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/matches/resetMatchInteractions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: localStorage.getItem("token") }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to reset match interactions.");
+            }
+
+            console.log("Match interactions reset successfully.");
+            setIsTimeout(false); // Reset timeout state
+            updateShownUser(); // Try fetching new roommates
+        } catch (error) {
+            console.error("Error resetting match interactions:", error);
+        }
+    };
+
 
     // Set new user info to match screen
     function updateShownUser() {
@@ -216,9 +241,14 @@ function Matching() {
                 <p>Error: {error}</p>
             )}
 
-            { isLoading ? (
+            {isLoading ? (
                 isTimeout ? (
-                    <p>No more matches at this time. Please try again later!</p>
+                    <>
+                        <p>No more matches at this time. Please try again later!</p>
+                        <button onClick={resetMatchInteractions} className="btn btn-primary">
+                            Reset Interactions
+                        </button>
+                    </>
                 ) : (
                     <>
                         <p>Loading potential roommate...</p>
@@ -268,7 +298,7 @@ function Matching() {
                 <p>No potential roommate found.</p>
             )}
 
-            
+
         </div>
     );
 }
