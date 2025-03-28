@@ -85,7 +85,7 @@ function Profile({ onEditProfile }) {
                     <img
                         src={profile.profile_picture_url || "/default-profile-pic.jpg"}
                         alt="Profile"
-                        className="profile-picture"
+                        className="profile-picture-page"
                     />
 
                     <h2 className="profile-heading">Profile Information</h2>
