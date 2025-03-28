@@ -49,6 +49,7 @@ public class MatchController {
         }
     
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
 
     public static String sendMatchInformation(Map<String, String> data, String method) {
         int code = 400;
