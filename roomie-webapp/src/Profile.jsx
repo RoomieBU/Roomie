@@ -128,8 +128,17 @@ function Profile({ onEditProfile }) {
 
                         <div className="detail-item">
                             <span className="detail-label">About Me:</span>
-                            <span className="detail-value">{profile.about_me || "No bio available."}</span>
+                            <span className="detail-value">
+                                {(() => {
+                                    try {
+                                        return decodeURIComponent(profile.about_me);
+                                    } catch (e) {
+                                        return profile.about_me || "No bio available.";  // Fallback to the raw string or "No bio available" if decoding fails
+                                    }
+                                })()}
+                            </span>
                         </div>
+
 
                         {/* Edit Profile Button */}
                         <button className="edit-profile-btn" onClick={onEditProfile}>
