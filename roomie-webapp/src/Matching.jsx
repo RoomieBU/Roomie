@@ -278,7 +278,13 @@ function Matching() {
                                     <dt>Major</dt>
                                     <dd>{roommate.major}</dd>
                                     <dt>Bio:</dt>
-                                    <dd>{roommate.about_me}</dd>
+                                    <dd>{(() => {
+                                            try {
+                                                return decodeURIComponent(roommate.about_me);
+                                            } catch (e) {
+                                                return roommate.about_me;
+                                            }
+                                        })()}</dd>
                                 </dl>
                             </div>
                         )}
