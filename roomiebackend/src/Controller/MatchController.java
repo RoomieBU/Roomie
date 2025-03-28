@@ -9,6 +9,35 @@ import java.util.*;
 
 public class MatchController {
 
+    public static String sendProfilePicture(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+        if(!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        String email = data.get("email");
+        List<String> columns = new ArrayList<>();
+        columns.add("profile_picture_url");
+
+        try {
+            Dao dao = new Dao(SQLConnection.getConnection());
+            response = dao.getData(columns, email, "Users");
+
+            if(response != null) {
+                response.put("message", "Send profile url");
+                code = 200;
+            }
+            
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL.");
+            code = 500;
+            response.put("email", "");
+        }
+
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
     public static String sendMatchInformation(Map<String, String> data, String method) {
         int code = 400;
         Map<String, String> response = new HashMap<>();
@@ -23,8 +52,6 @@ public class MatchController {
         }
 
         String email = Auth.getEmailfromToken(data.get("token"));
-
-
         Map<String, String> matchData = new HashMap<>();
         matchData.put("user", email);
         matchData.put("shown_user", data.get("shown_user"));

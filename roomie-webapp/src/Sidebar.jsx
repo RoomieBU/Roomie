@@ -42,7 +42,8 @@ function Sidebar({ currentView, onChatSelect }) {
             onChatSelect(selectedContact);
         }
 
-        console.log(groupChats)
+        // console.log(groupChats)
+        parseGroupChats()
     }
 
     // Match section
@@ -113,11 +114,84 @@ function Sidebar({ currentView, onChatSelect }) {
             }
 
             const result = await response.json();
+            return result
 
         } catch(error) {
             console.error("Error fetching groupchats: ", error)
         }
     }
+
+    class Chat {
+        constructor(email, profilePicture, groupchatId) {
+            this.email = email;
+            this.profilePicture = profilePicture;
+            this.groupchatId = groupchatId;
+        }
+    }
+
+    // parse groupchats to get users emails
+    function parseGroupChats() {
+
+        const emailCount = new Set()
+        let user = null
+
+        // this is just an easy way to get the current user's email --> change later
+        for (const {email1, email2} of groupChats) {
+            for (const email of [email1, email2]) {
+                if (emailCount.has(email)) {
+                    user = email; 
+                    break
+                }
+                emailCount.add(email);
+            }
+            if(user) break
+        }
+
+        // create chat objects to make visuals
+        const userChats = []
+        
+        for(const {groupChatId, email1, email2} of groupChats) {
+            let nonUserEmail = null
+            console.log(groupChatId)
+
+            if (email1 === user) {
+                nonUserEmail = email2;
+            } else {
+                nonUserEmail = email1;
+            }
+
+            // search for nonUserEmail's profile picture here
+
+            const getProfilePicture = async () => {
+                try {
+                    const response = await fetch("https://roomie.ddns.net:8080/matches/getProfilePicture", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: nonUserEmail })
+                    });
+    
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch profile picture of given email");
+                    }
+
+                    const result = await response.json();
+                    return result
+                } catch (error) {
+                    console.error("Error fetching profile picture", error);
+                }
+            };
+    
+            const profilePic = getProfilePicture();
+
+
+            // create chat object
+            userChats.push(new Chat(nonUserEmail, profilePic, groupChatId))
+        }
+
+        console.log("Helloooooo", userChats)
+
+    }
+
 
     useEffect(() => {
         if (activeView === "Chat") {
@@ -134,12 +208,12 @@ function Sidebar({ currentView, onChatSelect }) {
             {(() => {
                 switch (activeView) {
                     case "Chat":
-                        return chatContacts.map(chat => (
-                            <div className={`chatBox ${selectedChat === chat.id ? 'selected' : ''}`}
-                                key={chat.id}
-                                onClick={() => handleChatClick(chat.id)}>
+                        return groupChats.map(chat => (
+                            <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
+                                key={chat.groupChatId}
+                                onClick={() => handleChatClick(chat.groupChatId)}>
                                 <div className="profilePic"/>
-                                <h3>{chat.name}</h3>
+                                <h3>{chat.email2}</h3>
                             </div>
                         ));
                     case "Match":

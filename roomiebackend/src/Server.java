@@ -60,9 +60,10 @@ public class Server {
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
 
-            // Matches routes??
+            // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
+            router.addRoute("/matches/getProfilePicture", MatchController::sendProfilePicture);
 
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             // router.addRoute("/matches/getMatchList", MatchController::getLikedList);
