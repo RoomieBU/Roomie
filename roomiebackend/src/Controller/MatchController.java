@@ -12,31 +12,43 @@ public class MatchController {
     public static String sendProfilePicture(Map<String, String> data, String method) {
         int code = 400;
         Map<String, String> response = new HashMap<>();
-        if(!method.equals("POST")) {
+    
+        // Enforce only POST requests
+        if (!"POST".equals(method)) {
             response.put("message", "Method not allowed!");
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
         }
-
+    
+        // Get email from request data
         String email = data.get("email");
+        if (email == null || email.isEmpty()) {
+            response.put("message", "Email is required.");
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+        }
+    
         List<String> columns = new ArrayList<>();
         columns.add("profile_picture_url");
-
+    
         try {
             Dao dao = new Dao(SQLConnection.getConnection());
-            response = dao.getData(columns, email, "Users");
-
-            if(response != null) {
-                response.put("message", "Send profile url");
+            Map<String, String> dbResponse = dao.getData(columns, email, "Users");
+    
+            if (dbResponse.containsKey("profile_picture_url")) {
+                response.putAll(dbResponse); // Add database response to main response
+                response.put("message", "Profile picture URL retrieved successfully.");
                 code = 200;
+            } else {
+                response.put("message", "Profile picture not found.");
+                code = 404;
             }
-            
+    
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("[Match Controller] Unable to connect to MySQL.");
+            response.put("message", "Internal server error.");
             code = 500;
-            response.put("email", "");
         }
-
+    
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
-    }
 
     public static String sendMatchInformation(Map<String, String> data, String method) {
         int code = 400;
