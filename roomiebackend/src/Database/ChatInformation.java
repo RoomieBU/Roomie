@@ -11,7 +11,7 @@ public class ChatInformation {
         this.lastName = lastName;
         this.profilePicture = profilePicture;
     }
-
+    
     // Getter for profilePicture
     public String getProfilePicture() {
         return profilePicture;

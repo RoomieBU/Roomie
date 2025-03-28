@@ -182,7 +182,6 @@ function Sidebar({ currentView, onChatSelect }) {
             };
     
             const profilePic = getProfilePicture();
-            console.log("RESPONSE: ", profilePic)
 
             // create chat object
             userChats.push(new Chat(nonUserEmail, profilePic.profile_picture_url, groupchatId))
