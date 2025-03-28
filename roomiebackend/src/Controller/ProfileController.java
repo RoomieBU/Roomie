@@ -121,10 +121,10 @@ public class ProfileController {
         String lName = data.get("last_name");
         String aboutMe = data.get("about_me");
 
-        // Log the values received to the response (instead of using the server logs)
+        response.put("received_data", data.toString());
         response.put("received_first_name", fName);
         response.put("received_last_name", lName);
-        response.put("received_about_me", aboutMe); 
+        response.put("received_about_me", aboutMe);
 
         // Validate required fields
         if (fName == null || lName == null || aboutMe == null) {
