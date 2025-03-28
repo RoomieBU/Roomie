@@ -150,9 +150,9 @@ function Sidebar({ currentView, onChatSelect }) {
         // create chat objects to make visuals
         const userChats = []
         
-        for(const {groupChatId, email1, email2} of groupChats) {
+        for(const {groupchatId, email1, email2} of groupChats) {
             let nonUserEmail = null
-            console.log(groupChatId)
+            console.log(groupchatId)
 
             if (email1 === user) {
                 nonUserEmail = email2;
@@ -182,13 +182,14 @@ function Sidebar({ currentView, onChatSelect }) {
             };
     
             const profilePic = getProfilePicture();
-
+            console.log("RESPONSE: ", profilePic)
 
             // create chat object
-            userChats.push(new Chat(nonUserEmail, profilePic.getItem("profile_picture_url"), groupChatId))
+            userChats.push(new Chat(nonUserEmail, profilePic.profile_picture_url, groupchatId))
         }
 
         console.log("Helloooooo", userChats)
+        console.log(groupChats)
 
     }
 

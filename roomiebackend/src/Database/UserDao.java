@@ -102,19 +102,22 @@ public class UserDao extends Dao{
 
 
     // Testing
-    public String getUserProfilePicture(String email) {
-        String url = "";
-        String query = "SELECT profile_picture_url FROM Users WHERE email = ?";
+    public ChatInformation getChatInformation(String email) {
+        String query = "SELECT first_name, last_name, profile_picture_url FROM Users WHERE email = ?";
         try (PreparedStatement stmt = connection.prepareStatement((query))) {
             stmt.setString(1, email);
             try(ResultSet rs = stmt.executeQuery()) {
-                url = rs.getString("profile_picture_url");
+                ChatInformation chatInfo = new ChatInformation(
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getString("profile_picture_url")
+                );
+
+                 return chatInfo;
             }
         }catch (SQLException e) {
             throw new RuntimeException("Error retrieving given user's profile picture", e);
         }
-
-        return url;
     }
 
     /**

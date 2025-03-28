@@ -28,11 +28,13 @@ public class MatchController {
     
         try {
             UserDao dao = new UserDao(SQLConnection.getConnection());
-            String url = dao.getUserProfilePicture(email);
+            ChatInformation chatInfo = dao.getChatInformation(email);
             Map<String, String> d = new HashMap<>();
-            d.put("profile_picture_url", url);
+            d.put("first_name", chatInfo.getFirstName());
+            d.put("last_name", chatInfo.getLastName());
+            d.put("profile_picture_url", chatInfo.getProfilePicture());
     
-            if (url != null) {
+            if (!chatInfo.getFirstName().equals("no first name")) {
                 response.putAll(d); // Add database response to main response
                 response.put("message", "Profile picture URL retrieved successfully.");
                 code = 200;
