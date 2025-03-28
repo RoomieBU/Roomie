@@ -388,8 +388,11 @@ public class UserDao extends Dao{
     }
 
     public void closeConnection() throws SQLException {
-        connection.close();
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
     }
+
 
     
     
