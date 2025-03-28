@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-//import { Carousel } from "react-bootstrap"; // Import Carousel component from React Bootstrap
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
@@ -12,7 +11,8 @@ function Profile({ onEditProfile }) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [age, setAge] = useState("-1");
-    //const [userImages, setUserImages] = useState([]); // State to store user images
+    const [userImages, setUserImages] = useState([]); // State to store user images
+    const [currentIndex, setCurrentIndex] = useState(0); // State to keep track of the current image index
     const navigate = useNavigate();
 
     // Calculate age from date of birth
@@ -94,6 +94,18 @@ function Profile({ onEditProfile }) {
         getUserImages();
     }, []); // Run once when the component is mounted
 
+    // Function to go to the next image
+    const nextImage = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % userImages.length);
+    };
+
+    // Function to go to the previous image
+    const prevImage = () => {
+        setCurrentIndex(
+            (prevIndex) => (prevIndex - 1 + userImages.length) % userImages.length
+        );
+    };
+
     return (
         <div className="profile-container">
             {isLoading ? (
@@ -117,20 +129,22 @@ function Profile({ onEditProfile }) {
                     {/* Profile Information */}
                     <h2 className="profile-title">Profile Information</h2>
 
-{/*                      */}{/* Carousel for User Images */}
-{/*                     {userImages.length > 0 && ( */}
-{/*                         <Carousel> */}
-{/*                             {userImages.map((imageUrl, index) => ( */}
-{/*                                 <Carousel.Item key={index}> */}
-{/*                                     <img */}
-{/*                                         className="d-block w-100" */}
-{/*                                         src={imageUrl} */}
-{/*                                         alt={`User Image ${index + 1}`} */}
-{/*                                     /> */}
-{/*                                 </Carousel.Item> */}
-{/*                             ))} */}
-{/*                         </Carousel> */}
-{/*                     )} */}
+                    {/* Custom Image Carousel */}
+                    {userImages.length > 0 && (
+                        <div className="custom-carousel">
+                            <button onClick={prevImage} className="carousel-btn prev-btn">
+                                &#10094; {/* Left arrow */}
+                            </button>
+                            <img
+                                className="carousel-image"
+                                src={userImages[currentIndex]}
+                                alt={`User Image ${currentIndex + 1}`}
+                            />
+                            <button onClick={nextImage} className="carousel-btn next-btn">
+                                &#10095; {/* Right arrow */}
+                            </button>
+                        </div>
+                    )}
 
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
