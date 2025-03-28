@@ -6,10 +6,13 @@ function Profile({ onEditProfile }) {
     Profile.propTypes = {
         onEditProfile: PropTypes.func.isRequired,
     };
+
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [age, setAge] = useState("-1");
+    const [userImages, setUserImages] = useState([]); // State to store user images
+    const [currentIndex, setCurrentIndex] = useState(0); // State to keep track of the current image index
     const navigate = useNavigate();
 
     // Calculate age from date of birth
@@ -42,6 +45,7 @@ function Profile({ onEditProfile }) {
         verifyToken();
     }, [navigate]);
 
+    // Fetch profile information
     useEffect(() => {
         const getProfile = async () => {
             setIsLoading(true);
@@ -54,7 +58,6 @@ function Profile({ onEditProfile }) {
 
                 if (!response.ok) throw new Error("Failed to fetch profile");
                 const result = await response.json();
-
                 setProfile(result);
                 setAge(calculateAge(result.date_of_birth));
             } catch (error) {
@@ -66,18 +69,57 @@ function Profile({ onEditProfile }) {
         getProfile();
     }, []);
 
+    // Fetch images for the user
+    useEffect(() => {
+        const getUserImages = async () => {
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/user/images", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token: localStorage.getItem("token") })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch images");
+                const result = await response.json();
+
+                if (result.images) {
+                    const imageArray = result.images.split(",");
+                    setUserImages(imageArray);
+                }
+            } catch (error) {
+                setError(error.message);
+            }
+        };
+        getUserImages();
+    }, []);
+
+    // Function to go to the next image
+    const nextImage = () => {
+        setCurrentIndex((prevIndex) => {
+            const nextIndex = (prevIndex + 1) % userImages.length;
+            return nextIndex;
+        });
+    };
+
+    // Function to go to the previous image
+    const prevImage = () => {
+        setCurrentIndex((prevIndex) => {
+            const prevIndexUpdated = (prevIndex - 1 + userImages.length) % userImages.length;
+            return prevIndexUpdated;
+        });
+    };
+
     return (
         <div className="profile-container">
             {isLoading ? (
                 <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
-                <div className="text-center">
-                    <p className="fs-4">Loading profile...</p>
-                    {/* Optional: Add a spinner for better visual feedback */}
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
+                    <div className="text-center">
+                        <p className="fs-4">Loading profile...</p>
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
-            </div>
             ) : profile ? (
                 <div className="profile-content">
                     {/* Profile Picture */}
@@ -89,6 +131,31 @@ function Profile({ onEditProfile }) {
 
                     {/* Profile Information */}
                     <h2 className="profile-title">Profile Information</h2>
+
+                    {/* Custom Image Carousel */}
+                    {userImages.length > 0 ? (
+                        <div className="custom-carousel">
+                            <button onClick={prevImage} className="carousel-btn prev-btn">
+                                &#10094; {/* Left arrow */}
+                            </button>
+                            <img
+                                className="carousel-image"
+                                src={userImages[currentIndex]}
+                                alt={`User Image ${currentIndex + 1}`}
+                                style={{
+                                    width: "300px", // Adjust the width of the image
+                                    height: "auto", // Keep aspect ratio
+                                    borderRadius: "5px",
+                                    objectFit: "cover", // Make sure the image fits nicely
+                                }}
+                            />
+                            <button onClick={nextImage} className="carousel-btn next-btn">
+                                &#10095; {/* Right arrow */}
+                            </button>
+                        </div>
+                    ) : (
+                        <p>No images available</p>
+                    )}
 
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
@@ -102,15 +169,14 @@ function Profile({ onEditProfile }) {
                             <span className="detail-value">{profile.email}</span>
                         </div>
 
-                        {/* Add all other fields similarly */}
                         <div className="detail-item">
                             <span className="detail-label">School:</span>
                             <span className="detail-value">{profile.school || "N/A"}</span>
                         </div>
 
                         <div className="detail-item">
-                            <span className="detail-label">Preferred Gender:</span>
-                            <span className="detail-value">{profile.preferred_gender}</span>
+                            <span className="detail-label">About Me:</span>
+                            <span className="detail-value">{profile.about_me}</span>
                         </div>
 
                         {/* Add Edit Profile Button */}

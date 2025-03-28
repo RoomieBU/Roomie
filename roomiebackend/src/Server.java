@@ -50,6 +50,7 @@ public class Server {
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
             router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
 
+
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
