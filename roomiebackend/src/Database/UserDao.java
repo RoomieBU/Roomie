@@ -107,6 +107,7 @@ public class UserDao extends Dao{
         try (PreparedStatement stmt = connection.prepareStatement((query))) {
             stmt.setString(1, email);
             try(ResultSet rs = stmt.executeQuery()) {
+                rs.next();
                 ChatInformation chatInfo = new ChatInformation(
                     rs.getString("first_name"),
                     rs.getString("last_name"),
