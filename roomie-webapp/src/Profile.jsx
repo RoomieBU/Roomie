@@ -11,40 +11,11 @@ function Profile({ onEditProfile }) {
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [age, setAge] = useState("-1");
     const [userImages, setUserImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
-    const calculateAge = (birthDate) => {
-        if (!birthDate) return "-1";
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--;
-        }
-        return age.toString();
-    };
-
-    useEffect(() => {
-        const verifyToken = async () => {
-            try {
-                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: localStorage.getItem("token") })
-                });
-
-                if (!response.ok) throw new Error("Invalid token");
-            } catch (error) {
-                navigate("/login");
-            }
-        };
-        verifyToken();
-    }, [navigate]);
-
+    // Fetch profile information
     useEffect(() => {
         const getProfile = async () => {
             setIsLoading(true);
@@ -58,7 +29,6 @@ function Profile({ onEditProfile }) {
                 if (!response.ok) throw new Error("Failed to fetch profile");
                 const result = await response.json();
                 setProfile(result);
-                setAge(calculateAge(result.date_of_birth));
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -68,6 +38,7 @@ function Profile({ onEditProfile }) {
         getProfile();
     }, []);
 
+    // Fetch user images
     useEffect(() => {
         const getUserImages = async () => {
             try {
@@ -110,14 +81,16 @@ function Profile({ onEditProfile }) {
                 </div>
             ) : profile ? (
                 <div className="profile-content">
+                    {/* Profile Picture */}
                     <img
                         src={profile.profile_picture_url || "/default-profile-pic.jpg"}
                         alt="Profile"
                         className="profile-picture"
                     />
 
-                    <h2>Profile Information</h2>
+                    <h2 className="profile-heading">Profile Information</h2>
 
+                    {/* Image Carousel */}
                     {userImages.length > 0 ? (
                         <div className="carousel-container">
                             <button onClick={prevImage} className="carousel-button left">
@@ -136,28 +109,33 @@ function Profile({ onEditProfile }) {
                         <p>No images available</p>
                     )}
 
-                    <div className="profile-details">
-                        <div className="profile-detail-item">
-                            <span className="label">Name:</span>
-                            <span>{profile.name}</span>
+                    {/* Profile Details Grid */}
+                    <div className="profile-details-grid">
+                        <div className="detail-item">
+                            <span className="detail-label">Name:</span>
+                            <span className="detail-value">{profile.name}</span>
                         </div>
-                        <div className="profile-detail-item">
-                            <span className="label">Email:</span>
-                            <span>{profile.email}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                            <span className="label">School:</span>
-                            <span>{profile.school || "N/A"}</span>
-                        </div>
-                        <div className="profile-detail-item">
-                            <span className="label">About Me:</span>
-                            <span>{decodeURIComponent(profile.about_me)}</span>
-                        </div>
-                    </div>
 
-                    <button onClick={onEditProfile} className="edit-profile-button">
-                        Edit Profile
-                    </button>
+                        <div className="detail-item">
+                            <span className="detail-label">Email:</span>
+                            <span className="detail-value">{profile.email}</span>
+                        </div>
+
+                        <div className="detail-item">
+                            <span className="detail-label">School:</span>
+                            <span className="detail-value">{profile.school || "N/A"}</span>
+                        </div>
+
+                        <div className="detail-item">
+                            <span className="detail-label">About Me:</span>
+                            <span className="detail-value">{profile.about_me || "No bio available."}</span>
+                        </div>
+
+                        {/* Edit Profile Button */}
+                        <button className="edit-profile-btn" onClick={onEditProfile}>
+                            Edit Profile
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <p>{error || "No profile data available."}</p>

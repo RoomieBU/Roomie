@@ -3,6 +3,8 @@
     padding: 20px;
     font-family: Arial, sans-serif;
     text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 /* Loading screen */
@@ -22,7 +24,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 /* Profile picture */
@@ -34,12 +36,22 @@
     margin-bottom: 20px;
 }
 
-/* Carousel section */
+/* Heading */
+.profile-heading {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Image carousel */
 .carousel-container {
     position: relative;
     width: 400px;
     height: 300px;
     margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-button {
@@ -50,6 +62,7 @@
     border: none;
     font-size: 24px;
     color: #007bff;
+    cursor: pointer;
 }
 
 .carousel-button.left {
@@ -64,32 +77,51 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Profile details grid */
+.profile-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
     border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Profile details section */
-.profile-details {
+.detail-item {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #555;
 }
 
-.profile-detail-item {
-    width: 60%;
-}
-
-.label {
+.detail-label {
     font-weight: bold;
+    color: #333;
+}
+
+.detail-value {
+    color: #777;
 }
 
 /* Edit Profile Button */
-.edit-profile-button {
-    padding: 10px 20px;
+.edit-profile-btn {
+    padding: 12px 25px;
     background-color: #007bff;
-    color: #fff;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+    background-color: #0056b3;
 }
