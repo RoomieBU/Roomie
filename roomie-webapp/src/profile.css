@@ -46,8 +46,8 @@
 /* Image carousel */
 .carousel-container {
     position: relative;
-    width: 400px;
-    height: 300px;
+    width: 600px;
+    height: 800px;
     margin-bottom: 20px;
     border-radius: 8px;
     overflow: hidden;
