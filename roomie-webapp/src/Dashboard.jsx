@@ -134,6 +134,10 @@ function Dashboard() {
         setSelectedChat(chat);
     };
 
+    const handleChatHistory = (chatHistory) => {
+        setChatHistory(chatHistory)
+    }
+
     function showRelevantComponent(action) {
         setHideMatching(true);
         setHideDefault(true);
@@ -196,7 +200,7 @@ function Dashboard() {
                 <>
                     {/* Left Panel */}
                     <div className="left-panel" style={{ width: `${leftWidth}%` }}>
-                        <Sidebar onChatSelect={handleChatSelect} currentView={currentView} />
+                        <Sidebar onChatSelect={handleChatSelect} chatHistory={handleChatHistory} currentView={currentView} />
                     </div>
                     {/* Divider */}
                     <div
@@ -210,7 +214,7 @@ function Dashboard() {
                     <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
                         {hideDefault ? null : <p>Roomie.</p>}
                         {hideMatching ? null : <Matching />}
-                        {hideChat ? null : <Chat selectedChat={selectedChat} />}
+                        {hideChat ? null : <Chat selectedChat={selectedChat}/>}
                     </div>
                 </>
                 )}

@@ -4,31 +4,50 @@ import PropTypes from 'prop-types';
 
 function Chat({ selectedChat }) {
     const [text, setText] = useState('')
-    const [conversation, setConversation] = useState([])
     const [messages, setMessages] = useState([])
+    const [chatHistory, setChatHistory] = useState([])
 
     const messageAreaRef = useRef(null)
 
-
-
     let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "Unknown User";
 
-    useEffect(() => {
-        // reset chat for new selected chat here --> for now just clear conversation area
-        setConversation([])
+    // useEffect(() => {
+    //     // reset chat for new selected chat here --> for now just clear conversation area
+    //     setChatHistory(getChatHistory(selectedChat))
+    //     // console.log(chatHistory)
 
+    // }, [selectedChat])
+
+    useEffect(() => {
+        setMessages([])
+        if(selectedChat) {
+            const fetchChatHistory = async () => {
+                const history = await getChatHistory(selectedChat[2])
+                setChatHistory(history)
+            }
+            fetchChatHistory()
+            
+        }
     }, [selectedChat])
 
     useEffect(() => {
-        scrollToBottom()
-    }, [conversation])
+        if (chatHistory.length > 0) {
+            const sortedHistory = [...chatHistory].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            setMessages(sortedHistory); // Updating messages with sorted history
+            console.log("THIS IS IT", sortedHistory)
+        }
+    }, [chatHistory]);
+
+    useEffect(() => {
+         scrollToBottom()
+     }, [messages])
 
     function sendMessage() {
         if(!selectedChat) return
 
         const newMessage = {
-            type: "sent",
-            text: text
+            sentBySelf: true,
+            message: text
         }
 
         setMessages((prevMessages) => [...prevMessages, newMessage])
@@ -58,7 +77,11 @@ function Chat({ selectedChat }) {
             }
         }
         sendMessageData()
+        
+
         setText("")
+
+        //getChatHistory(selectedChat)
     }
 
     function handleKeyPress(e) {
@@ -75,23 +98,40 @@ function Chat({ selectedChat }) {
         }
     }
 
+    const getChatHistory = async (id) => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getChatHistory", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: id})
+            });
+
+            if(!response.ok) {
+                throw new Error("Failed to fetch chat history");
+            }
+
+            const result = await response.json();
+            return result
+
+        } catch(error) {
+            console.error("Error fetching chat history: ", error)
+        }
+    }
+
+
+
     return (
         <div className="holdChat">
             <div className="messageArea" ref={messageAreaRef}>
                 <h5 className="chatNote" >You are chatting with {name}</h5>
-                {/* {conversation.map((item, index) => (
-                    item.type === 'message' ? (
-                        <p key={index} className="right bubble">{item.content}</p>
-                    ) : (
-                        <p key={index} className="left bubble">{item.content}</p>
-                    )
-                ))} */}
 
-                {messages.map((msg, index) => {
-                    <div key={index} className="message">
-                        {msg.text}
-                    </div>
-                })}
+                {messages.map((msg, index) => (
+                    msg.sentBySelf === true ? (
+                        <p key={index} className="right bubble"> {msg.message}</p>
+                    ) : (
+                        <p key={index} className="left bubble"> {msg.message}</p>
+                    )
+                ))}
 
             </div>
             <div className="messageInput">

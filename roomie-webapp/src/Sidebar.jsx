@@ -5,7 +5,7 @@ import Spinner from './Spinner'; // Ensure the correct path to Spinner component
 import MatchWidget from "./MatchWidget";
 
 
-function Sidebar({ currentView, onChatSelect }) {
+function Sidebar({ currentView, onChatSelect}) {
     
     const [selectedChat, setSelectedChat] = useState(null)
     const [activeView, setActiveView] = useState(currentView || "Chat");
@@ -44,9 +44,6 @@ function Sidebar({ currentView, onChatSelect }) {
             const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId]
             onChatSelect(data); // Ensure onChatSelect expects an object
         }
-
-        // sent selected chat as "groupchat_id", token as "token"
-        getChatHistory()
     }
 
     // Match section
@@ -113,26 +110,6 @@ function Sidebar({ currentView, onChatSelect }) {
         }
     }
 
-    const getChatHistory = async () => {
-        try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getChatHistory", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: selectedChat })
-            });
-
-            if(!response.ok) {
-                throw new Error("Failed to fetch chat history");
-            }
-
-            const result = await response.json();
-            return result
-
-        } catch(error) {
-            console.error("Error fetching chat history: ", error)
-        }
-    }
-
     class Chat {
         constructor(firstName, lastName, groupChatId, profilePicture) {
             this.firstName = firstName;
@@ -142,7 +119,7 @@ function Sidebar({ currentView, onChatSelect }) {
         }
     }
 
-    const [userChats, setUserChats] = useState([])
+    const [userChats, setUserChats] = useState([]);
 
     const parseGroupChats = async () => {
         if (!groupChats.length) return;
