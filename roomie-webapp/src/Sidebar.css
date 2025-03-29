@@ -16,7 +16,7 @@
     background-color: #6f42c1;
     color: white;
     justify-content: left;
-    padding-left: 15px;
+    padding-left: 40px;
     gap: 15px;
     display: flex;
     align-items: center;
@@ -31,6 +31,8 @@
 .profilePic {
     min-width: 40px;
     min-height: 40px;
+    max-width: 40px;
+    max-height: 40px;
     object-fit: cover;
     background-image: url("src/assets/transparent.jpg");
     border-radius: 100%;

@@ -7,17 +7,7 @@ function Sidebar({ currentView, onChatSelect }) {
     
     const [selectedChat, setSelectedChat] = useState(null)
     const [activeView, setActiveView] = useState(currentView || "Chat");
-
-    const chatContacts = [
-        { id: 1, name: "Salvatore La Marca", lastMessage: "Hey, how are you?" },
-        { id: 2, name: "Riley Simmons", lastMessage: "See you tomorrow!" },
-        { id: 3, name: "Sam Kapp", lastMessage: "Thanks for the help" },
-        { id: 4, name: "Emily Faso", lastMessage: "Did you get my email?" },
-        { id: 5, name: "Matthew Yurkunas", lastMessage: "bruh"},
-    ];
-
     
-
     useEffect(() => {
         // Update activeView when currentView prop changes
         if (currentView) {
@@ -32,18 +22,26 @@ function Sidebar({ currentView, onChatSelect }) {
         return () => {
             window.removeEventListener('viewChange', handleViewChange);
         };
+    
+
     }, [currentView]); // Add currentView to dependency array
+
+
 
     const handleChatClick = (chatId) => {
         setSelectedChat(chatId);
-        const selectedContact = chatContacts.find(contact => contact.id === chatId);
+        console.log("CHAT ID: ", selectedChat)
+
+        const selectedChat = "JEFF"
+        onChatSelect(selectedChat)
+
+        // const selectedContact = chatContacts.find(contact => contact.id === chatId);
         
-        if (onChatSelect && selectedContact) {
-            onChatSelect(selectedContact);
-        }
+        // if (onChatSelect && selectedContact) {
+        //     onChatSelect(selectedContact);
+        // }
 
         // console.log(groupChats)
-        parseGroupChats()
     }
 
     // Match section
@@ -101,6 +99,7 @@ function Sidebar({ currentView, onChatSelect }) {
 
     const [groupChats, setGroupChats] = useState([]);
 
+
     const getGroupchats = async () => {
         try {
             const response = await fetch("https://roomie.ddns.net:8080/chat/getGroupchats", {
@@ -122,47 +121,41 @@ function Sidebar({ currentView, onChatSelect }) {
     }
 
     class Chat {
-        constructor(email, profilePicture, groupchatId) {
-            this.email = email;
-            this.profilePicture = profilePicture;
-            this.groupchatId = groupchatId;
+        constructor(firstName, lastName, groupChatId, profilePicture) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.groupChatId = groupChatId;
+            this.profilePicture = profilePicture
         }
     }
 
-    // parse groupchats to get users emails
-    function parseGroupChats() {
+    const [userChats, setUserChats] = useState([])
 
-        const emailCount = new Set()
-        let user = null
-
-        // this is just an easy way to get the current user's email --> change later
-        for (const {email1, email2} of groupChats) {
+    const parseGroupChats = async () => {
+        if (!groupChats.length) return;
+    
+        const emailCount = new Set();
+        let user = null;
+    
+        for (const { email1, email2 } of groupChats) {
             for (const email of [email1, email2]) {
                 if (emailCount.has(email)) {
-                    user = email; 
-                    break
+                    user = email;
+                    break;
                 }
                 emailCount.add(email);
             }
-            if(user) break
+            if (user) break;
         }
-
-        // create chat objects to make visuals
-        const userChats = []
-        
-        for(const {groupchatId, email1, email2} of groupChats) {
-            let nonUserEmail = null
-            console.log(groupchatId)
-
-            if (email1 === user) {
-                nonUserEmail = email2;
-            } else {
-                nonUserEmail = email1;
-            }
-
-            // search for nonUserEmail's profile picture here
-
-            const getChatInformation = async () => {
+    
+        if (!user) {
+            console.error("User email not found in group chats.");
+            return;
+        }
+    
+        const userChatsTemp = await Promise.all(
+            groupChats.map(async ({ groupchatId, email1, email2 }) => {
+                let nonUserEmail = email1 === user ? email2 : email1;
                 try {
                     const response = await fetch("https://roomie.ddns.net:8080/matches/getChatInformation", {
                         method: "POST",
@@ -171,26 +164,26 @@ function Sidebar({ currentView, onChatSelect }) {
                     });
     
                     if (!response.ok) {
-                        throw new Error("Failed to fetch profile picture of given email");
+                        throw new Error("Failed to fetch chat information");
                     }
-
-                    const result = await response.json();
-                    return result
-                } catch (error) {
-                    console.error("Error fetching profile picture", error);
-                }
-            };
     
-            const chatInformation = getChatInformation();
-
-            // create chat object
-            userChats.push(new Chat(nonUserEmail, chatInformation.profile_picture_url, groupchatId))
-        }
-
-        console.log("Helloooooo", userChats)
-        console.log(groupChats)
-
-    }
+                    const chatInformation = await response.json();
+                    return new Chat(
+                        chatInformation.first_name, 
+                        chatInformation.last_name, 
+                        groupchatId, 
+                        chatInformation.profile_picture_url
+                    );
+                } catch (error) {
+                    console.error("Error fetching chat information", error);
+                    return null;
+                }
+            })
+        );
+    
+        setUserChats(userChatsTemp.filter(chat => chat !== null));
+    };
+    
 
 
     useEffect(() => {
@@ -203,17 +196,28 @@ function Sidebar({ currentView, onChatSelect }) {
         }
     }, [activeView]);
 
+
+    useEffect(() => {
+        if (groupChats.length > 0) {
+            parseGroupChats();
+        }
+    }, [groupChats]);
+
     return (
-        <div className="sidebar">
+        <div onClick={() => parseGroupChats} className="sidebar">
             {(() => {
                 switch (activeView) {
                     case "Chat":
-                        return groupChats.map(chat => (
+                        return userChats.map(chat => (
                             <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
                                 key={chat.groupChatId}
                                 onClick={() => handleChatClick(chat.groupChatId)}>
-                                <div className="profilePic"/>
-                                <h3>{chat.email2}</h3>
+                                <img
+                                    src={chat.profilePicture}
+                                    alt="P"
+                                    className="profilePic"
+                                />
+                                <h3>{chat.firstName} {chat.lastName}</h3>
                             </div>
                         ));
                     case "Match":
