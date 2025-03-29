@@ -152,7 +152,7 @@ public class MatchController {
             response.put("name", user.getFirstName() + " " + user.getLastName());
             response.put("date_of_birth", user.getDateOfBirth().toString());
             response.put("about_me", user.getAboutMe());
-            response.put("major", "Ski ball (Undergrad)");
+            response.put("major", user.getMajor());
             response.put("profile_picture", user.getProfilePicture());
             code = 200;
 
