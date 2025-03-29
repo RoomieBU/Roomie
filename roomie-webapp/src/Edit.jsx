@@ -66,6 +66,48 @@ function Edit({ onProfile }) {
         getProfile();
     }, [reset]);
 
+    // Function to resize images
+const resizeImage = (file, maxWidth, maxHeight) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            img.src = reader.result;
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Calculate the aspect ratio
+            const aspectRatio = img.width / img.height;
+
+            // Set new width and height while maintaining the aspect ratio
+            if (img.width > img.height) {
+                // Landscape
+                canvas.width = maxWidth;
+                canvas.height = maxWidth / aspectRatio;
+            } else {
+                // Portrait
+                canvas.height = maxHeight;
+                canvas.width = maxHeight * aspectRatio;
+            }
+
+            // Draw the image on the canvas, resizing it
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Convert the canvas to a base64 string
+            const resizedDataUrl = canvas.toDataURL(file.type);
+            resolve(resizedDataUrl);
+        };
+    });
+};
+
+
     // Handle file input change for profile picture
     const handleProfilePictureChange = (event) => {
         const file = event.target.files[0];
@@ -83,7 +125,14 @@ function Edit({ onProfile }) {
             return;
         }
 
-        setSelectedProfilePicture(file);
+        // Resize the profile image to 150x150
+        resizeImage(file, 150, 150)
+            .then((resizedDataUrl) => {
+                setSelectedProfilePicture(resizedDataUrl);
+            })
+            .catch((err) => {
+                setProfileError("Failed to resize profile picture.");
+            });
     };
 
     // Handle file input change for additional user images
@@ -104,7 +153,18 @@ function Edit({ onProfile }) {
             }
         }
 
-        setSelectedUserImages(files);
+        // Resize each user image to 600x800
+        const resizedImagesPromises = files.map((file) =>
+            resizeImage(file, 600, 800)
+        );
+
+        Promise.all(resizedImagesPromises)
+            .then((resizedImages) => {
+                setSelectedUserImages(resizedImages);
+            })
+            .catch((err) => {
+                setProfileError("Failed to resize user images.");
+            });
     };
 
     const onSubmit = async (data) => {
@@ -127,20 +187,40 @@ function Edit({ onProfile }) {
                 throw new Error("Profile update failed. Please try again.");
             }
 
-            // Upload profile picture if selected
+            // Upload resized profile picture if selected
             if (selectedProfilePicture) {
-                const reader = new FileReader();
-                reader.readAsDataURL(selectedProfilePicture);
-                reader.onload = async () => {
-                    let base64Data = reader.result.split(",")[1];
-                    base64Data = base64Data.replace(/\s+/g, "");
+                const base64Data = selectedProfilePicture.split(",")[1];
+
+                const filePayload = JSON.stringify({
+                    token: localStorage.getItem("token"),
+                    fileName: "profile-picture",
+                    fileType: "image/jpeg", // Assuming resized images will be in JPEG format
+                    data: base64Data,
+                    isProfilePicture: "True",
+                });
+
+                const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: filePayload,
+                });
+
+                if (!fileResponse.ok) {
+                    throw new Error("Profile picture upload failed.");
+                }
+            }
+
+            // Upload resized user images if selected
+            if (selectedUserImages.length > 0) {
+                for (let i = 0; i < selectedUserImages.length; i++) {
+                    const base64Data = selectedUserImages[i].split(",")[1];
 
                     const filePayload = JSON.stringify({
                         token: localStorage.getItem("token"),
-                        fileName: selectedProfilePicture.name,
-                        fileType: selectedProfilePicture.type,
+                        fileName: `user-image-${i + 1}`,
+                        fileType: "image/jpeg", // Assuming resized images will be in JPEG format
                         data: base64Data,
-                        isProfilePicture: "True",
+                        isProfilePicture: "False", // For user images
                     });
 
                     const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
@@ -150,42 +230,12 @@ function Edit({ onProfile }) {
                     });
 
                     if (!fileResponse.ok) {
-                        throw new Error("Profile picture upload failed.");
+                        throw new Error("User image upload failed.");
                     }
-                };
-            }
-
-            // Upload user images if selected
-            if (selectedUserImages.length > 0) {
-                for (let file of selectedUserImages) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = async () => {
-                        let base64Data = reader.result.split(",")[1];
-                        base64Data = base64Data.replace(/\s+/g, "");
-
-                        const filePayload = JSON.stringify({
-                            token: localStorage.getItem("token"),
-                            fileName: file.name,
-                            fileType: file.type,
-                            data: base64Data,
-                            isProfilePicture: "False", // For user images
-                        });
-
-                        const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: filePayload,
-                        });
-
-                        if (!fileResponse.ok) {
-                            throw new Error("User image upload failed.");
-                        }
-                    };
                 }
             }
 
-                navigate("/dashboard");
+            navigate("/dashboard");
         } catch (error) {
             setProfileError(error.message);
         }
