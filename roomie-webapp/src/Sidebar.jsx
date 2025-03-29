@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import "./Sidebar.css"
+import Spinner from './Spinner'; // Ensure the correct path to Spinner component
+import MatchWidget from "./MatchWidget";
 
 
 function Sidebar({ currentView, onChatSelect }) {
@@ -8,6 +10,9 @@ function Sidebar({ currentView, onChatSelect }) {
     const [selectedChat, setSelectedChat] = useState(null)
     const [activeView, setActiveView] = useState(currentView || "Chat");
     
+    // loading flag for spinner 
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         // Update activeView when currentView prop changes
         if (currentView) {
@@ -32,39 +37,24 @@ function Sidebar({ currentView, onChatSelect }) {
         setSelectedChat(chatId);
         console.log("CHAT ID: ", selectedChat)
 
-        const selectedChat = "JEFF"
-        onChatSelect(selectedChat)
+        const targetChat = userChats.find(chat => chat.groupChatId === chatId);
+        console.log(targetChat)
 
-        // const selectedContact = chatContacts.find(contact => contact.id === chatId);
-        
-        // if (onChatSelect && selectedContact) {
-        //     onChatSelect(selectedContact);
-        // }
-
-        // console.log(groupChats)
+        if (targetChat) {
+            const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId]
+            onChatSelect(data); // Ensure onChatSelect expects an object
+        }
     }
 
     // Match section
 
-    // const [matches, setMatches] = useState([
-    //     { id: 1, name: "Salvatore La Marca" }
-    // ]);
-
-    // const [likes, setLikes] = useState([
-    //     {id: 1, name: "John Smith"},
-    // ]);
-
     const [isMatchesVisible, setIsMatchesVisible] = useState(true)
-    const [isLikedVisible, setIsLikedVisible] = useState(true)
 
     function toggleMatches() {
         setIsMatchesVisible(!isMatchesVisible)
         // getLikedList()
     }
 
-    function toggleLiked() {
-        setIsLikedVisible(!isLikedVisible)
-    }
 
     // const [likedUsers, setLikedUsers] = useState(null)
 
@@ -182,6 +172,7 @@ function Sidebar({ currentView, onChatSelect }) {
         );
     
         setUserChats(userChatsTemp.filter(chat => chat !== null));
+        setLoading(false)
     };
     
 
@@ -189,6 +180,7 @@ function Sidebar({ currentView, onChatSelect }) {
     useEffect(() => {
         if (activeView === "Chat") {
             const fetchChats = async () => {
+                setLoading(true)
                 const chats = await getGroupchats();
                 setGroupChats(chats);  // Store the data
             };
@@ -208,18 +200,22 @@ function Sidebar({ currentView, onChatSelect }) {
             {(() => {
                 switch (activeView) {
                     case "Chat":
-                        return userChats.map(chat => (
-                            <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
-                                key={chat.groupChatId}
-                                onClick={() => handleChatClick(chat.groupChatId)}>
-                                <img
-                                    src={chat.profilePicture}
-                                    alt="P"
-                                    className="profilePic"
-                                />
-                                <h3>{chat.firstName} {chat.lastName}</h3>
-                            </div>
-                        ));
+                        if (loading) {
+                            return <Spinner load="chats..."/>
+                        } else {
+                            return userChats.map(chat => (
+                                <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
+                                    key={chat.groupChatId}
+                                    onClick={() => handleChatClick(chat.groupChatId)}>
+                                    <img
+                                        src={chat.profilePicture || `https://ui-avatars.com/api/?name=${chat.firstName[0]}${chat.lastName[0]}&background=random`}
+                                        alt="P"
+                                        className="profilePic"
+                                    />
+                                    <h3>{chat.firstName} {chat.lastName}</h3>
+                                </div>
+                            ));
+                        }
                     case "Match":
                         return (
                             <div className="matchBox">
@@ -230,20 +226,57 @@ function Sidebar({ currentView, onChatSelect }) {
                                 </div>
                                 
                                 <div className="line"/>
-                                <div style={{
+                                {/* <div style={{
                                         height: isMatchesVisible ? "auto" : "0px",
                                         overflow: "scroll",
                                         transition: "height 0.3s ease-in-out",
                                         visibility: isMatchesVisible ? "visible" : "hidden"
-                                    }} className="matchList">
-                                    {/* {matches.map(match => (
-                                        <div key={match.id} className="selectedBox">
-                                            <h4>{match.name}</h4>
+                                    }} className="matchList container">
+                                    
+                                    
+                                    <div className="col-md-6">
+                                        <MatchWidget />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <MatchWidget />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <MatchWidget />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <MatchWidget />
+                                    </div>
+                                </div> */}
+                                <div style={{
+                                    height: isMatchesVisible ? "auto" : "0px",
+                                    overflow: "scroll",
+                                    transition: "height 0.3s ease-in-out",
+                                    visibility: isMatchesVisible ? "visible" : "hidden"
+                                }} className="container matchList">
+                                    <div className="row">
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
                                         </div>
-                                    ))} */}
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
+                                        </div>
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
+                                        </div>
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
+                                        </div>
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
+                                        </div>
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget />
+                                        </div>
+                                    </div>
                                 </div>
+
                                 
-                                <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
+                                {/* <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
                                 {isLikedVisible ? <i style={{marginTop: "3px"}} className="bi bi-chevron-down"/> : <i style={{marginTop: "3px"}} className="bi bi-chevron-right"/>} 
                                     <h4 onClick={toggleLiked}>Liked</h4>
                                 </div>
@@ -254,12 +287,8 @@ function Sidebar({ currentView, onChatSelect }) {
                                         transition: "height 0.3s ease-in-out",
                                         visibility: isLikedVisible ? "visible" : "hidden"
                                     }} className="matchList">
-                                    {/* {likes.map(like => (
-                                        <div key={like.id} className="selectedBox">
-                                            <h4>{like.name}</h4>
-                                        </div>
-                                    ))} */}
-                                </div>
+                
+                                </div> */}
                             </div>
                         );
                     

@@ -16,7 +16,7 @@
     background-color: #6f42c1;
     color: white;
     justify-content: left;
-    padding-left: 40px;
+    padding-left: 30px;
     gap: 15px;
     display: flex;
     align-items: center;
@@ -29,12 +29,11 @@
 }
 
 .profilePic {
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
     object-fit: cover;
-    background-image: url("src/assets/transparent.jpg");
     border-radius: 100%;
     border-width: 2px;
     border-color: black;
@@ -69,11 +68,11 @@
     /* justify-content: center; */
     align-items: center;
     flex-direction: column;
-    gap:5px;
+    /* gap:5px; */
     flex-grow: 1;
 
      /* Add these properties */
-    max-height: 300px;     /* Set your desired maximum height */
+    max-height: 1000px;     /* Set your desired maximum height */
     overflow-y: auto;      /* Enable vertical scrolling when content exceeds max-height */
     padding: 10px;   
     min-height: 80px;

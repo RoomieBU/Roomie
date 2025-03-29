@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import Spinner from "./Spinner"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -250,10 +251,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
         return (
             <div className="container-fluid d-flex align-items-center justify-content-center vh-100">
                 <div className="text-center">
-                    <p className="fs-4">Loading profile data...</p>
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
+                    <Spinner load={"profile data..."}/>
                 </div>
             </div>
         );

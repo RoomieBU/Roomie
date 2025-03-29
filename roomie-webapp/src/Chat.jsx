@@ -8,7 +8,9 @@ function Chat({ selectedChat }) {
 
     const messageAreaRef = useRef(null)
 
-    let name = selectedChat && selectedChat.name ? selectedChat.name : "Select a contact";
+
+
+    let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "Unknown User";
 
     useEffect(() => {
         // reset chat for new selected chat here --> for now just clear conversation area

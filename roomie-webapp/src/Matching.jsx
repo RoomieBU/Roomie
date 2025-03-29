@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import Spinner from "./Spinner"
 
 function Matching() {
     const [roommate, setRoommate] = useState(null); // Store roommate data
@@ -250,12 +251,7 @@ function Matching() {
                         </button>
                     </>
                 ) : (
-                    <>
-                        <p>Loading potential roommate...</p>
-                        <div className="spinner-border text-primary" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
-                    </>
+                    <Spinner load={"potential roomate..."}/>
                 )
             ) : roommate != null ? (
                 <>

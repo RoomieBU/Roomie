@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import './profile.css';  // Import the CSS file
+import Spinner from "./Spinner"
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
@@ -14,6 +15,7 @@ function Profile({ onEditProfile }) {
     const [userImages, setUserImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
+
 
     // Fetch profile information
     useEffect(() => {
@@ -74,10 +76,7 @@ function Profile({ onEditProfile }) {
         <div className="profile-container">
             {isLoading ? (
                 <div className="loading-container">
-                    <p>Loading profile...</p>
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
+                    <Spinner load={"profile..."}/>
                 </div>
             ) : profile ? (
                 <div className="profile-content">
