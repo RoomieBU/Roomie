@@ -76,6 +76,7 @@ public class Server {
              */
             router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
             router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+            router.addRoute("/chat/getChatHistory", ChatController::sendChatHistory);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");

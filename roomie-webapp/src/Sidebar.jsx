@@ -44,6 +44,9 @@ function Sidebar({ currentView, onChatSelect }) {
             const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId]
             onChatSelect(data); // Ensure onChatSelect expects an object
         }
+
+        // sent selected chat as "groupchat_id", token as "token"
+        getChatHistory()
     }
 
     // Match section
@@ -107,6 +110,26 @@ function Sidebar({ currentView, onChatSelect }) {
 
         } catch(error) {
             console.error("Error fetching groupchats: ", error)
+        }
+    }
+
+    const getChatHistory = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getChatHistory", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: selectedChat })
+            });
+
+            if(!response.ok) {
+                throw new Error("Failed to fetch chat history");
+            }
+
+            const result = await response.json();
+            return result
+
+        } catch(error) {
+            console.error("Error fetching chat history: ", error)
         }
     }
 

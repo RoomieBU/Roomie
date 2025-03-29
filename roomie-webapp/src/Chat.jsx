@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 function Chat({ selectedChat }) {
     const [text, setText] = useState('')
     const [conversation, setConversation] = useState([])
+    const [messages, setMessages] = useState([])
 
     const messageAreaRef = useRef(null)
 
@@ -23,6 +24,14 @@ function Chat({ selectedChat }) {
     }, [conversation])
 
     function sendMessage() {
+        if(!selectedChat) return
+
+        const newMessage = {
+            type: "sent",
+            text: text
+        }
+
+        setMessages((prevMessages) => [...prevMessages, newMessage])
 
         const sendMessageData = async () => {
             try {
@@ -48,8 +57,8 @@ function Chat({ selectedChat }) {
                 console.error("HERE we are", error)
             }
         }
-        
         sendMessageData()
+        setText("")
     }
 
     function handleKeyPress(e) {
@@ -70,13 +79,20 @@ function Chat({ selectedChat }) {
         <div className="holdChat">
             <div className="messageArea" ref={messageAreaRef}>
                 <h5 className="chatNote" >You are chatting with {name}</h5>
-                {conversation.map((item, index) => (
+                {/* {conversation.map((item, index) => (
                     item.type === 'message' ? (
                         <p key={index} className="right bubble">{item.content}</p>
                     ) : (
                         <p key={index} className="left bubble">{item.content}</p>
                     )
-                ))}
+                ))} */}
+
+                {messages.map((msg, index) => {
+                    <div key={index} className="message">
+                        {msg.text}
+                    </div>
+                })}
+
             </div>
             <div className="messageInput">
             <textarea
