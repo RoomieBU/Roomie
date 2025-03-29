@@ -7,7 +7,6 @@ import Database.UserPreferencesDao;
 import Tools.Auth;
 import Tools.Mail;
 import Tools.Utils;
-
 import java.sql.SQLException;
 import java.util.*;
 
@@ -204,6 +203,8 @@ public class AuthController {
         formData.put("date_of_birth", data.get("date_of_birth"));
         formData.put("registered", "true");
         formData.put("school", data.get("school"));
+        formData.put("major", data.get("major"));
+        formData.put("profile_picture_url", data.get("photo"));
 
         String userEnteredVerifyCode = data.get("code");
 
