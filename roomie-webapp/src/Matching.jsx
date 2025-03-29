@@ -166,9 +166,7 @@ function Matching() {
     }
 
     const sendMatchData = async (relationship) => {
-
         try {
-
             const matchInteraction = JSON.stringify({
                 token: localStorage.getItem("token"),
                 shown_user: roommate.email,

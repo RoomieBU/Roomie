@@ -23,34 +23,33 @@ function Chat({ selectedChat }) {
     }, [conversation])
 
     function sendMessage() {
-        // send message to db and to matched roomate...
-        if (text.trim() !== '') {
-          
-            const newMessage = {
-                type: 'message',
-                content: text,
-                timestamp: new Date().getTime()
+
+        const sendMessageData = async () => {
+            try {
+                const messageData = JSON.stringify({
+                    token: localStorage.getItem("token"),
+                    groupchat_id: selectedChat[2],
+                    message: text
+                })
+    
+                const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: messageData,
+                });
+    
+                if (!response.ok) {
+                    throw new Error("Message Data Sending failed. Please try again.");
+                }
+    
+            } catch (error) {
+                console.error("HERE we are", error)
             }
-
-            const newResponse = {
-                type: 'response',
-                content: "You are so right",
-                timestamp: new Date().getTime() + 1
-            }
-
-            // Add both to conversation array --> will be different when chat implemented
-            setConversation([...conversation, newMessage, newResponse])
-            
-            // Clear the input field after sending
-            setText('');
-
-            // Reset textarea height
-            const textarea = document.querySelector(".messageTextBox")
-            if(textarea)
-                textarea.style.height = "50px"
-          }
-
+        }
         
+        sendMessageData()
     }
 
     function handleKeyPress(e) {
