@@ -1,10 +1,10 @@
 import React from 'react';
 import './About.css';
-import SalImg from './assets/SalImage.JPEG';
-import EmilyImg from './assets/EmilyFasoImage.JPG';
-import MattImg from './assets/MattImage.JPG';
-import RileyImg from './assets/RileySimmonsImage.JPG';
-import SamImg from './assets/SamKappImage.JPG';
+import SalImg from 'src/assets/SalImage.jpeg';
+import EmilyImg from 'src/assets/EmilyFasoImage.jpg';
+import MattImg from 'src/assets/MattImage.jpg';
+import RileyImg from 'src/assets/RileySimmonsImage.jpg';
+import SamImg from 'src/assets/SamKappImage.jpg';
 
 
 const About = () => {
