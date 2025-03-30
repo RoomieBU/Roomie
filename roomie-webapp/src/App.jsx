@@ -11,18 +11,26 @@ import FileSubmit from "./FileSubmit";
 import Preferences from "./Preferences";
 import TempImageDemo from "./TempImageDemo";
 import Edit from "./Edit";
+import About from './About';
 
 function AppWrapper() {
   const location = useLocation();
-  // Header only shown on the index page
-  const showHeader = location.pathname === "/";
+  // Header shown on certain pages
+  const showHeader = [
+    "/",           // Home
+    "/about",      // About
+    "/login",      // Login
+    "/signup",     // Signup
+  ].includes(location.pathname);
 
   return (
     <>
       {showHeader && (
         <header className="navbar">
           <div className="navbar-left">
-            <h2 className="logo">ROOMIE.</h2>
+            <Link to="/" className="logo-link">
+              <h2 className="logo">ROOMIE.</h2>
+            </Link>
           </div>
           <nav className="navbar-right">
             <ul>
@@ -50,7 +58,7 @@ function AppWrapper() {
         <Route path="/user/images" element={<TempImageDemo />} />
         <Route path="/profile/edit" element={<Edit />} />
         {/* This will eventually link to a new About.jsx page that will introduce the team, but for now this is just a placeholder for that */}
-        <Route path="/about" element={<div style={{ padding: "2rem" }}>Get to know the Roomie Team!</div>} />
+        <Route path="/About" element={<About />} />
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

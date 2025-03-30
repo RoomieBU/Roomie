@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
     const navigate = useNavigate();
@@ -60,7 +61,7 @@ function Login() {
             <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
                 <h1 className="dashboard-h1">Welcome to ROOMIE.</h1>
                 <p className="dashboard-p">
-                    Don’t have an account?{" "}
+                    Don't have an account?{" "}
                     <a href="" onClick={() => navigate("/signup")}>
                         Sign up!
                     </a>
