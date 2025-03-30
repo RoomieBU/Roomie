@@ -110,7 +110,7 @@ public class FileController {
 
             int userId = Integer.parseInt(userIdStr);
 
-            if (isProfilePicture.equals("True")) {
+            if (isProfilePicture != null && isProfilePicture.equals("True")) {
                 // Store profile picture URL in userDao
                 Dao dao = new Dao(SQLConnection.getConnection());
                 Map<String, String> dataMap = new HashMap<>();
@@ -138,7 +138,6 @@ public class FileController {
             response.put("message", "Error saving image.");
             code = 500;
         } catch (Exception e) {
-            System.err.println("[Controller.FileController] Unexpected error: " + e.getMessage());
             e.printStackTrace();
             response.put("message", "Unexpected error.");
             code = 500;

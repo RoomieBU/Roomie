@@ -39,7 +39,9 @@ function Registration() {
                 last_name: data.last_name,
                 about_me: data.about_me,
                 date_of_birth: data.date_of_birth,
+                major: data.major,
                 school: data.school,
+                photo: data.photo,
                 code: data.code
             });
 
@@ -61,7 +63,7 @@ function Registration() {
 
     return (
         <div className="manBun">
-            <div className="container d-flex flex-column align-items-center vh-100 justify-content-center">
+            <div className="container d-flex flex-column align-items-center justify-content-center">
                 <h1 className="fw-bold">Register for ROOMIE</h1>
                 <p>
                     Already have an account?{" "}
@@ -110,6 +112,16 @@ function Registration() {
                     </div>
 
                     <div className="mb-3">
+                        <label className="form-label">Major</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.major ? "is-invalid" : ""}`}
+                            {...register("major", { required: "Major is required" })}
+                        />
+                        {errors.school && <div className="invalid-feedback">{errors.major.message}</div>}
+                    </div>
+
+                    <div className="mb-3">
                         <label className="form-label">School</label>
                         <input
                             type="text"
@@ -117,6 +129,16 @@ function Registration() {
                             {...register("school", { required: "School is required" })}
                         />
                         {errors.school && <div className="invalid-feedback">{errors.school.message}</div>}
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Profile Picture</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className={`form-control ${errors.major ? "is-invalid" : ""}`}
+                            {...register("photo", { required: "Photo is required" })}
+                        />
                     </div>
 
                     <div className="mb-3">

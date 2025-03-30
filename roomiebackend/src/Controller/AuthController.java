@@ -7,12 +7,11 @@ import Database.UserPreferencesDao;
 import Tools.Auth;
 import Tools.Mail;
 import Tools.Utils;
-
 import java.sql.SQLException;
 import java.util.*;
 
 public class AuthController {
-
+    private static final boolean ALLOW_EMAIL_VERIFICATION = false;
     /**
      * Logic for logging in.
      *
@@ -204,12 +203,14 @@ public class AuthController {
         formData.put("date_of_birth", data.get("date_of_birth"));
         formData.put("registered", "true");
         formData.put("school", data.get("school"));
+        formData.put("major", data.get("major"));
+        formData.put("profile_picture_url", data.get("photo"));
 
         String userEnteredVerifyCode = data.get("code");
 
         try {
             Dao dao = new Dao(SQLConnection.getConnection());
-            //if (Server.ALLOW_EMAIL_VERIFICATION) {
+            if (ALLOW_EMAIL_VERIFICATION) {
                 Map<String, String> codeReturn = dao.get(List.of("verify_code"), email, "Users");
                 String verifyCode = codeReturn.get("verify_code");
 
@@ -218,7 +219,7 @@ public class AuthController {
                     code = 422;
                     return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
                 }
-            //}
+            }
 
             if (dao.set(formData, email, "Users")) {
                 response.put("message", "Set user data for " + email);
@@ -269,6 +270,35 @@ public class AuthController {
             code = 500;
             response.put("token", "");
         }
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
+    public static String hasPreferences(Map<String, String> data, String method) {
+        int code = 400; // Default code (in case of sql error)
+        Map<String, String> response = new HashMap<>(); // Use this data structure for easier JSON
+        if (!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        // Get the user from the token value
+        String token = data.get("token");
+
+        if (!Auth.isValidToken(token)) {
+            response.put("message", "Unauthorized");
+            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+        }
+        String email = Auth.getEmailfromToken(token);
+
+        try {
+            Dao dao = new Dao(SQLConnection.getConnection());
+            if (dao.exists(Map.of("email", email), "UserPreferences")) {
+                response.put("message", "User preferences exist.");
+                return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+        }
+
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
     }
 }

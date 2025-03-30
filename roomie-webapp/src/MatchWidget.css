@@ -1,0 +1,38 @@
+
+/* .match-container {
+    background-color: pink;
+    min-width: 200px;
+    min-height: 300px;
+    max-width: 250px;
+    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    margin: 5px;
+} */
+
+.match-container {
+    background-color: pink;
+    min-width: 250px;          /* Minimum width of the container */
+    min-height: 300px;         /* Minimum height of the container */
+    max-width: 100%;           /* Maximum width will be the container's parent width */
+    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;   /* Vertically centers the contents */
+    border-radius: 15px;
+    margin: 5px;
+    padding: 10px;             /* Adds padding inside the container */
+    box-sizing: border-box;    /* Ensures padding is inside the defined width/height */
+    width: auto;               /* Allows width to adjust automatically */
+}
+
+.front {
+    background-color: green;
+}
+
+.back {
+    background-color: gray;
+}

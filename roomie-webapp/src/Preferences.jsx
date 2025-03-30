@@ -69,7 +69,6 @@ function Preferences() {
                 out_late: data.out_late,
                 play_instruments: data.play_instruments,
                 gamer: data.gamer,
-                pet_friendly: data.pet_friendly,
                 smoke: data.smoke,
                 smoke_okay: data.smoke_okay,
                 drugs: data.drugs,

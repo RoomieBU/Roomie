@@ -68,6 +68,8 @@ public class UserImagesDao {
     }
 
     public void closeConnection() throws SQLException {
-        connection.close();
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
     }
 }

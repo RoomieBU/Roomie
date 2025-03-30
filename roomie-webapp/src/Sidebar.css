@@ -13,10 +13,10 @@
     height: 65px;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
-    background-color: purple;
+    background-color: #6f42c1;
     color: white;
     justify-content: left;
-    padding-left: 15px;
+    padding-left: 30px;
     gap: 15px;
     display: flex;
     align-items: center;
@@ -24,15 +24,16 @@
 }
 
 .chatBox.selected {
-    background-color: #9932CC; /* A slightly lighter purple */
+    background-color: #7b49d8; /* A slightly lighter purple */
     box-shadow: 0 0 0 2px white; /* White outline to indicate selection */
 }
 
 .profilePic {
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
     object-fit: cover;
-    background-image: url("src/assets/transparent.jpg");
     border-radius: 100%;
     border-width: 2px;
     border-color: black;
@@ -67,11 +68,11 @@
     /* justify-content: center; */
     align-items: center;
     flex-direction: column;
-    gap:5px;
+    /* gap:5px; */
     flex-grow: 1;
 
      /* Add these properties */
-    max-height: 300px;     /* Set your desired maximum height */
+    max-height: 1000px;     /* Set your desired maximum height */
     overflow-y: auto;      /* Enable vertical scrolling when content exceeds max-height */
     padding: 10px;   
     min-height: 80px;
@@ -90,12 +91,14 @@
 .selectedBox {
     width: 95%;
     border-color: black;
-    background-color: lightgray;
+    background-color: #6f42c1;
     border-style: solid;
     min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 15px;
+    color: white;
 }
 
 .line {

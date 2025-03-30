@@ -22,8 +22,9 @@ public class User {
     private Boolean registered;
     private String school;
     private String profilePicture;
+    private String major;
 
-    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered) {
+    public User(int userId, String username, String email, String firstName, String lastName, String aboutMe, Date dateOfBirth, Timestamp createdAt, Boolean registered, String profilePicture, String major) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -34,7 +35,10 @@ public class User {
         this.createdAt = createdAt;
         this.registered = registered;
         this.school = school;
-        this.profilePicture = "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg";
+        this.major = major;
+
+        this.profilePicture = profilePicture;
+        // "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_3x2.jpg"
     }
 
     // Getters
@@ -49,6 +53,7 @@ public class User {
     public Boolean getRegistered() { return registered; }
     public String getSchool() { return school; }
     public String getProfilePicture() {return profilePicture;}
+    public String getMajor() {return major;}
 
     @Override
     public String toString() {

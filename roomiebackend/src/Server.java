@@ -20,7 +20,6 @@ import javax.net.ssl.*;
 public class Server {
     static private final boolean VERBOSE_OUTPUT = true;
     static private final boolean DEV_CONSOLE = true;
-    static public final boolean ALLOW_EMAIL_VERIFICATION = true;
     static public final boolean SYNC_OPS = true;
     static private final int MAX_CONNECTIONS = 10;
     static public int connections = 0;
@@ -49,6 +48,8 @@ public class Server {
             router.addRoute("/auth/isregistered", AuthController::isRegistered);
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
+            router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
+
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
@@ -57,12 +58,26 @@ public class Server {
             // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
+            router.addRoute("/matches/getChatInformation", MatchController::sendChatInformation); // <---- HERE
+
+            router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             // router.addRoute("/matches/getMatchList", MatchController::getLikedList);
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
             router.addRoute("/profile/editProfile", ProfileController::editProfile);
-            
+
+            // Messaging routes
+            /**
+             * /messages/chathistory
+             *      * Gets all chats when you open a chat / groupchat
+             * /messages/sendchat
+             *      * Sends a chat to go groupchat / person
+             */
+            router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
+            router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+            router.addRoute("/chat/getChatHistory", ChatController::sendChatHistory);
+
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
@@ -184,6 +199,8 @@ public class Server {
             }
         }
 
+        // Read in the rest of the request
+        // Read the body in chunks to handle large files
         StringBuilder body = new StringBuilder();
         char[] buffer = new char[4096];  // Read in chunks of 4KB (adjust if needed)
         int bytesRead;
@@ -194,6 +211,7 @@ public class Server {
             totalBytesRead += bytesRead;
         }
 
+        // If body size is still not fully read, you may want to log or handle that case
         if (totalBytesRead < requestLength) {
             System.out.println("[Warning] Body was not completely read, size mismatch.");
         }

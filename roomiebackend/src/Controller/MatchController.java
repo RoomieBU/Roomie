@@ -9,6 +9,44 @@ import java.util.*;
 
 public class MatchController {
 
+    public static String sendChatInformation(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+    
+        // Enforce only POST requests
+        if (!"POST".equals(method)) {
+            response.put("message", "Method not allowed!");
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+        }
+    
+        // Get email from request data
+        String email = data.get("email");
+        if (email == null || email.isEmpty()) {
+            response.put("message", "Email is required.");
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+        }
+    
+        try {
+            UserDao dao = new UserDao(SQLConnection.getConnection());
+            ChatInformation chatInfo = dao.getChatInformation(email);
+            Map<String, String> d = new HashMap<>();
+            d.put("first_name", chatInfo.getFirstName());
+            d.put("last_name", chatInfo.getLastName());
+            d.put("profile_picture_url", chatInfo.getProfilePicture());
+    
+            code = 200;
+
+            return Utils.assembleHTTPResponse(code, Utils.assembleJson(d));
+    
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL.");
+            response.put("message", "Internal server error.");
+            code = 500;
+        }
+    
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
     public static String sendMatchInformation(Map<String, String> data, String method) {
         int code = 400;
         Map<String, String> response = new HashMap<>();
@@ -23,8 +61,6 @@ public class MatchController {
         }
 
         String email = Auth.getEmailfromToken(data.get("token"));
-
-
         Map<String, String> matchData = new HashMap<>();
         matchData.put("user", email);
         matchData.put("shown_user", data.get("shown_user"));
@@ -44,6 +80,27 @@ public class MatchController {
             System.out.println("[Match Controller] Unable to connect to MySQL.");
             code = 500;
             response.put("token", "");
+        }
+
+        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+    }
+
+    public static String resetMatchInteractions(Map<String, String> data, String method) {
+        int code = 400;
+        Map<String, String> response = new HashMap<>();
+        if(!method.equals("POST")) {
+            response.put("message", "Method not allowed!");
+        }
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        try {
+            UserMatchInteractionDao dao = new UserMatchInteractionDao(SQLConnection.getConnection());
+            if (dao.removeAllForUser(email)) {
+                response.put("message", "Match Interactions Reset");
+                return Utils.assembleHTTPResponse(200, Utils.assembleJson(response));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("[Match Controller] Unable to connect to MySQL");
         }
 
         return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
@@ -95,7 +152,7 @@ public class MatchController {
             response.put("name", user.getFirstName() + " " + user.getLastName());
             response.put("date_of_birth", user.getDateOfBirth().toString());
             response.put("about_me", user.getAboutMe());
-            response.put("major", "Ski ball (Undergrad)");
+            response.put("major", user.getMajor());
             response.put("profile_picture", user.getProfilePicture());
             code = 200;
 
