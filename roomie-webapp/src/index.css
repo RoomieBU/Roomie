@@ -45,7 +45,7 @@ body {
 }
 
 .navbar-right a:hover {
-  color: #897389 !important;
+  color: #7738EB;
 }
 
 .navbar-right ul {
@@ -64,6 +64,7 @@ body {
 
 .navbar-right li a:hover {
   text-decoration: underline;
+  color: #7738EB;
 }
 
 .hero {
