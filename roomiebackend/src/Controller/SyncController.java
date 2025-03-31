@@ -12,7 +12,7 @@ public class SyncController{
         msc.start(); // Every 15 seconds
         /**
          * Calculate similarities between users for 1 second, wait 10 seconds, then repeat.
-         * For the future: make these wait values variable and dynamic (some change)
+         * For the future: make these wait values variable and dynamic
          */
         while (true) {
             Thread.sleep(1000);
