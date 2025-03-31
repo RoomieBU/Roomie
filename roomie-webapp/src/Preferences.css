@@ -1,220 +1,84 @@
-.preferences-container {
+html,
+body {
+    height: 100%;
+    background-image: none;
+    background-size: cover;
+    background-position: center;
+}
+
+.holdStuff {
     display: flex;
+    flex-direction: row;
+    gap: 100px;
+    width: 800px;
+}
+
+.genderHolder {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    width: 800px;
+}
+
+.column {
+    width: 100%;
+}
+
+.genderChoice {
+    width: 100%;
+}
+
+.instructionBox {
+    width: 100%;
+    border-style: solid;
+    border-width: 3px;
+    border-color: white;
+    border-radius: 10px;
+}
+
+.riley {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-    padding: 2rem;
 }
 
-.preferences-card {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 1200px;
-}
-
-.preferences-title {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-    font-weight: 600;
-}
-
-.preferences-instructions {
-    background-color: #f0f4f8;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    text-align: center;
-    color: #4a5568;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-.preferences-form {
+.something {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-}
-
-.preferences-section {
-    margin-bottom: 1.5rem;
-}
-
-.gender-preferences {
-    display: flex;
-    gap: 2rem;
     justify-content: center;
-    margin-bottom: 1.5rem;
-}
-
-.gender-option {
-    flex: 1;
-    max-width: 300px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #4a5568;
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-.form-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background-color: #f8fafc;
-}
-
-.form-select:focus {
-    border-color: #6F43C1;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
-}
-
-.preferences-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-}
-
-.slider-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.slider-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.slider-label {
-    font-weight: 500;
-    color: #4a5568;
-    font-size: 0.95rem;
-}
-
-.form-range {
-    width: 100%;
-    height: 8px;
-    cursor: pointer;
-    -webkit-appearance: none;
-    background: #e2e8f0;
-    border-radius: 4px;
-}
-
-.form-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #6F43C1;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.form-range::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-    background: #6F43C1;
-}
-
-.slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #718096;
-    margin-top: 0.25rem;
-}
-
-.checkbox-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.checkbox-group {
-    display: flex;
     align-items: center;
-    gap: 0.75rem;
 }
 
-.form-check-input {
-    width: 18px;
-    height: 18px;
-    border: 1px solid #cbd5e0;
-    cursor: pointer;
+.genderChoice {
+    width: 300px;
+}
+
+:root {
+    --bs-primary: #6f42c1;
+    /* Bootstrap primary color changed to purple */
+    --bs-primary-rgb: 111, 66, 193;
+}
+
+.btn-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.btn-primary:hover {
+    background-color: #5a34a1;
+    border-color: #5a34a1;
 }
 
 .form-check-input:checked {
-    background-color: #6F43C1;
-    border-color: #6F43C1;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
-.form-check-label {
-    color: #4a5568;
-    font-size: 0.95rem;
-    cursor: pointer;
+.form-range::-webkit-slider-thumb {
+    background: var(--bs-primary);
 }
 
-.submit-button {
-    background-color: #6F43C1;
-    color: white;
-    border: none;
-    padding: 1rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 1.5rem;
-}
-
-.submit-button:hover {
-    background-color: #7738EB;
-    box-shadow: 0 2px 8px rgb(111, 67, 193);
-}
-
-.invalid-feedback {
-    color: #e53e3e;
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-}
-
-.is-invalid {
-    border-color: #e53e3e !important;
-}
-
-@media (max-width: 992px) {
-    .preferences-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .preferences-card {
-        padding: 1.5rem;
-    }
-
-    .preferences-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .gender-preferences {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .gender-option {
-        max-width: 100%;
-    }
+.form-range::-moz-range-thumb {
+    background: var(--bs-primary);
 }
