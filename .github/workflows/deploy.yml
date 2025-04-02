@@ -67,8 +67,9 @@ jobs:
           script: |
             cd /var/www/html/
             install dependencies or run build steps
-            sudo npm install
-            sudo npm run build
+            sudo chown -R frontdev:frontdev /var/www/html
+            npm install
+            npm run build
             sudo systemctl daemon-reload
 
 
