@@ -75,10 +75,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /var/www/html/
-            sudo chown -R frontdev:frontdev /var/www/html
             npm install
             npm run build
-            sudo systemctl daemon-reload
 
       - name: Restart frontend
         uses: appleboy/ssh-action@master
