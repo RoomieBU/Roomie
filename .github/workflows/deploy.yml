@@ -66,7 +66,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /var/www/html/
-            install dependencies or run build steps
             sudo chown -R frontdev:frontdev /var/www/html
             npm install
             npm run build
