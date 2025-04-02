@@ -25,7 +25,6 @@ jobs:
             sudo find /var/www/html -mindepth 1 -not -name 'node_modules' -exec rm -rf {} +
             sudo mkdir -p /var/www/html
             sudo chown $USER:$USER /var/www/html
-
       - name: Copy front-end files to EC2
         uses: appleboy/scp-action@master
         with:
@@ -46,7 +45,6 @@ jobs:
           script: |
             sudo mkdir -p /opt/roomiebackend
             sudo chown $USER:$USER /opt/roomiebackend
-
       - name: Copy back-end files to EC2
         uses: appleboy/scp-action@master
         with:
@@ -58,36 +56,18 @@ jobs:
           overwrite: true
           strip_components: 1           # Remove the first directory level
 
-      - name: Gives front-end privledges to frontdev
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            sudo chown -R frontdev:frontdev /var/www/html
-
       - name: Run remote SSH commands
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER_FRONTDEV }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            source ~/.bashrc
-            cd /var/www/html/
-            npm install
-            npm run build
-
-      - name: Restart frontend
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            cd /var/www/html/
+            install dependencies or run build steps
+            sudo npm install
+            sudo npm run build
             sudo systemctl daemon-reload
-
       - name: Restart backend server
         uses: appleboy/ssh-action@master
         with:
@@ -95,7 +75,6 @@ jobs:
           username: ${{ secrets.EC2_USER_BACKDEV }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-
             # Ensure the SSL_KEY variable is set before running the server
             export SSL_KEY="${{ secrets.SSL_KEY }}"
             
@@ -106,8 +85,6 @@ jobs:
             else
               echo "No existing screen session found."
             fi
-
             # Start a new screen session running ./start
             screen -dmS roomie_backend bash -c 'export SSL_KEY=$SSL_KEY; ~/start; exec bash'
             echo "New screen session started."
-
