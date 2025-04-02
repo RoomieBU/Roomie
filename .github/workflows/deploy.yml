@@ -74,6 +74,7 @@ jobs:
           username: ${{ secrets.EC2_USER_FRONTDEV }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            source ~/.bashrc
             cd /var/www/html/
             npm install
             npm run build
