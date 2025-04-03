@@ -2,19 +2,36 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ "main" ]  # or whichever branches you want to auto-deploy
+    branches: [ "main" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-        
-      - name: Remove .git folder
-        run: rm -rf .git
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      ### ───────────────────── FRONTEND ─────────────────────
+      - name: Install frontend dependencies
+        working-directory: ./roomie-webapp
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./roomie-webapp
+        run: npm run build
+
+      ### ───────────────────── BACKEND ─────────────────────
+      - name: Install backend dependencies
+        working-directory: ./roomiebackend
+        run: npm ci
+
+      ### ───────────────────── CLEAN EC2 ─────────────────────
       - name: Clean up existing files on EC2 (except node_modules)
         uses: appleboy/ssh-action@master
         with:
@@ -25,18 +42,21 @@ jobs:
             sudo find /var/www/html -mindepth 1 -not -name 'node_modules' -exec rm -rf {} +
             sudo mkdir -p /var/www/html
             sudo chown $USER:$USER /var/www/html
-      - name: Copy front-end files to EC2
+
+      ### ───────────────────── COPY FRONTEND ─────────────────────
+      - name: Copy built frontend to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "roomie-webapp/*"
+          source: "roomie-webapp/build/*"
           target: "/var/www/html/"
           overwrite: true
-          strip_components: 1           # Remove the first directory level
+          strip_components: 1
 
-      - name: Create directory with sudo
+      ### ───────────────────── COPY BACKEND ─────────────────────
+      - name: Create backend directory on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -45,29 +65,19 @@ jobs:
           script: |
             sudo mkdir -p /opt/roomiebackend
             sudo chown $USER:$USER /opt/roomiebackend
-      - name: Copy back-end files to EC2
+
+      - name: Copy backend files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "roomiebackend"
-          target: "/opt/roomiebackend"            
+          target: "/opt/roomiebackend"
           overwrite: true
-          strip_components: 1           # Remove the first directory level
+          strip_components: 1
 
-     # - name: Run remote SSH commands
-     #   uses: appleboy/ssh-action@master
-     #   with:
-     #     host: ${{ secrets.EC2_HOST }}
-     #     username: ${{ secrets.EC2_USER }}
-     #     key: ${{ secrets.EC2_SSH_KEY }}
-     #     script: |
-     #       cd /var/www/html/
-     #       install dependencies or run build steps
-     #       sudo npm install
-     #       sudo npm run build
-     #       sudo systemctl daemon-reload
+      ### ───────────────────── RESTART BACKEND ─────────────────────
       - name: Restart backend server
         uses: appleboy/ssh-action@master
         with:
@@ -75,16 +85,11 @@ jobs:
           username: ${{ secrets.EC2_USER_BACKDEV }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Ensure the SSL_KEY variable is set before running the server
             export SSL_KEY="${{ secrets.SSL_KEY }}"
-            
-            # Stop the currently running screen session (if it exists)
             if screen -list | grep -q "roomie_backend"; then
               screen -S roomie_backend -X quit
               echo "Old screen session terminated."
             else
               echo "No existing screen session found."
             fi
-            # Start a new screen session running ./start
             screen -dmS roomie_backend bash -c 'export SSL_KEY=$SSL_KEY; ~/start; exec bash'
-            echo "New screen session started."
