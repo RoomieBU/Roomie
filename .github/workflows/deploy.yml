@@ -26,11 +26,6 @@ jobs:
         working-directory: ./roomie-webapp
         run: npm run build
 
-      ### ───────────────────── BACKEND ─────────────────────
-      - name: Install backend dependencies
-        working-directory: ./roomiebackend
-        run: npm ci
-
       ### ───────────────────── CLEAN EC2 ─────────────────────
       - name: Clean up existing files on EC2 (except node_modules)
         uses: appleboy/ssh-action@master
