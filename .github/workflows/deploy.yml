@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Build frontend
-        working-directory: ./roomie-webapp
+        working-directory: roomie-webapp
         run: npm run build
 
       ### ───────────────────── CLEAN EC2 ─────────────────────
@@ -45,7 +45,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "roomie-webapp/build/*"
+          source: "roomie-webapp/dist/"
           target: "/var/www/html/"
           overwrite: true
           strip_components: 1
