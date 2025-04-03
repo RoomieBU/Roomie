@@ -10,25 +10,6 @@ function Registration() {
 
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
-    useEffect(() => {
-        const verifyToken = async () => {
-            try {
-                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: localStorage.getItem("token") })
-                });
-
-                if (!response.ok) throw new Error("Invalid token");
-            } catch (error) {
-                console.log("Redirecting to login due to invalid token.");
-                navigate("/login");
-            }
-        };
-
-        verifyToken();
-    }, [navigate]);
-
     // Resize uploaded image
     const resizeImage = (file, maxWidth, maxHeight) => {
         return new Promise((resolve, reject) => {
@@ -111,6 +92,11 @@ function Registration() {
             if (!response.ok) {
                 throw new Error("Registration failed. Please try again.");
             }
+
+            const result = await response.json();
+                if (result.token) {
+                    localStorage.setItem("token", result.token);
+                }
 
             // Step 2: Upload profile picture
             if (selectedProfilePicture) {
