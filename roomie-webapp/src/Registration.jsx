@@ -6,8 +6,10 @@ function Registration() {
     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [registrationError, setRegistrationError] = useState("");
+    const [selectedProfilePicture, setSelectedProfilePicture] = useState(null);
 
-    // Verify that the user is currently logged in and has a valid token
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
     useEffect(() => {
         const verifyToken = async () => {
             try {
@@ -17,11 +19,7 @@ function Registration() {
                     body: JSON.stringify({ token: localStorage.getItem("token") })
                 });
 
-                if (!response.ok) {
-                    throw new Error("Invalid token");
-                }
-
-                return;
+                if (!response.ok) throw new Error("Invalid token");
             } catch (error) {
                 console.log("Redirecting to login due to invalid token.");
                 navigate("/login");
@@ -31,9 +29,69 @@ function Registration() {
         verifyToken();
     }, [navigate]);
 
+    // Resize uploaded image
+    const resizeImage = (file, maxWidth, maxHeight) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                img.src = reader.result;
+            };
+
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+
+                const aspectRatio = img.width / img.height;
+
+                if (img.width > img.height) {
+                    canvas.width = maxWidth;
+                    canvas.height = maxWidth / aspectRatio;
+                } else {
+                    canvas.height = maxHeight;
+                    canvas.width = maxHeight * aspectRatio;
+                }
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const resizedDataUrl = canvas.toDataURL(file.type);
+                resolve(resizedDataUrl);
+            };
+        });
+    };
+
+    // Handle profile picture selection + resizing
+    const handleProfilePictureChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validTypes = ["image/jpeg", "image/png", "image/webp"];
+        if (!validTypes.includes(file.type)) {
+            setRegistrationError("Unsupported image format.");
+            return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            setRegistrationError("Image file is too large. Please upload a smaller image.");
+            return;
+        }
+
+        resizeImage(file, 150, 150)
+            .then((resizedDataUrl) => {
+                setSelectedProfilePicture(resizedDataUrl);
+            })
+            .catch(() => {
+                setRegistrationError("Failed to resize profile picture.");
+            });
+    };
+
     const onSubmit = async (data) => {
         try {
-            const formData = JSON.stringify({
+            // Step 1: Send registration data
+            const profileData = JSON.stringify({
                 token: localStorage.getItem("token"),
                 first_name: data.first_name,
                 last_name: data.last_name,
@@ -41,18 +99,40 @@ function Registration() {
                 date_of_birth: data.date_of_birth,
                 major: data.major,
                 school: data.school,
-                photo: data.photo,
                 code: data.code
             });
 
             const response = await fetch("https://roomie.ddns.net:8080/auth/sendRegistration", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: formData,
+                body: profileData,
             });
 
             if (!response.ok) {
                 throw new Error("Registration failed. Please try again.");
+            }
+
+            // Step 2: Upload profile picture
+            if (selectedProfilePicture) {
+                const base64Data = selectedProfilePicture.split(",")[1];
+
+                const filePayload = JSON.stringify({
+                    token: localStorage.getItem("token"),
+                    fileName: "profile-picture",
+                    fileType: "image/jpeg",
+                    data: base64Data,
+                    isProfilePicture: "True",
+                });
+
+                const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: filePayload,
+                });
+
+                if (!fileResponse.ok) {
+                    throw new Error("Profile picture upload failed.");
+                }
             }
 
             navigate("/dashboard");
@@ -118,7 +198,7 @@ function Registration() {
                             className={`form-control ${errors.major ? "is-invalid" : ""}`}
                             {...register("major", { required: "Major is required" })}
                         />
-                        {errors.school && <div className="invalid-feedback">{errors.major.message}</div>}
+                        {errors.major && <div className="invalid-feedback">{errors.major.message}</div>}
                     </div>
 
                     <div className="mb-3">
@@ -136,8 +216,8 @@ function Registration() {
                         <input
                             type="file"
                             accept="image/*"
-                            className={`form-control ${errors.major ? "is-invalid" : ""}`}
-                            {...register("photo", { required: "Photo is required" })}
+                            onChange={handleProfilePictureChange}
+                            className="form-control"
                         />
                     </div>
 
