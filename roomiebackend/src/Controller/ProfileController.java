@@ -28,7 +28,7 @@ public class ProfileController {
         userDataColumns.add("date_of_birth");
         userDataColumns.add("profile_picture_url");
         userDataColumns.add("school");
-        Map<String, String> userData = dao.getData(userDataColumns, userEmail, "Users");
+        Map<String, String> userData = dao.get(userDataColumns, userEmail, "Users");
 
         // Fetch user preferences (UPDATED TO MATCH YOUR SCHEMA)
         List<String> userPrefDataColumns = new ArrayList<>();
@@ -37,7 +37,7 @@ public class ProfileController {
         userPrefDataColumns.add("introvert");
         userPrefDataColumns.add("extrovert");
         userPrefDataColumns.add("prefer_quiet");
-        Map<String, String> userPrefData = dao.getData(userPrefDataColumns, userEmail, "UserPreferences");
+        Map<String, String> userPrefData = dao.get(userPrefDataColumns, userEmail, "UserPreferences");
 
         if (userData != null && userPrefData != null) {
             response.setMessage("message", "Profile found");

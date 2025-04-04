@@ -44,73 +44,51 @@ public class Console {
     }
 
     private void printUsers() {
-        try {
-            UserDao ud = new UserDao(SQLConnection.getConnection());
+        UserDao ud = new UserDao(SQLConnection.getConnection());
 
-            List<User> usersList = ud.getAllUsers();
+        List<User> usersList = ud.getAllUsers();
 
-            System.out.println("User ID\tEmail");
-            for (User u : usersList) {
-                System.out.println(u.getUserId() + "\t" + u.getEmail());
-            }
-            ud.closeConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("[Tools.Console] Unable to establish SQL connection");
+        System.out.println("User ID\tEmail");
+        for (User u : usersList) {
+            System.out.println(u.getUserId() + "\t" + u.getEmail());
         }
     }
 
     private void createUser() {
-        try {
-            UserDao ud = new UserDao(SQLConnection.getConnection());
+        UserDao ud = new UserDao(SQLConnection.getConnection());
 
-            System.out.print("[Tools.Console] Enter username: ");
-            String user = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter password: ");
-            String pass = scan.nextLine().trim();
-            ud.createUser(user, pass);
-            System.out.println("[Tools.Console] Created new entry for user " + user);
-            ud.closeConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("[Tools.Console] Unable to establish SQL connection");
-        }
-
+        System.out.print("[Tools.Console] Enter username: ");
+        String user = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter password: ");
+        String pass = scan.nextLine().trim();
+        ud.createUser(user, pass);
     }
 
     private void removeUser() {
-        try {
-            UserDao ud = new UserDao(SQLConnection.getConnection());
-            System.out.print("[Tools.Console] Enter username: ");
-            String user = scan.nextLine().trim();
-            ud.removeUser(user);
-            ud.closeConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("[Tools.Console] Unable to establish SQL connection");
-        }
+        UserDao ud = new UserDao(SQLConnection.getConnection());
+        System.out.print("[Tools.Console] Enter username: ");
+        String user = scan.nextLine().trim();
+        ud.removeUser(user);
     }
 
     private void updateUser() {
-        try {
-            UserDao ud = new UserDao(SQLConnection.getConnection());
+        UserDao ud = new UserDao(SQLConnection.getConnection());
 
-            System.out.print("[Tools.Console] Enter username: ");
-            String username = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter email: ");
-            String email = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter first name: ");
-            String fName = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter last name: ");
-            String lName = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter about me: ");
-            String about_me = scan.nextLine().trim();
-            System.out.print("[Tools.Console] Enter DOB (YYYY-MM-DD): ");
-            String dob = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter email: ");
+        String email = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter first name: ");
+        String fName = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter last name: ");
+        String lName = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter about me: ");
+        String about_me = scan.nextLine().trim();
+        System.out.print("[Tools.Console] Enter DOB (YYYY-MM-DD): ");
+        String dob = scan.nextLine().trim();
 
-            //ud.updateUserInfo(username, email, fName, lName, about_me, dob);
-            System.out.println("[Tools.Console] Updated record for user " + email);
-            ud.closeConnection();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("[Tools.Console] Unable to establish SQL connection");
-        }
+        //ud.updateUserInfo(username, email, fName, lName, about_me, dob);
+        System.out.println("[Tools.Console] Updated record for user " + email);
     }
 
     private void hash() {
@@ -160,25 +138,21 @@ public class Console {
     private void populateSimilarityTable() {
         long startTime = System.nanoTime();
 
-        try {
-            List<User> userList;
-            UserDao uDao = new UserDao(SQLConnection.getConnection());
-            Dao dao = new Dao(SQLConnection.getConnection());
-            userList = uDao.getAllUsers();
-            for (User u : userList) {
-                for (User b : userList) {
-                    if (u.getEmail().equals(b.getEmail())) {
-                        continue;
-                    }
-                    dao.insert(
-                            Map.of("email1", u.getEmail(),
-                                    "email2", b.getEmail(),
-                                    "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
-                            "UserSimilarities");
+        List<User> userList;
+        UserDao uDao = new UserDao(SQLConnection.getConnection());
+        Dao dao = new Dao(SQLConnection.getConnection());
+        userList = uDao.getAllUsers();
+        for (User u : userList) {
+            for (User b : userList) {
+                if (u.getEmail().equals(b.getEmail())) {
+                    continue;
                 }
+                dao.insert(
+                        Map.of("email1", u.getEmail(),
+                                "email2", b.getEmail(),
+                                "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
+                        "UserSimilarities");
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
         long endTime = System.nanoTime();

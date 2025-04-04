@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ChatDao extends Dao {
 
-    public ChatDao(Connection connection) throws SQLException {
+    public ChatDao(Connection connection) {
         super(connection);
     }
 

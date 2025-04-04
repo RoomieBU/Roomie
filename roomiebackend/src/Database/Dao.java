@@ -141,44 +141,7 @@ public class Dao {
         }
     }
 
-    /**
-     * Method for getting data from a record where an email is the unique identifier.
-     *
-     * @param columns Fields to be retrieved
-     * @param email Unique email for specific user
-     * @return A Map of the columns as the keys and their values as the values
-     */
-    public Map<String, String> getData(List<String> columns, String email, String table) {
-        Map<String, String> data = new HashMap<>();
-        String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE email = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    for (String col : columns) {
-                        if (col.equals("registered")) {
-                            data.put(col, Integer.toString(rs.getInt(col))); // Store as "0" or "1"
-                        } else {
-                            data.put(col, rs.getString(col));
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving info: ", e);
-        }
-
-        return data;
-    }
-
-    /**
-     * Method for getting data from a record where an id is the unique identifier.
-     *
-     * @param columns Fields to be retrieved
-     * @param id Unique id for record
-     * @return A Map of the columns as the keys and their values as the values
-     */
+    // Retrieving data where id is the primary key
     public Map<String, String> get(List<String> columns, int id, String table) {
         Map<String, String> data = new HashMap<>();
         String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE id = ?";
@@ -203,13 +166,7 @@ public class Dao {
         return data;
     }
 
-    /**
-     * Method for getting data from a given table, where the email is the unique identifier
-     *
-     * @param columns Fields to be retrieved
-     * @param email Unique email for specific user
-     * @return A Map of the columns as the keys and their values as the values
-     */
+    // Retrieving data where email is primary key
     public Map<String, String> get(List<String> columns, String email, String table) {
         Map<String, String> data = new HashMap<>();
         String query = "SELECT " + String.join(", ", columns) + " FROM " + table + " WHERE email = ?";
@@ -234,12 +191,7 @@ public class Dao {
         return data;
     }
 
-    /**
-     * Checks if at least one record exists with a given map of data. Aims to replace
-     * Dao methods similar to UserDao.isUserLogin
-     *
-     * @return
-     */
+    // Check if at least one record exists
     public boolean exists(Map<String, String> data, String table) {
         if (data.isEmpty()) {
             throw new IllegalArgumentException("Data map cannot be empty");
@@ -261,38 +213,6 @@ public class Dao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error querying for record", e);
-        }
-    }
-
-    /**
-     * Removes a record from a given table where the email is the unique identifier
-     * @param email
-     * @param table
-     */
-    public void remove(String email, String table) {
-        String query = "DELETE FROM " + table + " WHERE email = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, email);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error removing record", e);
-        }
-    }
-
-    /**
-     * Removes a record from a given table where the id is the unique identifier
-     * @param id
-     * @param table
-     */
-    public void remove(int id, String table) {
-        String query = "DELETE FROM " + table + " WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error removing record", e);
         }
     }
 
