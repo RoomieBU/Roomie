@@ -22,10 +22,9 @@ public class MatchController {
 
         UserDao dao = new UserDao(SQLConnection.getConnection());
         ChatInformation chatInfo = dao.getChatInformation(email);
-        Map<String, String> d = new HashMap<>();
-        d.put("first_name", chatInfo.getFirstName());
-        d.put("last_name", chatInfo.getLastName());
-        d.put("profile_picture_url", chatInfo.getProfilePicture());
+        response.setMessage("first_name", chatInfo.getFirstName());
+        response.setMessage("last_name", chatInfo.getLastName());
+        response.setMessage("profile_picture_url", chatInfo.getProfilePicture());
 
         response.code = 200;
 
