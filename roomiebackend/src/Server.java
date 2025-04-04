@@ -77,6 +77,8 @@ public class Server {
             router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
             router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
             router.addRoute("/chat/getChatHistory", ChatController::sendChatHistory);
+            router.addRoute("/chat/requestRoommate", ChatController::receiveRoommateRequest);
+            router.addRoute("chat/getRoommateRequestStatus", ChatController::sendRoommateRequestStatus);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");

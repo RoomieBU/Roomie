@@ -15,6 +15,24 @@ import java.util.ArrayList;
 
 public class ChatController {
 
+    public static String receiveRoommateRequest(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+        Map<String, String> insertData = new HashMap<>();
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        insertData.put("sender", email);
+        insertData.put("groupchat_id", data.get("groupchat_id"));
+        insertData.put("accepted", "true");
+
+        dao.insert(insertData, "UserRoommateRequests");
+
+        response.code = 200;
+
+        return response.toString();
+    }
+
     public static String receiveMessage(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
@@ -30,6 +48,14 @@ public class ChatController {
 
         response.code = 200;
         return response.toString();
+    }
+
+    public static String sendRoommateRequestStatus(Map<String, String> data, String method) {
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        int groupId = Integer.parseInt(data.get("groupchat_id"));
+        String status = dao.getRoommateRequestStatus(email, groupId);
     }
     
     public static String sendChatHistory(Map<String, String> data, String method) {

@@ -87,7 +87,6 @@ function Matching() {
 
                 const result = await response.json();
 
-
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
             } catch (error) {
@@ -149,11 +148,6 @@ function Matching() {
                 const result = await response.json();
                 setRoommate(result); // Store roommate data in state
                 setAge(calculateAge(result.date_of_birth))
-
-                console.log(roommate)
-
-                console.log("This is the profile Picture", roommate.profile_picture)
-                console.log(roommate.major)
             } catch (error) {
                 console.error("Error fetching potential roommate:", error);
                 setError(error.message);
@@ -234,6 +228,21 @@ function Matching() {
         return age
     }
 
+    const getAvatarUrl = (roommate) => {
+
+        if (roommate?.profile_picture) {
+            return roommate.profile_picture;
+        }
+
+        if (!roommate.name) return "U"; // Default if name is missing
+        const nameParts = roommate.name.trim().split(" ");
+        const firstInitial = nameParts[0]?.charAt(0) || "";
+        const lastInitial = nameParts.length > 1 ? nameParts[nameParts.length - 1].charAt(0) : "";
+
+
+        return `https://ui-avatars.com/api/?name=${firstInitial}${lastInitial}&background=random`;
+    };
+
     return (
         <div className="hold-all">
             {error && (
@@ -249,15 +258,15 @@ function Matching() {
                         </button>
                     </>
                 ) : (
-                    <Spinner load={"potential roomate..."}/>
+                    <Spinner load={"potential roommate..."}/>
                 )
             ) : roommate != null ? (
                 <>
                     <div
                         onClick={swapSides}
                         className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
-                        style={isFront ? { backgroundImage: `url(${roommate.profile_picture})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
-                    >
+                        style={isFront ? { backgroundImage: `url(${getAvatarUrl(roommate)})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                        >
                         {isFront ? (
                             <div className="user_info">
                                 <p>{roommate.name}, {roommate.age}

@@ -11,6 +11,61 @@ public class ChatDao extends Dao {
         super(connection);
     }
 
+    public String getRoommateRequestStatus(String email, int groupchatId) {
+        // First, check if there are any records for the given groupchat_id
+        String checkQuery = """
+            SELECT COUNT(*) AS total_requests
+            FROM UserRoommateRequests
+            WHERE groupchat_id = ?
+            """;
+    
+        // Default to "No request yet"
+        String status = "No Request Yet";
+    
+        try (PreparedStatement checkStmt = connection.prepareStatement(checkQuery)) {
+            checkStmt.setInt(1, groupchatId);
+    
+            try (ResultSet checkRs = checkStmt.executeQuery()) {
+                if (checkRs.next() && checkRs.getInt("total_requests") == 0) {
+                    // No records for this groupchat_id, return immediately
+                    return status;
+                }
+            }
+    
+            // If there are records, check the user's response status
+            String query = """
+                SELECT
+                    CASE
+                        WHEN accepted = 1 THEN 'Accepted'
+                        WHEN accepted = 0 THEN 'Declined'
+                        ELSE 'Pending'
+                    END AS response_status
+                FROM UserRoommateRequests
+                WHERE sender = ? AND groupchat_id = ?
+                """;
+    
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setString(1, email);
+                stmt.setInt(2, groupchatId);
+    
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        status = rs.getString("response_status");  // Get the status if record exists
+                    }
+                }
+    
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return status;
+    }
+
+
     public List<Message> getChatHistory(int groupchat_id) {
         String query = "SELECT * FROM ChatHistory WHERE groupchat_id = ? ORDER BY timestamp ASC";
 

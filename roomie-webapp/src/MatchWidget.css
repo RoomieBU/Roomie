@@ -13,7 +13,7 @@
 } */
 
 .match-container {
-    background-color: pink;
+    /* background-color: pink; */
     min-width: 250px;          /* Minimum width of the container */
     min-height: 300px;         /* Minimum height of the container */
     max-width: 100%;           /* Maximum width will be the container's parent width */
@@ -30,9 +30,41 @@
 }
 
 .front {
-    background-color: green;
+    /* background-color: green; */
+    min-width: 250px;          /* Minimum width of the container */
+    min-height: 300px;         /* Minimum height of the container */
+    max-width: 100%;           /* Maximum width will be the container's parent width */
+    max-height: 200px;
+    border-radius: 15px;
+    background-image: url("https://ui-avatars.com/api/?name=SL&background=random");
+    
 }
 
 .back {
-    background-color: gray;
+    background-color: #6f42c1;
+    min-width: 250px;          /* Minimum width of the container */
+    min-height: 300px;         /* Minimum height of the container */
+    max-width: 100%;           /* Maximum width will be the container's parent width */
+    max-height: 200px;
+    border-radius: 15px;
+    padding: 10px;
+    color: whitesmoke;
+}
+
+
+.more-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user_info {
+    height: max-content;
+    width: max-content;
+    text-align: left;
+    margin-top: 97%;
+    margin-left: 3%;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: white;
 }

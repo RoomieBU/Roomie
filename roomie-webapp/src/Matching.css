@@ -17,7 +17,7 @@ p {
     margin-bottom: 20px;
     justify-items: center;
     border-radius: 15px;
-    border-color: purple; /* This can be changed to color scheme
+    border-color:  #6f42c1; /* This can be changed to color scheme
                             or maybe will be chosen based on user picture?? */
     border-width: 1px;
     border-style: solid;
@@ -27,17 +27,19 @@ p {
 .potential-roomate-back {
     height: 400px;
     width: 350px;
-    background-color: lightgray;
+    background-color:  #6f42c1;
     margin-bottom: 20px;
     text-align: left;
-    padding-left: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top:10px;
     border-radius: 15px;
-    border-color: purple; /* This can be changed to color scheme
+    border-color:  #6f42c1; /* This can be changed to color scheme
                             or maybe will be chosen based on user picture?? */
     border-width: 1px;
     border-style: solid; 
     display: block;
+    color: whitesmoke
 }
 
 .more-user-info {

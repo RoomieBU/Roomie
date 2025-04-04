@@ -324,6 +324,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                     <button
                         type="submit"
                         className="btn btn-primary w-100 mt-3"
+                        onClick={onProfile}
                     >
                         Save Changes
                     </button>

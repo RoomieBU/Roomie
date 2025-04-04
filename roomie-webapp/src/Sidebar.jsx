@@ -103,6 +103,8 @@ function Sidebar({ currentView, onChatSelect}) {
             }
 
             const result = await response.json();
+
+            console.log("These are the groupchats: ", result)
             return result
 
         } catch(error) {
@@ -226,27 +228,7 @@ function Sidebar({ currentView, onChatSelect}) {
                                 </div>
                                 
                                 <div className="line"/>
-                                {/* <div style={{
-                                        height: isMatchesVisible ? "auto" : "0px",
-                                        overflow: "scroll",
-                                        transition: "height 0.3s ease-in-out",
-                                        visibility: isMatchesVisible ? "visible" : "hidden"
-                                    }} className="matchList container">
-                                    
-                                    
-                                    <div className="col-md-6">
-                                        <MatchWidget />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <MatchWidget />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <MatchWidget />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <MatchWidget />
-                                    </div>
-                                </div> */}
+                               
                                 <div style={{
                                     height: isMatchesVisible ? "auto" : "0px",
                                     overflow: "scroll",
@@ -255,25 +237,28 @@ function Sidebar({ currentView, onChatSelect}) {
                                 }} className="container matchList">
                                     <div className="row">
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
+                                            <MatchWidget name="Emily" major="Biology" school="Bloomsburg University" age="22" aboutMe="Love hiking and coffee!" />
+                                        </div>
+                                        
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget name="Sophia" major="Psychology" school="Bloomsburg University" age="23" aboutMe="Passionate about mental health advocacy." />
+                                        </div>
+                                        
+                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
+                                            <MatchWidget name="Ava" major="Art History" school="Bloomsburg University" age="22" aboutMe="Museum hopping is my thing!" />
                                         </div>
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
+                                            <MatchWidget name="Liam" major="Physics" school="Bloomsburg University" age="24" aboutMe="Stargazer and quantum physics fan." />
                                         </div>
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
+                                            <MatchWidget name="Daniel" major="Mathematics" school="Bloomsburg University" age="21" aboutMe="Chess lover and aspiring mathematician." />
                                         </div>
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
-                                        </div>
-                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
-                                        </div>
-                                        <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
-                                            <MatchWidget />
+                                            <MatchWidget name="Jacob" major="Computer Science" school="Bloomsburg University" age="20" aboutMe="Tech enthusiast and gamer." />
                                         </div>
                                     </div>
                                 </div>
+
 
                                 
                                 {/* <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>

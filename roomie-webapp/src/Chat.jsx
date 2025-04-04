@@ -6,17 +6,11 @@ function Chat({ selectedChat }) {
     const [text, setText] = useState('')
     const [messages, setMessages] = useState([])
     const [chatHistory, setChatHistory] = useState([])
+    const [requestStatus, setRequestStatus] = useState("")
 
     const messageAreaRef = useRef(null)
 
-    let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "Unknown User";
-
-    // useEffect(() => {
-    //     // reset chat for new selected chat here --> for now just clear conversation area
-    //     setChatHistory(getChatHistory(selectedChat))
-    //     // console.log(chatHistory)
-
-    // }, [selectedChat])
+    let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "...";
 
     useEffect(() => {
         setMessages([])
@@ -26,6 +20,13 @@ function Chat({ selectedChat }) {
                 setChatHistory(history)
             }
             fetchChatHistory()
+            
+            const fetchRequestStatus = async() => {
+                const status = await getRoommateRequestStatus()
+                setRequestStatus(status)
+                console.log(status)
+            }
+            fetchRequestStatus()
             
         }
     }, [selectedChat])
@@ -44,6 +45,8 @@ function Chat({ selectedChat }) {
 
     function sendMessage() {
         if(!selectedChat) return
+
+        if(text.length === 0) return
 
         const newMessage = {
             sentBySelf: true,
@@ -80,8 +83,6 @@ function Chat({ selectedChat }) {
         
 
         setText("")
-
-        //getChatHistory(selectedChat)
     }
 
     function handleKeyPress(e) {
@@ -118,6 +119,58 @@ function Chat({ selectedChat }) {
         }
     }
 
+    // Check Roommate Request Status
+    const getRoommateRequestStatus = async () => {
+        // check if there is an active request in this chat and who sent it
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getRoommateRequestStatus", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: selectedChat[2]})
+            });
+
+            if(!response.ok) {
+                throw new Error("Failed to fetch roommate request status");
+            }
+
+            const result = await response.json();
+            return result
+
+        } catch(error) {
+            console.error("Error fetching roommate request status: ", error)
+        }
+    }
+
+
+    // Request Roommate
+    const requestRoommate = async () => {
+
+        console.log("Requesting Roommate...")
+
+
+        try {
+            const roommateRequest = JSON.stringify({
+                token: localStorage.getItem("token"),
+                groupchat_id: selectedChat[2]
+            })
+
+            const response = await fetch("https://roomie.ddns.net:8080/chat/requestRoommate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: roommateRequest,
+            });
+
+            if (!response.ok) {
+                throw new Error("Roommate request failed. Please try again.");
+            }
+
+        } catch (error) {
+            console.error("Error calling roommate request", error)
+        }
+    }
+
 
 
     return (
@@ -135,7 +188,13 @@ function Chat({ selectedChat }) {
 
             </div>
             <div className="messageInput">
-            <textarea
+
+
+                <button disabled={requestStatus !== "No request yet"} onClick={requestRoommate} className="chatButton">
+                    <i className="bi bi-hand-thumbs-up"/>
+                </button>
+
+                <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleKeyPress}
@@ -148,7 +207,7 @@ function Chat({ selectedChat }) {
                 className="messageTextBox form-control"
                 />
                 {/* <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKeyPress} style={{resize: "none"}} className="form-control" type="text"/> */}
-                <button onClick={sendMessage} className=" sendButton">
+                <button onClick={sendMessage} className="chatButton">
                     <i className="bi bi-send"/>
                 </button>
             </div>
