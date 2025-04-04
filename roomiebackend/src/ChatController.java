@@ -49,15 +49,12 @@ public class ChatController {
 
 
     public static String sendGroupChats(Map<String, String> data, String method) {
-        HTTPResponse response = new HTTPResponse();
-
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
 
         String email = Auth.getEmailfromToken(data.get("token"));
         List<GroupChat> groupChats = dao.getGroupchats(email);
         Gson gson = new Gson();
-        response.code = 200;
 
-        return response.toString();
+        return Utils.assembleHTTPResponse(200, gson.toJson(groupChats));
     }
 }
