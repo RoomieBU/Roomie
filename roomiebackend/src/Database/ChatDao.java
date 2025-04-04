@@ -20,7 +20,11 @@ public class ChatDao extends Dao {
             stmt.setInt(1, groupchat_id);
             try (ResultSet rs = stmt.executeQuery()) {
                 while(rs.next()) {
-                    Message m = new Message(rs.getString("sender_email"), rs.getInt("groupchat_id"), rs.getString("message"), rs.getString("timestamp"));
+                    Message m = new Message(
+                            rs.getString("sender_email"),
+                            rs.getInt("groupchat_id"),
+                            rs.getString("message"),
+                            rs.getString("timestamp"));
                     messageList.add(m);
                 }
             }

@@ -1,12 +1,14 @@
 package Controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.Base64;
 import Database.*;
 import Tools.Auth;
+import Tools.HTTPResponse;
 import Tools.Utils;
 
 /**
@@ -20,20 +22,9 @@ public class FileController {
      * @return HTTP response
      */
     public static String uploadFile(Map<String, String> data, String method) {
-        int code = 400;
-        Map<String, String> response = new HashMap<>();
-
-        // Ensure the method is POST
-        if (!method.equals("POST")) {
-            response.put("message", "Method not allowed.");
-            return Utils.assembleHTTPResponse(405, Utils.assembleJson(response));
-        }
+        HTTPResponse response = new HTTPResponse();
 
         String token = data.get("token");
-        if (!Auth.isValidToken(token)) {
-            response.put("message", "Unauthorized");
-            return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
-        }
 
         String fileType = data.get("fileType");
         String base64Image = data.get("data");
@@ -46,12 +37,12 @@ public class FileController {
 
         // Check for missing data
         if (base64Image == null || base64Image.isEmpty()) {
-            response.put("message", "No image data has been provided.");
-            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            response.setMessage("message", "No image data has been provided.");
+            return response.toString();
         }
         if (fileType == null || fileType.isEmpty()) {
-            response.put("message", "No file type provided.");
-            return Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+            response.setMessage("message", "No file type provided.");
+            return response.toString();
         }
 
         // Define file extension based on the provided file type
@@ -60,19 +51,18 @@ public class FileController {
             case "image/png" -> "png";
             case "image/webp" -> "webp";
             default -> {
-                response.put("message", "Unsupported image format.");
-                yield Utils.assembleHTTPResponse(400, Utils.assembleJson(response));
+                response.setMessage("message", "Unsupported image format.");
+                yield response.toString();
             }
         };
 
-        try {
             // Decode Base64
             byte[] decodedImage = Base64.getDecoder().decode(base64Image);
 
             // Check for large image size
             if (decodedImage.length > 10 * 1024 * 1024) {
-                response.put("message", "Image too large.");
-                return Utils.assembleHTTPResponse(413, Utils.assembleJson(response));
+                response.setMessage("message", "Image too large.");
+                return response.toString();
             }
 
             // Save image locally
@@ -89,23 +79,24 @@ public class FileController {
             // Write image file
             try (FileOutputStream fos = new FileOutputStream(filePath)) {
                 fos.write(decodedImage);
+            } catch (IOException e) {
+                System.out.println("Error while writing image to file.");
             }
 
             // Get user ID from token
             String userEmail = Auth.getEmailfromToken(token);
             if (userEmail == null) {
-                response.put("message", "Invalid token.");
-                return Utils.assembleHTTPResponse(401, Utils.assembleJson(response));
+                response.setMessage("message", "Invalid token.");
+                return response.toString();
             }
 
             UserDao userDao = new UserDao(SQLConnection.getConnection());
             Map<String, String> userData = userDao.getData(Collections.singletonList("user_id"), userEmail);
             String userIdStr = userData.get("user_id");
-            userDao.closeConnection();
 
             if (userIdStr == null) {
-                response.put("message", "User not found.");
-                return Utils.assembleHTTPResponse(404, Utils.assembleJson(response));
+                response.setMessage("message", "User not found.");
+                return response.toString();
             }
 
             int userId = Integer.parseInt(userIdStr);
@@ -118,31 +109,18 @@ public class FileController {
                 boolean success = dao.set(dataMap, userEmail, "Users");
 
                 if (!success) {
-                    response.put("message", "Failed to update profile picture.");
-                    return Utils.assembleHTTPResponse(500, Utils.assembleJson(response));
+                    response.setMessage("message", "Failed to update profile picture.");
+                    return response.toString();
                 }
             } else {
-                // Store image path in userImagesDao
                 UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
                 userImageDao.uploadUserImage(userId, urlPath);
-                userImageDao.closeConnection();
             }
 
-            response.put("message", "File uploaded successfully.");
-            response.put("image_url", urlPath);
-            code = 200;
+            response.setMessage("message", "File uploaded successfully.");
+            response.setMessage("image_url", urlPath);
+            response.code = 200;
 
-        } catch (IOException e) {
-            System.err.println("[Controller.FileController] Error saving image: " + e.getMessage());
-            e.printStackTrace();
-            response.put("message", "Error saving image.");
-            code = 500;
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("message", "Unexpected error.");
-            code = 500;
-        }
-
-        return Utils.assembleHTTPResponse(code, Utils.assembleJson(response));
+        return response.toString();
     }
 }

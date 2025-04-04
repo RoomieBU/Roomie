@@ -17,7 +17,7 @@ public class UserDao extends Dao{
     /**
      * Takes the connection given to connect to the database
      */
-    public UserDao(Connection connection) throws SQLException {
+    public UserDao(Connection connection) {
         super(connection);
         this.connection = connection;
     }

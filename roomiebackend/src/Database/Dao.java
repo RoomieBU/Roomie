@@ -13,7 +13,7 @@ public class Dao {
     Connection connection;
 
 
-    public Dao(Connection connection) throws SQLException {
+    public Dao(Connection connection) {
         this.connection = connection;
     }
 

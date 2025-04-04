@@ -30,9 +30,6 @@ public class MatchingScannerController extends Thread{
                 }
                 Thread.sleep(15000); // 15 seconds
             }
-        } catch (SQLException | ClassNotFoundException ignored) {
-            System.out.println("[MSC] SQL Error: Starting over");
-            start(); // Just start over and try again
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

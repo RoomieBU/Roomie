@@ -17,7 +17,7 @@ public class UserMatchInteractionDao extends Dao{
     /**
      * Takes the connection given to connect to the database
      */
-    public UserMatchInteractionDao(Connection connection) throws SQLException {
+    public UserMatchInteractionDao(Connection connection) {
         super(connection);
         this.connection = connection;
     }

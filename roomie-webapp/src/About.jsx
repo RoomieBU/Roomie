@@ -12,31 +12,31 @@ const About = () => {
             id: 1,
             name: 'Sal La Marca',
             img: SalImg,
-            bio: 'TBD' 
+            bio: 'TBD'
         },
         {
             id: 2,
             name: 'Emily Faso',
             img: EmilyImg,
-            bio: 'Web developer that dabbles in both front and back-end development. Enjoys exploring the newest UI/UX techniques and prioritizing continous learning.' 
+            bio: 'Web developer that dabbles in both front and back-end development. Enjoys exploring the newest UI/UX techniques and prioritizing continous learning.'
         },
         {
             id: 3,
             name: 'Matthew Yurkunas',
             img: MattImg,
-            bio: 'TBD' 
+            bio: 'TBD'
         },
         {
             id: 4,
             name: 'Riley Simmons',
             img: RileyImg,
-            bio: 'TBD'
+            bio: 'Senior computer science major with an interest in software engineering and automation.'
         },
         {
             id: 5,
             name: 'Samuel Kapp',
             img: SamImg,
-            bio: 'TBD' 
+            bio: 'TBD'
         }
     ];
 
@@ -72,7 +72,7 @@ const About = () => {
                             </div>
                             <h3>{member.name}</h3>
                             <p className="bio">{member.bio}</p>
-                            </div>
+                        </div>
                     ))}
                 </div>
             </section>

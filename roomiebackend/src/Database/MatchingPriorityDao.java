@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class MatchingPriorityDao extends Dao{
 
-    public MatchingPriorityDao(Connection connection) throws SQLException {
+    public MatchingPriorityDao(Connection connection) {
         super(connection);
     }
 

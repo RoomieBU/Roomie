@@ -12,8 +12,13 @@ public class SQLConnection {
     private static final String USER = "database";
     private static final String PASSWORD = System.getenv("SSL_KEY");
 
-    public static Connection getConnection() throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("SQL Connection Error: " + e);
+        }
+        return null;
     }
 }

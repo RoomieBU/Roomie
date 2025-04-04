@@ -218,9 +218,10 @@ public class Server {
 
         Map<String, String> data = Utils.parseJson(body.toString());
 
-        String httpResponse = router.handleRequest(path, data, method);
-
-        out.write(httpResponse.getBytes());
+        if (method.equals("POST")) {
+            String httpResponse = router.handleRequest(path, data, method);
+            out.write(httpResponse.getBytes());
+        }
         out.flush();
         client.close();
         connections--;

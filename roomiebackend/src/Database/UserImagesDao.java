@@ -13,7 +13,7 @@ import java.util.List;
 public class UserImagesDao {
     private Connection connection;
 
-    public UserImagesDao(Connection connection) throws SQLException {
+    public UserImagesDao(Connection connection) {
         this.connection = connection;
     }
 

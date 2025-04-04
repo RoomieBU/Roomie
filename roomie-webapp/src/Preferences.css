@@ -55,7 +55,6 @@ body {
 }
 
 :root {
-    --bs-primary: #6f42c1;
     /* Bootstrap primary color changed to purple */
     --bs-primary-rgb: 111, 66, 193;
 }

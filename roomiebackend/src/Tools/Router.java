@@ -10,14 +10,6 @@ import java.util.function.BiFunction;
  */
 
 public class Router {
-
-    /**
-     * I KNOW this looks insane but check this out:
-     * BiFunction takes two arguments and produces some result (of data type of the 3rd parameter)
-     * BiFunction will end up being login or register classes within auth controller
-     *
-     * Map<String, String> is the type for the received form data.
-     */
     private Map<String, BiFunction<Map<String, String>, String, String>> routes = new HashMap<>();
 
     public void addRoute(String path, BiFunction<Map<String, String>, String, String> handler) {
@@ -30,10 +22,5 @@ public class Router {
             return handler.apply(data, method);
         }
         return Utils.assembleHTTPResponse(404, "{\"message\": \"Not Found\"}");
-    }
-
-    public void addRoute(String path, Object handler) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addRoute'");
     }
 }
