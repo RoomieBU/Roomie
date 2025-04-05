@@ -69,7 +69,7 @@ public class Server {
 
             // Messaging routes
             /**
-             * /messages/chathistory
+             * /messages/chathistorys
              *      * Gets all chats when you open a chat / groupchat
              * /messages/sendchat
              *      * Sends a chat to go groupchat / person

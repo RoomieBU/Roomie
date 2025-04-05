@@ -150,7 +150,7 @@ function Chat({ selectedChat }) {
 
 
     // Request Roommate
-    const requestRoommate = async () => {
+    const requestRoommate = async (choice) => {
 
         console.log("Requesting Roommate...")
 
@@ -159,7 +159,7 @@ function Chat({ selectedChat }) {
             const roommateRequest = JSON.stringify({
                 token: localStorage.getItem("token"),
                 groupchat_id: selectedChat[2],
-                response: 1
+                response: choice
             })
 
             const response = await fetch("https://roomie.ddns.net:8080/chat/requestRoommate", {
@@ -181,6 +181,20 @@ function Chat({ selectedChat }) {
 
 
 
+    // State to track if the modal is open
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Function to open the modal
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+
     return (
         <div className="holdChat">
             <div className="messageArea" ref={messageAreaRef}>
@@ -198,9 +212,23 @@ function Chat({ selectedChat }) {
             <div className="messageInput">
 
 
-                <button onClick={requestRoommate} className="chatButton">
+                <button onClick={openModal} className="chatButton">
                     <i className="bi bi-hand-thumbs-up"/>
                 </button>
+
+                {/* Modal with full-screen overlay */}
+                {isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <span className="close-button" onClick={closeModal}>&times;</span>
+                            <h2>Would you like to be Roomies?</h2>
+                            <div className="button-cluster">
+                                <button onClick={() => {requestRoommate(0)}} className="chatButton noButton">No</button>
+                                <button onClick={() => {requestRoommate(1)}} className="chatButton yesButton">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <textarea
                 value={text}
