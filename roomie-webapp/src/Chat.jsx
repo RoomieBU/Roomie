@@ -145,6 +145,14 @@ function Chat({ selectedChat }) {
     // Request Roommate
     const requestRoommate = async () => {
 
+
+        const fetchRequestStatus = async() => {
+            const status = await getRoommateRequestStatus()
+            setRequestStatus(status)
+            console.log(status)
+        }
+        fetchRequestStatus()
+
         console.log("Requesting Roommate...")
 
 
