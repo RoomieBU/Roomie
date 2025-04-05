@@ -22,9 +22,7 @@ function Chat({ selectedChat }) {
             fetchChatHistory()
             
             const fetchRequestStatus = async() => {
-                const status = await getRoommateRequestStatus()
-                setRequestStatus(status)
-                console.log(status)
+                await getRoommateRequestStatus()
             }
             fetchRequestStatus()
             
@@ -119,14 +117,23 @@ function Chat({ selectedChat }) {
         }
     }
 
+
     // Check Roommate Request Status
     const getRoommateRequestStatus = async () => {
         // check if there is an active request in this chat and who sent it
+
+
+        const statusData = JSON.stringify({
+            token: localStorage.getItem("token"),
+            groupchat_id: selectedChat[2],
+        })
+
+
         try {
             const response = await fetch("https://roomie.ddns.net:8080/chat/getRoommateRequestStatus", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: selectedChat[2]})
+                body: statusData,
             });
 
             if(!response.ok) {
@@ -134,7 +141,7 @@ function Chat({ selectedChat }) {
             }
 
             const result = await response.json();
-            return result
+            setRequestStatus(result.status)
 
         } catch(error) {
             console.error("Error fetching roommate request status: ", error)
@@ -144,14 +151,6 @@ function Chat({ selectedChat }) {
 
     // Request Roommate
     const requestRoommate = async () => {
-
-
-        const fetchRequestStatus = async() => {
-            const status = await getRoommateRequestStatus()
-            setRequestStatus(status)
-            console.log(status)
-        }
-        fetchRequestStatus()
 
         console.log("Requesting Roommate...")
 
