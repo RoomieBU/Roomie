@@ -56,6 +56,11 @@ public class ChatController {
         String email = Auth.getEmailfromToken(data.get("token"));
         int groupId = Integer.parseInt(data.get("groupchat_id"));
         String status = dao.getRoommateRequestStatus(email, groupId);
+
+        
+        String response = String.format("{\"status\": \"%s\"}", status);
+        
+        return Utils.assembleHTTPResponse(200, response);
     }
     
     public static String sendChatHistory(Map<String, String> data, String method) {
