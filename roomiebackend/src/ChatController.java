@@ -2,6 +2,8 @@ import Database.ChatDao;
 import Database.Dao;
 import Database.GroupChat;
 import Database.SQLConnection;
+import Database.User;
+import Database.UserDao;
 import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Utils;
@@ -51,16 +53,18 @@ public class ChatController {
     }
 
     public static String sendRoommateRequestStatus(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
 
         String email = Auth.getEmailfromToken(data.get("token"));
         int groupId = Integer.parseInt(data.get("groupchat_id"));
         String status = dao.getRoommateRequestStatus(email, groupId);
 
+        response.setMessage("message", "status found");
+        response.setMessage("status", status);
+        response.code = 200;
         
-        String response = String.format("{\"status\": \"%s\"}", status);
-        
-        return Utils.assembleHTTPResponse(200, response);
+        return response.toString();
     }
     
     public static String sendChatHistory(Map<String, String> data, String method) {
