@@ -26,11 +26,12 @@ public class ChatController {
         String email = Auth.getEmailfromToken(data.get("token"));
         insertData.put("sender", email);
         insertData.put("groupchat_id", data.get("groupchat_id"));
-        insertData.put("accepted", "true");
+        insertData.put("accepted", data.get("response"));
 
         dao.insert(insertData, "UserRoommateRequests");
 
         response.code = 200;
+        response.setMessage("message", "request stored");
 
         return response.toString();
     }

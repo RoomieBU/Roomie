@@ -151,7 +151,8 @@ function Chat({ selectedChat }) {
         try {
             const roommateRequest = JSON.stringify({
                 token: localStorage.getItem("token"),
-                groupchat_id: selectedChat[2]
+                groupchat_id: selectedChat[2],
+                response: 1
             })
 
             const response = await fetch("https://roomie.ddns.net:8080/chat/requestRoommate", {
@@ -190,7 +191,7 @@ function Chat({ selectedChat }) {
             <div className="messageInput">
 
 
-                <button disabled={requestStatus !== "No request yet"} onClick={requestRoommate} className="chatButton">
+                <button onClick={requestRoommate} className="chatButton">
                     <i className="bi bi-hand-thumbs-up"/>
                 </button>
 
