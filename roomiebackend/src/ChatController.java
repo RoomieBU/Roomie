@@ -40,6 +40,7 @@ public class ChatController {
     
             List<String> emails = new ArrayList<>();
     
+            // Collect emails for all group chat IDs
             for (int id : groupchatIds) {
                 String otherEmail = dao.getGroupChatEmail(email, id);
                 if (otherEmail != null && !otherEmail.isEmpty()) {
@@ -47,18 +48,24 @@ public class ChatController {
                 }
             }
     
+            // Check if any emails were found (excluding the current user's email)
             if (emails.isEmpty()) {
                 return Utils.assembleHTTPResponse(400, "No valid users found to create a group chat.");
             }
     
+            // Create the map to store emails
             Map<String, String> insertData = new HashMap<>();
     
+            // Add the emails to insertData
             int i;
             for (i = 1; i <= emails.size(); i++) {
-                insertData.put("email" + i, emails.get(i - 1));
+                insertData.put("email" + i, emails.get(i - 1)); // Add other emails
             }
-            insertData.put("email" + i, email); // add the current user
     
+            // Add the current user's email (the passed email) as the last one
+            insertData.put("email" + (i + 1), email);
+    
+            // Insert the group chat data into the database
             dao.insert(insertData, "GroupChats");
     
             return Utils.assembleHTTPResponse(200, "Group chat created successfully");
@@ -68,6 +75,7 @@ public class ChatController {
             return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error");
         }
     }
+    
     
 
 

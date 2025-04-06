@@ -217,8 +217,7 @@ function Sidebar({ currentView, onChatSelect}) {
 
 
     function handleGroupchatCreation() {
-        // restrict buttons outside of sidebar.jsx show buttons for creating groupchat
-        
+        // restrict buttons outside of sidebar.jsx show buttons for creating groupchats
 
         console.log(selectedUsers)
         const createGroupChat = async () => {
