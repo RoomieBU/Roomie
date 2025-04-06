@@ -219,15 +219,44 @@ function Chat({ selectedChat }) {
                 {/* Modal with full-screen overlay */}
                 {isModalOpen && (
                     <div className="modal-overlay">
+                    {requestStatus === "No Request Yet" && (
                         <div className="modal-content">
                             <span className="close-button" onClick={closeModal}>&times;</span>
                             <h2>Would you like to be Roomies?</h2>
                             <div className="button-cluster">
-                                <button onClick={() => {requestRoommate(0)}} className="chatButton noButton">No</button>
-                                <button onClick={() => {requestRoommate(1)}} className="chatButton yesButton">Yes</button>
+                                <button onClick={() => requestRoommate(0)} className="chatButton noButton">No</button>
+                                <button onClick={() => requestRoommate(1)} className="chatButton yesButton">Yes</button>
                             </div>
                         </div>
-                    </div>
+                    )}
+
+                    {requestStatus === "Pending" && (
+                        <div className="modal-content">
+                            <span className="close-button" onClick={closeModal}>&times;</span>
+                            <h2>Pending Status</h2>
+                            {/* <div className="button-cluster">
+                                <button onClick={() => requestRoommate(0)} className="chatButton noButton">No</button>
+                                <button onClick={() => requestRoommate(1)} className="chatButton yesButton">Yes</button>
+                            </div> */}
+                        </div>
+                    )}
+            
+                    {requestStatus === "Accepted" && (
+                        <div className="modal-content">
+                            <span className="close-button" onClick={closeModal}>&times;</span>
+                            <h2>You are already Roommates 🎉</h2>
+                            <p>No need to vote again.</p>
+                        </div>
+                    )}
+            
+                    {requestStatus === "Declined" && (
+                        <div className="modal-content">
+                            <span className="close-button" onClick={closeModal}>&times;</span>
+                            <h2>This request was declined</h2>
+                            <p>You can’t vote again unless a new request is sent.</p>
+                        </div>
+                    )}
+                </div>
                 )}
 
                 <textarea
