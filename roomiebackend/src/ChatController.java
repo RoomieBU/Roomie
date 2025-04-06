@@ -25,22 +25,30 @@ public class ChatController {
         List<Integer> groupchatIds = new ArrayList<>();
     
         try {
+            // Remove square brackets and trim extra spaces
             rawIds = rawIds.replaceAll("\\[|\\]", "").trim();
     
-            if (!rawIds.isEmpty()) {
-                String[] parts = rawIds.split(",");
+            // Check if rawIds is empty or invalid
+            if (rawIds.isEmpty()) {
+                return Utils.assembleHTTPResponse(400, "No group chat IDs provided.");
+            }
     
-                for (String part : parts) {
-                    String trimmed = part.trim();
-                    if (!trimmed.isEmpty()) {
-                        groupchatIds.add(Integer.parseInt(trimmed));
-                    }
+            // Split the rawIds string into individual group chat IDs
+            String[] parts = rawIds.split(",");
+            for (String part : parts) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    groupchatIds.add(Integer.parseInt(trimmed));
                 }
             }
     
-            List<String> emails = new ArrayList<>();
+            // If no valid group chat IDs were parsed
+            if (groupchatIds.isEmpty()) {
+                return Utils.assembleHTTPResponse(400, "Invalid group chat IDs.");
+            }
     
-            // Collect emails for all group chat IDs
+            // Collect the emails for the group chat IDs
+            List<String> emails = new ArrayList<>();
             for (int id : groupchatIds) {
                 String otherEmail = dao.getGroupChatEmail(email, id);
                 if (otherEmail != null && !otherEmail.isEmpty()) {
@@ -48,31 +56,40 @@ public class ChatController {
                 }
             }
     
-            // Check if any emails were found (excluding the current user's email)
+            // If no valid emails are found, return an error response
             if (emails.isEmpty()) {
                 return Utils.assembleHTTPResponse(400, "No valid users found to create a group chat.");
             }
     
-            // Create the map to store emails
-            Map<String, String> insertData = new HashMap<>();
+            // Log the collected emails (debugging)
+            System.out.println("Collected Emails: " + emails);
     
-            // Add the emails to insertData
+            // Create a map to store the email data for insertion
+            Map<String, String> insertData = new HashMap<>();
             int i;
             for (i = 1; i <= emails.size(); i++) {
                 insertData.put("email" + i, emails.get(i - 1)); // Add other emails
             }
     
-            // Add the current user's email (the passed email) as the last one
+            // Add the current user's email as the last one
             insertData.put("email" + (i + 1), email);
     
-            // Insert the group chat data into the database
-            dao.insert(insertData, "GroupChats");
+            // Log the insert data (debugging)
+            System.out.println("Insert Data: " + insertData);
     
-            return Utils.assembleHTTPResponse(200, "Group chat created successfully");
+            // Insert the group chat data into the database
+            boolean isInserted = dao.insert(insertData, "GroupChats");
+    
+            // Check if the insert was successful
+            if (isInserted) {
+                return Utils.assembleHTTPResponse(200, "Group chat created successfully");
+            } else {
+                return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
+            }
     
         } catch (Exception e) {
             e.printStackTrace();
-            return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error");
+            return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error.");
         }
     }
     
