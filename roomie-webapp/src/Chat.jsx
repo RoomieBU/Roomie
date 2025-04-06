@@ -148,12 +148,45 @@ function Chat({ selectedChat }) {
         }
     }
 
+    // Reset Roommate Request
+    const resetRequestChoice = async () => {
+        console.log("Resetting roommate request...")
+
+        try {
+            const data = JSON.stringify({
+                token: localStorage.getItem("token"),
+                groupchat_id: selectedChat[2],
+            })
+
+            const response = await fetch("https://roomie.ddns.net:8080/chat/resetRoommateRequestChoice", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: data,
+            });
+
+            if (!response.ok) {
+                throw new Error("Roommate request reset failed. Please try again.");
+            }
+
+        } catch (error) {
+            console.error("Error calling resetting roommate request", error)
+        }
+
+    }
+
+    // handle request choice
+    function handleRequestChoice(choice) {
+        closeModal()
+        requestRoommate(choice)
+    }
+
 
     // Request Roommate
     const requestRoommate = async (choice) => {
 
         console.log("Requesting Roommate...")
-
 
         try {
             const roommateRequest = JSON.stringify({
@@ -179,7 +212,11 @@ function Chat({ selectedChat }) {
         }
     }
 
-
+    // handle changing response
+    function handleChangeMind() {
+        resetRequestChoice()
+        requestStatus()
+    }
 
     // State to track if the modal is open
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -221,19 +258,23 @@ function Chat({ selectedChat }) {
                     <div className="modal-overlay">
                     {requestStatus === "No Request Yet" && (
                         <div className="modal-content">
-                            <span className="close-button" onClick={closeModal}>&times;</span>
-                            <h2>Would you like to be Roomies?</h2>
+                            <div className="holdCloseAndH2">
+                                <h2>Would you like to be Roomies?</h2>
+                                <span className="close-button" onClick={closeModal}>&times;</span>
+                            </div>
                             <div className="button-cluster">
-                                <button onClick={() => requestRoommate(0)} className="chatButton noButton">No</button>
-                                <button onClick={() => requestRoommate(1)} className="chatButton yesButton">Yes</button>
+                                <button onClick={() => handleRequestChoice(0)} className="chatButton noButton">No</button>
+                                <button onClick={() => handleRequestChoice(1)} className="chatButton yesButton">Yes</button>
                             </div>
                         </div>
                     )}
 
                     {requestStatus === "Pending" && (
                         <div className="modal-content">
-                            <span className="close-button" onClick={closeModal}>&times;</span>
-                            <h2>Pending Status</h2>
+                            <div className="holdCloseAndH2">
+                                <h2>Pending Status</h2>
+                                <span className="close-button" onClick={closeModal}>&times;</span>
+                            </div>
                             {/* <div className="button-cluster">
                                 <button onClick={() => requestRoommate(0)} className="chatButton noButton">No</button>
                                 <button onClick={() => requestRoommate(1)} className="chatButton yesButton">Yes</button>
@@ -243,17 +284,21 @@ function Chat({ selectedChat }) {
             
                     {requestStatus === "Accepted" && (
                         <div className="modal-content">
-                            <span className="close-button" onClick={closeModal}>&times;</span>
-                            <h2>You are already Roommates 🎉</h2>
-                            <p>No need to vote again.</p>
+                            <div className="holdCloseAndH2">
+                                <h2>You have requested to be Roomies!</h2>
+                                <span className="close-button" onClick={closeModal}>&times;</span>
+                            </div>
+                            <p onClick={handleChangeMind}>Change your mind?</p>
                         </div>
                     )}
             
                     {requestStatus === "Declined" && (
                         <div className="modal-content">
-                            <span className="close-button" onClick={closeModal}>&times;</span>
-                            <h2>This request was declined</h2>
-                            <p>You can’t vote again unless a new request is sent.</p>
+                            <div className="holdCloseAndH2">
+                                <h2>You have declined becoming Roomies.</h2>
+                                <span className="close-button" onClick={closeModal}>&times;</span>
+                            </div>
+                            <p onClick={handleChangeMind}>Change your mind?</p>
                         </div>
                     )}
                 </div>

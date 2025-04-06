@@ -135,16 +135,13 @@
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 430px;
+  width: 450px;
   gap: 20px;
   text-align: center;
 }
 
 /* Close button */
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 20px;
   font-size: 30px;
   cursor: pointer;
 }
@@ -165,4 +162,9 @@
 
 .yesButton:hover {
   background-color: rgb(0, 128, 0, .7);
+}
+
+.holdCloseAndH2 {
+  display: flex;
+  flex-direction: row;
 }

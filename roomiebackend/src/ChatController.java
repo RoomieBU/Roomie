@@ -17,6 +17,21 @@ import java.util.ArrayList;
 
 public class ChatController {
 
+    public static String resetRoommateRequestChoice(Map<String, String> data, String method) {
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        int groupchatId = Integer.parseInt(data.get("groupchat_id"));
+
+        boolean deleted = dao.deleteRoommateRequest(email, groupchatId);
+
+        if (deleted) {
+            return Utils.assembleHTTPResponse(200, "Request deleted");
+        } else {
+            return Utils.assembleHTTPResponse(404, "No matching request found");
+        }
+    }
+
     public static String receiveRoommateRequest(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
