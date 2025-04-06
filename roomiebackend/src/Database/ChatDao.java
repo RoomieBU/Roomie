@@ -11,6 +11,31 @@ public class ChatDao extends Dao {
         super(connection);
     }
 
+    public String getGroupChatEmail(String email, int groupchatId) {
+        String query = "SELECT email1, email2, email3, email4, email5, email6 FROM GroupChats WHERE id = ?";
+        try (
+            Connection conn = SQLConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)
+        ) {
+            stmt.setInt(1, groupchatId);
+            ResultSet rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                // Loop through each email column and return the first one that isn't the current user
+                for (int i = 1; i <= 6; i++) {
+                    String currentEmail = rs.getString("email" + i);
+                    if (currentEmail != null && !currentEmail.equals(email)) {
+                        return currentEmail;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return null; // If no match found
+    }
+
     public boolean deleteRoommateRequest(String sender, int groupchatId) {
         String query = "DELETE FROM UserRoommateRequests WHERE sender = ? AND groupchat_id = ?";
     

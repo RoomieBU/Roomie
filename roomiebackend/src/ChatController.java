@@ -17,6 +17,60 @@ import java.util.ArrayList;
 
 public class ChatController {
 
+    public static String createGroupChat(Map<String, String> data, String method) {
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+    
+        String email = Auth.getEmailfromToken(data.get("token"));
+        String rawIds = data.get("groupChatIds"); // Should look like "[1, 2, 3]"
+        List<Integer> groupchatIds = new ArrayList<>();
+    
+        try {
+            rawIds = rawIds.replaceAll("\\[|\\]", "").trim();
+    
+            if (!rawIds.isEmpty()) {
+                String[] parts = rawIds.split(",");
+    
+                for (String part : parts) {
+                    String trimmed = part.trim();
+                    if (!trimmed.isEmpty()) {
+                        groupchatIds.add(Integer.parseInt(trimmed));
+                    }
+                }
+            }
+    
+            List<String> emails = new ArrayList<>();
+    
+            for (int id : groupchatIds) {
+                String otherEmail = dao.getGroupChatEmail(email, id);
+                if (otherEmail != null && !otherEmail.isEmpty()) {
+                    emails.add(otherEmail);
+                }
+            }
+    
+            if (emails.isEmpty()) {
+                return Utils.assembleHTTPResponse(400, "No valid users found to create a group chat.");
+            }
+    
+            Map<String, String> insertData = new HashMap<>();
+    
+            int i;
+            for (i = 1; i <= emails.size(); i++) {
+                insertData.put("email" + i, emails.get(i - 1));
+            }
+            insertData.put("email" + i, email); // add the current user
+    
+            dao.insert(insertData, "GroupChats");
+    
+            return Utils.assembleHTTPResponse(200, "Group chat created successfully");
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error");
+        }
+    }
+    
+
+
     public static String resetRoommateRequestChoice(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
 

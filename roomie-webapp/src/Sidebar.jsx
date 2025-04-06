@@ -34,17 +34,33 @@ function Sidebar({ currentView, onChatSelect}) {
 
 
     const handleChatClick = (chatId) => {
-        setSelectedChat(chatId);
-        console.log("CHAT ID: ", selectedChat)
-
         const targetChat = userChats.find(chat => chat.groupChatId === chatId);
-        console.log(targetChat)
+        console.log(targetChat);
+    
+        if (groupChatMode) {
 
-        if (targetChat) {
-            const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId]
-            onChatSelect(data); // Ensure onChatSelect expects an object
+            if(selectedUsers.length > 6) return;
+
+            setSelectedUsers(prev => {
+                const alreadyExists = prev.some(user => user.groupChatId === targetChat.groupChatId);
+                if (alreadyExists) {
+                    // Remove from the list
+                    return prev.filter(user => user.groupChatId !== targetChat.groupChatId);
+                } else {
+                    // Add to the list
+                    return [...prev, targetChat];
+                }
+            });
+        } else {
+            setSelectedChat(chatId);
+            console.log("CHAT ID: ", selectedChat);
+    
+            if (targetChat) {
+                const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId];
+                onChatSelect(data); // Ensure onChatSelect expects an object or array like this
+            }
         }
-    }
+    };
 
     // Match section
     const [isMatchesVisible, setIsMatchesVisible] = useState(true)
@@ -204,10 +220,47 @@ function Sidebar({ currentView, onChatSelect}) {
         // restrict buttons outside of sidebar.jsx show buttons for creating groupchat
         
 
+        console.log(selectedUsers)
+        const createGroupChat = async () => {
+            // send users for groupchat
+
+            const groupChatData = JSON.stringify({
+                token: localStorage.getItem("token"),
+                groupChatIds: selectedUsers.map(user => user.groupChatId),
+            })
+
+
+            try {
+                const response = await fetch("https://roomie.ddns.net:8080/chat/createGroupChat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: groupChatData,
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to create groupchat");
+                }
+
+            } catch (error) {
+                console.error("Error creating groupchat", error);
+                return null;
+            }
+        }
+        createGroupChat();
+
 
         // back to normal mode
+        setSelectedUsers([])
         setGroupChatMode(false)
     }
+
+    function handleGroupchatCancel() {
+        setGroupChatMode(false)
+        setSelectedUsers([])
+    }
+
+
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
 
 
@@ -216,9 +269,6 @@ function Sidebar({ currentView, onChatSelect}) {
             {(() => {
                 switch (activeView) {
                     case "Chat":
-                        <div>
-                            Hello World
-                        </div>
                         if (loading) {
                             return <Spinner load="chats..."/>
                         } else {
@@ -228,25 +278,38 @@ function Sidebar({ currentView, onChatSelect}) {
                                     <div className="groupchat-cluster">
                                         {groupChatMode && 
                                         <>
-                                            <h4 onClick={() => setGroupChatMode(false)}>Cancel</h4>
-                                            <h4 onClick={handleGroupchatCreation}>Confirm</h4>
+                                            <h4>Select users for your groupchat</h4>
+                                            <button className="btn purpleBtn" onClick={handleGroupchatCancel}>Cancel</button>
+                                            <button className="btn purpleBtn" onClick={handleGroupchatCreation}>Confirm</button>
                                         </>}
                                         <i onClick={() => setGroupChatMode(true)} className="bi bi-chat-dots groupChatButton"/>
                                     </div>
+
+                                    {/* {groupChatMode &&
+                                    <div className="selectArea">
+                                        {selectedUsers.map((user, index) => (
+                                            <h3 key={index}>{user.firstName} {user.lastName}</h3>
+                                        ))}
+                                    </div>} */}
             
                                     {/* Dynamic content */}
-                                    {userChats.map(chat => (
-                                        <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
-                                            key={chat.groupChatId}
-                                            onClick={() => handleChatClick(chat.groupChatId)}>
-                                            <img
-                                                src={chat.profilePicture || `https://ui-avatars.com/api/?name=${chat.firstName[0]}${chat.lastName[0]}&background=random`}
-                                                alt="P"
-                                                className="profilePic"
-                                            />
-                                            <h3>{chat.firstName} {chat.lastName}</h3>
-                                        </div>
-                                    ))}
+                                    {userChats.map(chat => {
+                                        const isSelected = selectedUsers.some(user => user.groupChatId === chat.groupChatId);
+                                        return (
+                                            <div
+                                                className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''} ${isSelected ? 'gSelected' : ''}`}
+                                                key={chat.groupChatId}
+                                                onClick={() => handleChatClick(chat.groupChatId)}
+                                            >
+                                                <img
+                                                    src={chat.profilePicture || `https://ui-avatars.com/api/?name=${chat.firstName[0]}${chat.lastName[0]}&background=random`}
+                                                    alt="P"
+                                                    className="profilePic"
+                                                />
+                                                <h3>{chat.firstName} {chat.lastName}</h3>
+                                            </div>
+                                        );
+                                    })}
                                 </>
                             );
                         }

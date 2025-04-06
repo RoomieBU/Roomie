@@ -4,7 +4,6 @@ import Database.*;
 import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Utils;
-import java.sql.SQLException;
 import java.util.*;
 
 
@@ -33,8 +32,6 @@ public class MatchController {
 
     public static String sendMatchInformation(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
-
-        String token = data.get("token");
 
         String email = Auth.getEmailfromToken(data.get("token"));
         Map<String, String> matchData = new HashMap<>();

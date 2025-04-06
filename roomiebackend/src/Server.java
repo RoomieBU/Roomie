@@ -80,6 +80,7 @@ public class Server {
             router.addRoute("/chat/requestRoommate", ChatController::receiveRoommateRequest);
             router.addRoute("/chat/getRoommateRequestStatus", ChatController::sendRoommateRequestStatus);
             router.addRoute("/chat/resetRoommateRequestChoice", ChatController::resetRoommateRequestChoice);
+            router.addRoute("/chat/createGroupChat", ChatController::createGroupChat);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
