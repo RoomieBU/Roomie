@@ -106,3 +106,22 @@
     width: 100%;
     background-color: black;
 }
+
+.groupChatButton {
+    font-size: 30px;
+    margin-right: 15px;   
+}
+
+.groupChatButton:hover {
+    color: #6f42c1;
+    cursor: pointer;
+}
+
+.groupchat-cluster {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 30px;
+    align-items: center;
+    justify-content: right;
+}   

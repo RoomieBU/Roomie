@@ -168,3 +168,12 @@
   display: flex;
   flex-direction: row;
 }
+
+.changeMind {
+  color: #6f42c1;
+}
+
+.changeMind:hover {
+  color: rgba(128, 0, 128, 0.72);
+  cursor: pointer;
+}

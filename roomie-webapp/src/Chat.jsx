@@ -121,8 +121,6 @@ function Chat({ selectedChat }) {
     // Check Roommate Request Status
     const getRoommateRequestStatus = async () => {
         // check if there is an active request in this chat and who sent it
-
-
         const statusData = JSON.stringify({
             token: localStorage.getItem("token"),
             groupchat_id: selectedChat[2],
@@ -177,9 +175,11 @@ function Chat({ selectedChat }) {
     }
 
     // handle request choice
-    function handleRequestChoice(choice) {
-        closeModal()
-        requestRoommate(choice)
+    async function handleRequestChoice(choice) {
+        closeModal();
+
+        await requestRoommate(choice);      // Wait for the request to finish
+        await getRoommateRequestStatus();   // Then call this
     }
 
 
@@ -215,7 +215,7 @@ function Chat({ selectedChat }) {
     // handle changing response
     function handleChangeMind() {
         resetRequestChoice()
-        requestStatus()
+        setRequestStatus("No Request Yet")
     }
 
     // State to track if the modal is open
@@ -288,7 +288,7 @@ function Chat({ selectedChat }) {
                                 <h2>You have requested to be Roomies!</h2>
                                 <span className="close-button" onClick={closeModal}>&times;</span>
                             </div>
-                            <p onClick={handleChangeMind}>Change your mind?</p>
+                            <p className="changeMind" onClick={handleChangeMind}>Change your mind?</p>
                         </div>
                     )}
             
@@ -298,7 +298,7 @@ function Chat({ selectedChat }) {
                                 <h2>You have declined becoming Roomies.</h2>
                                 <span className="close-button" onClick={closeModal}>&times;</span>
                             </div>
-                            <p onClick={handleChangeMind}>Change your mind?</p>
+                            <p className="changeMind" onClick={handleChangeMind}>Change your mind?</p>
                         </div>
                     )}
                 </div>

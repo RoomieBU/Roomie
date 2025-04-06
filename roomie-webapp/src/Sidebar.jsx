@@ -47,7 +47,6 @@ function Sidebar({ currentView, onChatSelect}) {
     }
 
     // Match section
-
     const [isMatchesVisible, setIsMatchesVisible] = useState(true)
 
     function toggleMatches() {
@@ -197,26 +196,59 @@ function Sidebar({ currentView, onChatSelect}) {
         }
     }, [groupChats]);
 
+
+    const [groupChatMode, setGroupChatMode] = useState(false)
+
+
+    function handleGroupchatCreation() {
+        // restrict buttons outside of sidebar.jsx show buttons for creating groupchat
+        
+
+
+        // back to normal mode
+        setGroupChatMode(false)
+    }
+
+
+
     return (
         <div onClick={() => parseGroupChats} className="sidebar">
             {(() => {
                 switch (activeView) {
                     case "Chat":
+                        <div>
+                            Hello World
+                        </div>
                         if (loading) {
                             return <Spinner load="chats..."/>
                         } else {
-                            return userChats.map(chat => (
-                                <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
-                                    key={chat.groupChatId}
-                                    onClick={() => handleChatClick(chat.groupChatId)}>
-                                    <img
-                                        src={chat.profilePicture || `https://ui-avatars.com/api/?name=${chat.firstName[0]}${chat.lastName[0]}&background=random`}
-                                        alt="P"
-                                        className="profilePic"
-                                    />
-                                    <h3>{chat.firstName} {chat.lastName}</h3>
-                                </div>
-                            ));
+                            return (
+                                <>
+                                    {/* Static content above the list, if needed */}
+                                    <div className="groupchat-cluster">
+                                        {groupChatMode && 
+                                        <>
+                                            <h4 onClick={() => setGroupChatMode(false)}>Cancel</h4>
+                                            <h4 onClick={handleGroupchatCreation}>Confirm</h4>
+                                        </>}
+                                        <i onClick={() => setGroupChatMode(true)} className="bi bi-chat-dots groupChatButton"/>
+                                    </div>
+            
+                                    {/* Dynamic content */}
+                                    {userChats.map(chat => (
+                                        <div className={`chatBox ${selectedChat === chat.groupChatId ? 'selected' : ''}`}
+                                            key={chat.groupChatId}
+                                            onClick={() => handleChatClick(chat.groupChatId)}>
+                                            <img
+                                                src={chat.profilePicture || `https://ui-avatars.com/api/?name=${chat.firstName[0]}${chat.lastName[0]}&background=random`}
+                                                alt="P"
+                                                className="profilePic"
+                                            />
+                                            <h3>{chat.firstName} {chat.lastName}</h3>
+                                        </div>
+                                    ))}
+                                </>
+                            );
                         }
                     case "Match":
                         return (
