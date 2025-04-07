@@ -58,7 +58,7 @@ public class ChatController {
             
             System.out.println("Final emails list: " + emails);
 
-            return Utils.assembleHTTPResponse(400, emails.toString());
+            return Utils.assembleHTTPResponse(400, groupchatIds.toString());
             
             // // Check if there's at least 2 participants
             // if (emails.size() < 2) {
