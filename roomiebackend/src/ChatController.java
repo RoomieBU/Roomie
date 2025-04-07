@@ -24,10 +24,26 @@ public class ChatController {
         String email = Auth.getEmailfromToken(data.get("token"));
 
         System.out.println("Received data: " + data.toString());
-        List<String> groupchatIdsRaw = List.of(data.get("groupChatIds"));
         List<Integer> groupchatIds = new ArrayList<>();
-        for (String id : groupchatIdsRaw) {
-            groupchatIds.add(Integer.parseInt(id)); // error
+
+        // bruh
+        if (data.get("groupChatId0") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId0")));
+        }
+        if (data.get("groupChatId1") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId1")));
+        }
+        if (data.get("groupChatId2") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId2")));
+        }
+        if (data.get("groupChatId3") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId3")));
+        }
+        if (data.get("groupChatId4") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId4")));
+        }
+        if (data.get("groupChatId5") != null) {
+            groupchatIds.add(Integer.parseInt(data.get("groupChatId5")));
         }
 
         System.out.println("Processing IDs: " + groupchatIds);

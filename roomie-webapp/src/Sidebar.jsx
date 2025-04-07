@@ -5,11 +5,11 @@ import Spinner from './Spinner'; // Ensure the correct path to Spinner component
 import MatchWidget from "./MatchWidget";
 
 
-function Sidebar({ currentView, onChatSelect}) {
-    
+function Sidebar({ currentView, onChatSelect }) {
+
     const [selectedChat, setSelectedChat] = useState(null)
     const [activeView, setActiveView] = useState(currentView || "Chat");
-    
+
     // loading flag for spinner 
     const [loading, setLoading] = useState(true)
 
@@ -18,16 +18,16 @@ function Sidebar({ currentView, onChatSelect}) {
         if (currentView) {
             setActiveView(currentView);
         }
-        
+
         const handleViewChange = (event) => {
             setActiveView(event.detail.view);
         };
-        
+
         window.addEventListener('viewChange', handleViewChange);
         return () => {
             window.removeEventListener('viewChange', handleViewChange);
         };
-    
+
 
     }, [currentView]); // Add currentView to dependency array
 
@@ -36,10 +36,10 @@ function Sidebar({ currentView, onChatSelect}) {
     const handleChatClick = (chatId) => {
         const targetChat = userChats.find(chat => chat.groupChatId === chatId);
         console.log(targetChat);
-    
+
         if (groupChatMode) {
 
-            if(selectedUsers.length > 6) return;
+            if (selectedUsers.length > 6) return;
 
             setSelectedUsers(prev => {
                 const alreadyExists = prev.some(user => user.groupChatId === targetChat.groupChatId);
@@ -54,7 +54,7 @@ function Sidebar({ currentView, onChatSelect}) {
         } else {
             setSelectedChat(chatId);
             console.log("CHAT ID: ", selectedChat);
-    
+
             if (targetChat) {
                 const data = [targetChat.firstName, targetChat.lastName, targetChat.groupChatId];
                 onChatSelect(data); // Ensure onChatSelect expects an object or array like this
@@ -74,26 +74,26 @@ function Sidebar({ currentView, onChatSelect}) {
     // const [likedUsers, setLikedUsers] = useState(null)
 
     // function getLikedList() {
-        // const getMatchList = async () => {
-        //     try {
-        //         const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({ token: localStorage.getItem("token") })
-        //         });
+    // const getMatchList = async () => {
+    //     try {
+    //         const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ token: localStorage.getItem("token") })
+    //         });
 
-        //         if (!response.ok) {
-        //             throw new Error("Failed to fetch potential roommate");
-        //         }
+    //         if (!response.ok) {
+    //             throw new Error("Failed to fetch potential roommate");
+    //         }
 
-        //         const result = await response.json();
-        //         setLikedUsers(result)
+    //         const result = await response.json();
+    //         setLikedUsers(result)
 
-        //     } catch (error) {
-        //         console.error("Error fetching potential roommate:", error);
-        //         // setError(error.message);
-        //     }
-        // };
+    //     } catch (error) {
+    //         console.error("Error fetching potential roommate:", error);
+    //         // setError(error.message);
+    //     }
+    // };
 
     //     getMatchList();
     //     console.log(likedUsers)
@@ -113,7 +113,7 @@ function Sidebar({ currentView, onChatSelect}) {
                 body: JSON.stringify({ token: localStorage.getItem("token") })
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error("Failed to fetch groupchats");
             }
 
@@ -122,7 +122,7 @@ function Sidebar({ currentView, onChatSelect}) {
             console.log("These are the groupchats: ", result)
             return result
 
-        } catch(error) {
+        } catch (error) {
             console.error("Error fetching groupchats: ", error)
         }
     }
@@ -140,10 +140,10 @@ function Sidebar({ currentView, onChatSelect}) {
 
     const parseGroupChats = async () => {
         if (!groupChats.length) return;
-    
+
         const emailCount = new Set();
         let user = null;
-    
+
         for (const { email1, email2 } of groupChats) {
             for (const email of [email1, email2]) {
                 if (emailCount.has(email)) {
@@ -154,12 +154,12 @@ function Sidebar({ currentView, onChatSelect}) {
             }
             if (user) break;
         }
-    
+
         if (!user) {
             console.error("User email not found in group chats.");
             return;
         }
-    
+
         const userChatsTemp = await Promise.all(
             groupChats.map(async ({ groupchatId, email1, email2 }) => {
                 let nonUserEmail = email1 === user ? email2 : email1;
@@ -169,16 +169,16 @@ function Sidebar({ currentView, onChatSelect}) {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ email: nonUserEmail })
                     });
-    
+
                     if (!response.ok) {
                         throw new Error("Failed to fetch chat information");
                     }
-    
+
                     const chatInformation = await response.json();
                     return new Chat(
-                        chatInformation.first_name, 
-                        chatInformation.last_name, 
-                        groupchatId, 
+                        chatInformation.first_name,
+                        chatInformation.last_name,
+                        groupchatId,
                         chatInformation.profile_picture_url
                     );
                 } catch (error) {
@@ -187,11 +187,11 @@ function Sidebar({ currentView, onChatSelect}) {
                 }
             })
         );
-    
+
         setUserChats(userChatsTemp.filter(chat => chat !== null));
         setLoading(false)
     };
-    
+
 
 
     useEffect(() => {
@@ -224,28 +224,33 @@ function Sidebar({ currentView, onChatSelect}) {
             // Format the groupChatIds as a string representation of an array
             const groupChatData = JSON.stringify({
                 token: localStorage.getItem("token"),
-                groupChatIds: selectedUsers.map(user => user.groupChatId)
+                groupChatId0: selectedUsers[0]?.groupChatId || null,
+                groupChatId1: selectedUsers[1]?.groupChatId || null,
+                groupChatId2: selectedUsers[2]?.groupChatId || null,
+                groupChatId3: selectedUsers[3]?.groupChatId || null,
+                groupChatId4: selectedUsers[4]?.groupChatId || null,
+                groupChatId5: selectedUsers[5]?.groupChatId || null,
             });
-            
+
             try {
                 const response = await fetch("https://roomie.ddns.net:8080/chat/createGroupChat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: groupChatData,
                 });
-                
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.message || "Failed to create groupchat");
                 }
-                
+
                 return await response.json();
             } catch (error) {
                 console.error("Error creating groupchat", error);
                 return null;
             }
         };
-        
+
         // Call the function
         createGroupChat();
 
@@ -271,19 +276,19 @@ function Sidebar({ currentView, onChatSelect}) {
                 switch (activeView) {
                     case "Chat":
                         if (loading) {
-                            return <Spinner load="chats..."/>
+                            return <Spinner load="chats..." />
                         } else {
                             return (
                                 <>
                                     {/* Static content above the list, if needed */}
                                     <div className="groupchat-cluster">
-                                        {groupChatMode && 
-                                        <>
-                                            <h4>Select users for your groupchat</h4>
-                                            <button className="btn purpleBtn" onClick={handleGroupchatCancel}>Cancel</button>
-                                            <button className="btn purpleBtn" onClick={handleGroupchatCreation}>Confirm</button>
-                                        </>}
-                                        <i onClick={() => setGroupChatMode(true)} className="bi bi-chat-dots groupChatButton"/>
+                                        {groupChatMode &&
+                                            <>
+                                                <h4>Select users for your groupchat</h4>
+                                                <button className="btn purpleBtn" onClick={handleGroupchatCancel}>Cancel</button>
+                                                <button className="btn purpleBtn" onClick={handleGroupchatCreation}>Confirm</button>
+                                            </>}
+                                        <i onClick={() => setGroupChatMode(true)} className="bi bi-chat-dots groupChatButton" />
                                     </div>
 
                                     {/* {groupChatMode &&
@@ -292,7 +297,7 @@ function Sidebar({ currentView, onChatSelect}) {
                                             <h3 key={index}>{user.firstName} {user.lastName}</h3>
                                         ))}
                                     </div>} */}
-            
+
                                     {/* Dynamic content */}
                                     {userChats.map(chat => {
                                         const isSelected = selectedUsers.some(user => user.groupChatId === chat.groupChatId);
@@ -317,14 +322,14 @@ function Sidebar({ currentView, onChatSelect}) {
                     case "Match":
                         return (
                             <div className="matchBox">
-                               
-                                <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
-                                    {isMatchesVisible ? <i style={{marginTop: "3px"}} className="bi bi-chevron-down"/> : <i style={{marginTop: "3px"}} className="bi bi-chevron-right"/>}  
+
+                                <div style={{ display: "flex", width: "140px", justifyContent: "space-evenly", }}>
+                                    {isMatchesVisible ? <i style={{ marginTop: "3px" }} className="bi bi-chevron-down" /> : <i style={{ marginTop: "3px" }} className="bi bi-chevron-right" />}
                                     <h4 onClick={toggleMatches} > Matches</h4>
                                 </div>
-                                
-                                <div className="line"/>
-                               
+
+                                <div className="line" />
+
                                 <div style={{
                                     height: isMatchesVisible ? "auto" : "0px",
                                     overflow: "scroll",
@@ -335,11 +340,11 @@ function Sidebar({ currentView, onChatSelect}) {
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
                                             <MatchWidget name="Emily" major="Biology" school="Bloomsburg University" age="22" aboutMe="Love hiking and coffee!" />
                                         </div>
-                                        
+
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
                                             <MatchWidget name="Sophia" major="Psychology" school="Bloomsburg University" age="23" aboutMe="Passionate about mental health advocacy." />
                                         </div>
-                                        
+
                                         <div className="col-6 col-md-6 d-flex justify-content-center align-items-center">
                                             <MatchWidget name="Ava" major="Art History" school="Bloomsburg University" age="22" aboutMe="Museum hopping is my thing!" />
                                         </div>
@@ -356,7 +361,7 @@ function Sidebar({ currentView, onChatSelect}) {
                                 </div>
 
 
-                                
+
                                 {/* <div style={{display: "flex", width: "140px", justifyContent: "space-evenly", }}>
                                 {isLikedVisible ? <i style={{marginTop: "3px"}} className="bi bi-chevron-down"/> : <i style={{marginTop: "3px"}} className="bi bi-chevron-right"/>} 
                                     <h4 onClick={toggleLiked}>Liked</h4>
@@ -372,7 +377,7 @@ function Sidebar({ currentView, onChatSelect}) {
                                 </div> */}
                             </div>
                         );
-                    
+
                     default:
                         return <div>Welcome!</div>;
                 }
