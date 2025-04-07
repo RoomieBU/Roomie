@@ -19,26 +19,7 @@ import java.util.ArrayList;
 
 public class ChatController {
 
-    class CreateGroupChatRequest {
-        private String token;
-        private List<Integer> groupChatIds;
     
-        public String getToken() {
-            return token;
-        }
-    
-        public void setToken(String token) {
-            this.token = token;
-        }
-    
-        public List<Integer> getGroupChatIds() {
-            return groupChatIds;
-        }
-    
-        public void setGroupChatIds(List<Integer> groupChatIds) {
-            this.groupChatIds = groupChatIds;
-        }
-    }
 
     public static String createGroupChat(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
@@ -102,10 +83,6 @@ public class ChatController {
             return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error.");
         }
     }
-
-    
-    
-
 
     public static String resetRoommateRequestChoice(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
