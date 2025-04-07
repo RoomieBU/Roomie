@@ -23,7 +23,7 @@ public class ChatController {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
         String email = Auth.getEmailfromToken(data.get("token"));
 
-        System.out.println("Received ids: " + data.get("groupChatIds"));
+        System.out.println("Received data: " + data.toString());
         List<String> groupchatIdsRaw = List.of(data.get("groupChatIds"));
         List<Integer> groupchatIds = new ArrayList<>();
         for (String id : groupchatIdsRaw) {
