@@ -57,41 +57,43 @@ public class ChatController {
             emails.add(email);
             
             System.out.println("Final emails list: " + emails);
+
+            return Utils.assembleHTTPResponse(400, emails.toString());
             
-            // Check if there's at least 2 participants
-            if (emails.size() < 2) {
-                return Utils.assembleHTTPResponse(400, "A group chat requires at least two distinct users.");
-            }
+            // // Check if there's at least 2 participants
+            // if (emails.size() < 2) {
+            //     return Utils.assembleHTTPResponse(400, "A group chat requires at least two distinct users.");
+            // }
             
-            // Limit to 6 emails max due to schema
-            if (emails.size() > 6) {
-                return Utils.assembleHTTPResponse(400, "Group chat cannot have more than 6 members.");
-            }
+            // // Limit to 6 emails max due to schema
+            // if (emails.size() > 6) {
+            //     return Utils.assembleHTTPResponse(400, "Group chat cannot have more than 6 members.");
+            // }
             
-            // Prepare data for insertion
-            Map<String, String> insertData = new HashMap<>();
-            int i = 1;
-            for (String e : emails) {
-                insertData.put("email" + i, e);
-                i++;
-            }
+            // // Prepare data for insertion
+            // Map<String, String> insertData = new HashMap<>();
+            // int i = 1;
+            // for (String e : emails) {
+            //     insertData.put("email" + i, e);
+            //     i++;
+            // }
             
-            // Fill remaining email fields with null
-            while (i <= 6) {
-                insertData.put("email" + i, null);
-                i++;
-            }
+            // // Fill remaining email fields with null
+            // while (i <= 6) {
+            //     insertData.put("email" + i, null);
+            //     i++;
+            // }
             
-            // Log insert data
-            System.out.println("Insert Data: " + insertData);
+            // // Log insert data
+            // System.out.println("Insert Data: " + insertData);
             
-            // Insert into the database
-            boolean isInserted = dao.insert(insertData, "GroupChats");
-            if (isInserted) {
-                return Utils.assembleHTTPResponse(200, "Group chat created successfully.");
-            } else {
-                return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
-            }
+            // // Insert into the database
+            // boolean isInserted = dao.insert(insertData, "GroupChats");
+            // if (isInserted) {
+            //     return Utils.assembleHTTPResponse(200, "Group chat created successfully.");
+            // } else {
+            //     return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
+            // }
         } catch (Exception e) {
             e.printStackTrace();
             return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error: " + e.getMessage());
