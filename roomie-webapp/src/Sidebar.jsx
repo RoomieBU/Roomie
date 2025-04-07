@@ -224,7 +224,7 @@ function Sidebar({ currentView, onChatSelect}) {
             // Format the groupChatIds as a string representation of an array
             const groupChatData = JSON.stringify({
                 token: localStorage.getItem("token"),
-                groupChatIds: JSON.stringify(selectedUsers.map(user => user.groupChatId))
+                groupChatIds: selectedUsers.map(user => user.groupChatId)
             });
             
             try {
