@@ -51,9 +51,7 @@ public class ChatController {
         Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
         for (int id : groupchatIds) {
             String otherEmail = dao.getGroupChatEmail(email, id);
-            if (otherEmail != null && !otherEmail.isEmpty() && !otherEmail.equals(email)) {
-                emails.add(otherEmail);
-            }
+            emails.add(otherEmail);
         }
 
         // Add current user's email
