@@ -27,23 +27,27 @@ public class ChatController {
         List<Integer> groupchatIds = new ArrayList<>();
 
         // bruh
-        if (data.get("groupChatId0") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId0")));
-        }
-        if (data.get("groupChatId1") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId1")));
-        }
-        if (data.get("groupChatId2") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId2")));
-        }
-        if (data.get("groupChatId3") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId3")));
-        }
-        if (data.get("groupChatId4") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId4")));
-        }
-        if (data.get("groupChatId5") != null) {
-            groupchatIds.add(Integer.parseInt(data.get("groupChatId5")));
+        try {
+            if (data.get("groupChatId0") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId0")));
+            }
+            if (data.get("groupChatId1") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId1")));
+            }
+            if (data.get("groupChatId2") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId2")));
+            }
+            if (data.get("groupChatId3") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId3")));
+            }
+            if (data.get("groupChatId4") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId4")));
+            }
+            if (data.get("groupChatId5") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId5")));
+            }
+        } catch (Exception e) {
+            // There's nothing to do here
         }
 
         System.out.println("Processing IDs: " + groupchatIds);
