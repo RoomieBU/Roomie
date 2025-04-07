@@ -221,30 +221,32 @@ function Sidebar({ currentView, onChatSelect}) {
 
         console.log(selectedUsers)
         const createGroupChat = async () => {
-            // send users for groupchat
-
+            // Format the groupChatIds as a string representation of an array
             const groupChatData = JSON.stringify({
                 token: localStorage.getItem("token"),
-                groupChatIds: selectedUsers.map(user => user.groupChatId),
-            })
-
-
+                groupChatIds: JSON.stringify(selectedUsers.map(user => user.groupChatId))
+            });
+            
             try {
                 const response = await fetch("https://roomie.ddns.net:8080/chat/createGroupChat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: groupChatData,
                 });
-
+                
                 if (!response.ok) {
-                    throw new Error("Failed to create groupchat");
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Failed to create groupchat");
                 }
-
+                
+                return await response.json();
             } catch (error) {
                 console.error("Error creating groupchat", error);
                 return null;
             }
-        }
+        };
+        
+        // Call the function
         createGroupChat();
 
 
@@ -261,7 +263,7 @@ function Sidebar({ currentView, onChatSelect}) {
 
     const [selectedUsers, setSelectedUsers] = useState([]);
 
-
+    // get emails from groupchatids
 
     return (
         <div onClick={() => parseGroupChats} className="sidebar">
