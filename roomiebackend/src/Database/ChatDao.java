@@ -11,8 +11,10 @@ public class ChatDao extends Dao {
         super(connection);
     }
 
-    public String getGroupChatEmail(String email, int groupchatId) {
-        String query = "SELECT email1, email2, email3, email4, email5, email6 FROM GroupChats WHERE id = ?";
+    public List<String> getGroupChatEmails(String email, int groupchatId) {
+        List<String> emails = new ArrayList<>();
+        String query = "SELECT id, email1, email2, email3, email4, email5, email6 FROM GroupChats WHERE id = ?";
+        
         try (
             Connection conn = SQLConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)
@@ -21,19 +23,26 @@ public class ChatDao extends Dao {
             ResultSet rs = stmt.executeQuery();
     
             if (rs.next()) {
-                // Loop through each email column and return the first one that isn't the current user
+                System.out.println("Found group chat with ID " + groupchatId);
+                // Loop through each email column and add any non-null email that isn't the current user
                 for (int i = 1; i <= 6; i++) {
                     String currentEmail = rs.getString("email" + i);
-                    if (currentEmail != null && !currentEmail.equals(email)) {
-                        return currentEmail;
+                    System.out.println("Column email" + i + " contains: " + currentEmail);
+                    if (currentEmail != null && !currentEmail.isEmpty() && !currentEmail.equals(email)) {
+                        emails.add(currentEmail);
+                        System.out.println("Added email: " + currentEmail);
                     }
                 }
+            } else {
+                System.out.println("No group chat found with ID " + groupchatId);
             }
         } catch (SQLException e) {
+            System.out.println("SQL error when fetching group chat " + groupchatId + ": " + e.getMessage());
             e.printStackTrace();
         }
     
-        return null; // If no match found
+        System.out.println("Total emails found in chat " + groupchatId + ": " + emails.size());
+        return emails;
     }
 
     public boolean deleteRoommateRequest(String sender, int groupchatId) {

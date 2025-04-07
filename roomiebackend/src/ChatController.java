@@ -44,27 +44,18 @@ public class ChatController {
                 return Utils.assembleHTTPResponse(400, "Invalid group chat IDs.");
             }
             
-            // Debug output
-            System.out.println("Processing IDs: " + groupchatIds);
-            
-            // Collect the emails from the groupchat IDs
+            // Collect all emails from the groupchat IDs, excluding current user
             Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
             
             for (int id : groupchatIds) {
-                String otherEmail = dao.getGroupChatEmail(email, id);
-                System.out.println("Found email for ID " + id + ": " + otherEmail); // Debug line
-                
-                if (otherEmail != null && !otherEmail.isEmpty()) {
-                    emails.add(otherEmail);
-                } else {
-                    System.out.println("Warning: No email found for ID " + id);
-                }
+                List<String> chatEmails = dao.getGroupChatEmails(email, id);
+                System.out.println("Found emails for ID " + id + ": " + chatEmails);
+                emails.addAll(chatEmails);
             }
             
             // Add current user's email
             emails.add(email);
             
-            // Debug output
             System.out.println("Final emails list: " + emails);
             
             // Check if there's at least 2 participants
@@ -105,10 +96,7 @@ public class ChatController {
             e.printStackTrace();
             return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error: " + e.getMessage());
         }
-    }
-}
-
-    
+    }    
     
 
 
