@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
-import org.json.JSONArray;
 
 public class ChatController {
 
