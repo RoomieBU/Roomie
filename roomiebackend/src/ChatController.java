@@ -22,11 +22,10 @@ public class ChatController {
     public static String createGroupChat(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
         String email = Auth.getEmailfromToken(data.get("token"));
-
+    
         System.out.println("Received data: " + data.toString());
         List<Integer> groupchatIds = new ArrayList<>();
-
-        // bruh
+    
         try {
             if (data.get("groupChatId0") != null) {
                 groupchatIds.add(Integer.parseInt(data.get("groupChatId0")));
@@ -49,54 +48,73 @@ public class ChatController {
         } catch (Exception e) {
             // There's nothing to do here
         }
-
+    
         System.out.println("Processing IDs: " + groupchatIds);
-
+    
         if (groupchatIds.isEmpty()) {
             return Utils.assembleHTTPResponse(400, "No group chat IDs provided.");
         }
-
+    
         // Collect all emails from the groupchat IDs
         Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
-
+    
         for (int id : groupchatIds) {
             List<String> chatEmails = dao.getGroupChatEmails(email, id);
             System.out.println("Found emails for ID " + id + ": " + chatEmails);
             emails.addAll(chatEmails);
         }
-
+    
         // Add current user's email
         emails.add(email);
-
+    
         System.out.println("Final emails list: " + emails);
-
+    
         // Check if there's at least 2 participants
         if (emails.size() < 2) {
             return Utils.assembleHTTPResponse(400, "A group chat requires at least two distinct users.");
         }
-
+    
         // Limit to 6 emails max due to schema
         if (emails.size() > 6) {
             return Utils.assembleHTTPResponse(400, "Group chat cannot have more than 6 members.");
         }
-
+    
+        // Prepare data map for checking if the group chat already exists
+        Map<String, String> existsData = new HashMap<>();
+        int i = 1;
+        for (String e : emails) {
+            existsData.put("email" + i, e);
+            i++;
+        }
+    
+        // Fill remaining email fields with null
+        while (i <= 6) {
+            existsData.put("email" + i, null);
+            i++;
+        }
+    
+        // Check if the group chat already exists
+        if (dao.exists(existsData, "GroupChats")) {
+            return Utils.assembleHTTPResponse(400, "A group chat with these emails already exists.");
+        }
+    
         // Prepare data for insertion
         Map<String, String> insertData = new HashMap<>();
-        int i = 1;
+        i = 1;
         for (String e : emails) {
             insertData.put("email" + i, e);
             i++;
         }
-
+    
         // Fill remaining email fields with null
         while (i <= 6) {
             insertData.put("email" + i, null);
             i++;
         }
-
+    
         // Log insert data
         System.out.println("Insert Data: " + insertData);
-
+    
         // Insert into the database
         boolean isInserted = dao.insert(insertData, "GroupChats");
         if (isInserted) {
@@ -104,7 +122,8 @@ public class ChatController {
         } else {
             return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
         }
-    }    
+    }
+       
     
 
 
