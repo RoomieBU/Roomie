@@ -16,30 +16,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
-import org.json.JSONArray;
 
 public class ChatController {
 
     public static String createGroupChat(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
         String email = Auth.getEmailfromToken(data.get("token"));
-        
-        // Get the groupChatIds as a JSON array
+        String rawIds = data.get("groupChatIds"); // Should look like "[7,8,12]"
         List<Integer> groupchatIds = new ArrayList<>();
         try {
-            // Parse the JSON array from the request
-            JSONArray jsonArray = new JSONArray(data.get("groupChatIds"));
-            for (int i = 0; i < jsonArray.length(); i++) {
-                groupchatIds.add(jsonArray.getInt(i));
-            }
-            
-            System.out.println("Processing IDs: " + groupchatIds);
-            
-            if (groupchatIds.isEmpty()) {
+            // Remove square brackets and trim extra spaces
+            rawIds = rawIds.replaceAll("\\[|\\]", "").trim();
+            if (rawIds.isEmpty()) {
                 return Utils.assembleHTTPResponse(400, "No group chat IDs provided.");
             }
             
-            // Collect all emails from the groupchat IDs
+            // Split the rawIds string into individual group chat IDs
+            String[] parts = rawIds.split(",");
+            for (String part : parts) {
+                String trimmed = part.trim();
+                if (!trimmed.isEmpty()) {
+                    groupchatIds.add(Integer.parseInt(trimmed));
+                }
+            }
+            
+            if (groupchatIds.isEmpty()) {
+                return Utils.assembleHTTPResponse(400, "Invalid group chat IDs.");
+            }
+            
+            // Collect all emails from the groupchat IDs, excluding current user
             Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
             
             for (int id : groupchatIds) {
@@ -91,7 +96,7 @@ public class ChatController {
             e.printStackTrace();
             return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error: " + e.getMessage());
         }
-    } 
+    }    
     
 
 

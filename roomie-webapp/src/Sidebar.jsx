@@ -32,6 +32,27 @@ function Sidebar({ currentView, onChatSelect}) {
     }, [currentView]); // Add currentView to dependency array
 
 
+    const getUserEmail = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/user/getUserEmail", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") })
+            });
+
+            if(!response.ok) {
+                throw new Error("Failed to fetch user email");
+            }
+
+            const result = await response.json();
+
+            console.log("The email is: ", result)
+            return result
+
+        } catch(error) {
+            console.error("Error fetching user email: ", error)
+        }
+    }
 
     const handleChatClick = (chatId) => {
         const targetChat = userChats.find(chat => chat.groupChatId === chatId);
@@ -69,36 +90,6 @@ function Sidebar({ currentView, onChatSelect}) {
         setIsMatchesVisible(!isMatchesVisible)
         // getLikedList()
     }
-
-
-    // const [likedUsers, setLikedUsers] = useState(null)
-
-    // function getLikedList() {
-        // const getMatchList = async () => {
-        //     try {
-        //         const response = await fetch("https://roomie.ddns.net:8080/matches/getLikedList", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({ token: localStorage.getItem("token") })
-        //         });
-
-        //         if (!response.ok) {
-        //             throw new Error("Failed to fetch potential roommate");
-        //         }
-
-        //         const result = await response.json();
-        //         setLikedUsers(result)
-
-        //     } catch (error) {
-        //         console.error("Error fetching potential roommate:", error);
-        //         // setError(error.message);
-        //     }
-        // };
-
-    //     getMatchList();
-    //     console.log(likedUsers)
-    // }
-
 
     // Get list of groupchats
 

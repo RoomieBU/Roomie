@@ -66,6 +66,7 @@ public class Server {
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);
             router.addRoute("/profile/editProfile", ProfileController::editProfile);
+            router.addRoute("/profile/getUserEmail", ProfileController::sendUserEmail);
 
             // Messaging routes
             /**
@@ -81,6 +82,8 @@ public class Server {
             router.addRoute("/chat/getRoommateRequestStatus", ChatController::sendRoommateRequestStatus);
             router.addRoute("/chat/resetRoommateRequestChoice", ChatController::resetRoommateRequestChoice);
             router.addRoute("/chat/createGroupChat", ChatController::createGroupChat);
+
+            
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
