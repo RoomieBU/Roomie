@@ -22,79 +22,87 @@ public class ChatController {
     public static String createGroupChat(Map<String, String> data, String method) {
         ChatDao dao = new ChatDao(SQLConnection.getConnection());
         String email = Auth.getEmailfromToken(data.get("token"));
-        String rawIds = data.get("groupChatIds"); // Should look like "[7,8,12]"
+
+        System.out.println("Received data: " + data.toString());
         List<Integer> groupchatIds = new ArrayList<>();
+
+        // bruh
         try {
-            // Remove square brackets and trim extra spaces
-            rawIds = rawIds.replaceAll("\\[|\\]", "").trim();
-            if (rawIds.isEmpty()) {
-                return Utils.assembleHTTPResponse(400, "No group chat IDs provided.");
+            if (data.get("groupChatId0") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId0")));
             }
-            
-            // Split the rawIds string into individual group chat IDs
-            String[] parts = rawIds.split(",");
-            for (String part : parts) {
-                String trimmed = part.trim();
-                if (!trimmed.isEmpty()) {
-                    groupchatIds.add(Integer.parseInt(trimmed));
-                }
+            if (data.get("groupChatId1") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId1")));
             }
-            
-            if (groupchatIds.isEmpty()) {
-                return Utils.assembleHTTPResponse(400, "Invalid group chat IDs.");
+            if (data.get("groupChatId2") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId2")));
             }
-            
-            // Collect all emails from the groupchat IDs, excluding current user
-            Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
-            
-            for (int id : groupchatIds) {
-                List<String> chatEmails = dao.getGroupChatEmails(email, id);
-                System.out.println("Found emails for ID " + id + ": " + chatEmails);
-                emails.addAll(chatEmails);
+            if (data.get("groupChatId3") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId3")));
             }
-            
-            // Add current user's email
-            emails.add(email);
-            
-            System.out.println("Final emails list: " + emails);
-            
-            // Check if there's at least 2 participants
-            if (emails.size() < 2) {
-                return Utils.assembleHTTPResponse(400, "A group chat requires at least two distinct users.");
+            if (data.get("groupChatId4") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId4")));
             }
-            
-            // Limit to 6 emails max due to schema
-            if (emails.size() > 6) {
-                return Utils.assembleHTTPResponse(400, "Group chat cannot have more than 6 members.");
-            }
-            
-            // Prepare data for insertion
-            Map<String, String> insertData = new HashMap<>();
-            int i = 1;
-            for (String e : emails) {
-                insertData.put("email" + i, e);
-                i++;
-            }
-            
-            // Fill remaining email fields with null
-            while (i <= 6) {
-                insertData.put("email" + i, null);
-                i++;
-            }
-            
-            // Log insert data
-            System.out.println("Insert Data: " + insertData);
-            
-            // Insert into the database
-            boolean isInserted = dao.insert(insertData, "GroupChats");
-            if (isInserted) {
-                return Utils.assembleHTTPResponse(200, "Group chat created successfully.");
-            } else {
-                return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
+            if (data.get("groupChatId5") != null) {
+                groupchatIds.add(Integer.parseInt(data.get("groupChatId5")));
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return Utils.assembleHTTPResponse(500, "Failed to create group chat due to server error: " + e.getMessage());
+            // There's nothing to do here
+        }
+
+        System.out.println("Processing IDs: " + groupchatIds);
+
+        if (groupchatIds.isEmpty()) {
+            return Utils.assembleHTTPResponse(400, "No group chat IDs provided.");
+        }
+
+        // Collect all emails from the groupchat IDs
+        Set<String> emails = new LinkedHashSet<>(); // Use LinkedHashSet to maintain order and avoid duplicates
+
+        for (int id : groupchatIds) {
+            List<String> chatEmails = dao.getGroupChatEmails(email, id);
+            System.out.println("Found emails for ID " + id + ": " + chatEmails);
+            emails.addAll(chatEmails);
+        }
+
+        // Add current user's email
+        emails.add(email);
+
+        System.out.println("Final emails list: " + emails);
+
+        // Check if there's at least 2 participants
+        if (emails.size() < 2) {
+            return Utils.assembleHTTPResponse(400, "A group chat requires at least two distinct users.");
+        }
+
+        // Limit to 6 emails max due to schema
+        if (emails.size() > 6) {
+            return Utils.assembleHTTPResponse(400, "Group chat cannot have more than 6 members.");
+        }
+
+        // Prepare data for insertion
+        Map<String, String> insertData = new HashMap<>();
+        int i = 1;
+        for (String e : emails) {
+            insertData.put("email" + i, e);
+            i++;
+        }
+
+        // Fill remaining email fields with null
+        while (i <= 6) {
+            insertData.put("email" + i, null);
+            i++;
+        }
+
+        // Log insert data
+        System.out.println("Insert Data: " + insertData);
+
+        // Insert into the database
+        boolean isInserted = dao.insert(insertData, "GroupChats");
+        if (isInserted) {
+            return Utils.assembleHTTPResponse(200, "Group chat created successfully.");
+        } else {
+            return Utils.assembleHTTPResponse(500, "Failed to insert data into the database.");
         }
     }    
     

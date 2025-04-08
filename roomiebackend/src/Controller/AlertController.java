@@ -1,10 +1,15 @@
 package Controller;
 
+import Database.Alert;
+import Database.AlertDao;
 import Database.Dao;
 import Database.SQLConnection;
 import Tools.Auth;
 import Tools.HTTPResponse;
+import Tools.Utils;
+import com.google.gson.Gson;
 
+import java.util.List;
 import java.util.Map;
 
 public class AlertController {
@@ -36,4 +41,11 @@ public class AlertController {
         return response.toString();
     }
 
+    public static String getAllAlerts(Map<String, String> data, String method) {
+        AlertDao dao = new AlertDao(SQLConnection.getConnection());
+        List<Alert> alerts = dao.getAlerts(Integer.parseInt(data.get("roommateid")));
+
+        Gson gson = new Gson();
+        return Utils.assembleHTTPResponse(200, gson.toJson(alerts));
+    }
 }
