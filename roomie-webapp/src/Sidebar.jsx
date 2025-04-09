@@ -333,12 +333,18 @@ function Sidebar({ currentView, onChatSelect }) {
                                         visibility: isMatchesVisible ? "visible" : "hidden"
                                     }} className="container matchList">
                                         <div className="row">
-                                            <MatchWidget name="Emily" major="Biology" school="Bloomsburg University" age="22" aboutMe="Love hiking and coffee!" />
-                                            <MatchWidget name="Sophia" major="Psychology" school="Bloomsburg University" age="23" aboutMe="Passionate about mental health advocacy." />
-                                            <MatchWidget name="Ava" major="Art History" school="Bloomsburg University" age="22" aboutMe="Museum hopping is my thing!" />
-                                            <MatchWidget name="Liam" major="Physics" school="Bloomsburg University" age="24" aboutMe="Stargazer and quantum physics fan." />
-                                            <MatchWidget name="Daniel" major="Mathematics" school="Bloomsburg University" age="21" aboutMe="Chess lover and aspiring mathematician." />
-                                            <MatchWidget name="Jacob" major="Computer Science" school="Bloomsburg University" age="20" aboutMe="Tech enthusiast and gamer." />
+                                            {matchList.map(match => (
+                                                <MatchWidget
+                                                key={match.userId}
+                                                firstName={match.firstName}
+                                                lastName={match.lastName}
+                                                major={match.major}
+                                                school={match.school}
+                                                age={match.dateOfBirth}
+                                                aboutMe={decodeURIComponent(match.aboutMe)}
+                                                picture={match.profilePicture}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
                                 </div>

@@ -2,7 +2,7 @@ import "./MatchWidget.css";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-function MatchWidget({ name, major, aboutMe, school, age }) {
+function MatchWidget({ firstName, lastName, major, aboutMe, school, age, picture }) {
     const [isFront, setIsFront] = useState(true);
 
     function toggleSide() {
@@ -17,7 +17,7 @@ function MatchWidget({ name, major, aboutMe, school, age }) {
                 style={
                     isFront
                         ? {
-                              backgroundImage: `url(https://ui-avatars.com/api/?name=${name[0]}&background=random)`,
+                              backgroundImage: `url(${picture ? picture : `https://ui-avatars.com/api/?name=${firstName[0]}&background=random`})`,
                               backgroundSize: "cover",
                               backgroundPosition: "center",
                           }
@@ -27,14 +27,14 @@ function MatchWidget({ name, major, aboutMe, school, age }) {
                 {isFront ? (
                     <div className="user_info">
                         <p>
-                            {name}, {age}
+                            {firstName} {lastName}, {age}
                             <br />
                             {school}
                         </p>
                     </div>
                 ) : (
                     <div className="more-user-info">
-                        <h3>More about {name}</h3>
+                        <h3>More about {firstName}</h3>
                         <dl>
                             <dt>Major</dt>
                             <dd>{major}</dd>
@@ -49,11 +49,13 @@ function MatchWidget({ name, major, aboutMe, school, age }) {
 }
 
 MatchWidget.propTypes = {
-    name: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
     major: PropTypes.string,
     aboutMe: PropTypes.string,
     school: PropTypes.string,
     age: PropTypes.number,
+    picture: PropTypes.string
 };
 
 export default MatchWidget;
