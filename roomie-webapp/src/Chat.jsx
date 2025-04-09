@@ -10,22 +10,31 @@ function Chat({ selectedChat }) {
 
     const messageAreaRef = useRef(null)
 
+    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+    const [alertForm, setAlertForm] = useState({
+        name: "",
+        description: "",
+        start_time: "",
+        end_time: ""
+    });
+
+
     let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "...";
 
     useEffect(() => {
         setMessages([])
-        if(selectedChat) {
+        if (selectedChat) {
             const fetchChatHistory = async () => {
                 const history = await getChatHistory(selectedChat[2])
                 setChatHistory(history)
             }
             fetchChatHistory()
-            
-            const fetchRequestStatus = async() => {
+
+            const fetchRequestStatus = async () => {
                 await getRoommateRequestStatus()
             }
             fetchRequestStatus()
-            
+
         }
     }, [selectedChat])
 
@@ -38,13 +47,13 @@ function Chat({ selectedChat }) {
     }, [chatHistory]);
 
     useEffect(() => {
-         scrollToBottom()
-     }, [messages])
+        scrollToBottom()
+    }, [messages])
 
     function sendMessage() {
-        if(!selectedChat) return
+        if (!selectedChat) return
 
-        if(text.length === 0) return
+        if (text.length === 0) return
 
         const newMessage = {
             sentBySelf: true,
@@ -61,8 +70,6 @@ function Chat({ selectedChat }) {
                     message: text
                 })
 
-                console.log(messageData)
-    
                 const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
                     method: "POST",
                     headers: {
@@ -70,17 +77,17 @@ function Chat({ selectedChat }) {
                     },
                     body: messageData,
                 });
-    
+
                 if (!response.ok) {
                     throw new Error("Message Data Sending failed. Please try again.");
                 }
-    
+
             } catch (error) {
                 console.error("HERE we are", error)
             }
         }
         sendMessageData()
-        
+
 
         setText("")
     }
@@ -104,17 +111,17 @@ function Chat({ selectedChat }) {
             const response = await fetch("https://roomie.ddns.net:8080/chat/getChatHistory", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: id})
+                body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: id })
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error("Failed to fetch chat history");
             }
 
             const result = await response.json();
             return result
 
-        } catch(error) {
+        } catch (error) {
             console.error("Error fetching chat history: ", error)
         }
     }
@@ -136,14 +143,14 @@ function Chat({ selectedChat }) {
                 body: statusData,
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
                 throw new Error("Failed to fetch roommate request status");
             }
 
             const result = await response.json();
             setRequestStatus(result.status)
 
-        } catch(error) {
+        } catch (error) {
             console.error("Error fetching roommate request status: ", error)
         }
     }
@@ -183,6 +190,37 @@ function Chat({ selectedChat }) {
         await requestRoommate(choice);      // Wait for the request to finish
         await getRoommateRequestStatus();   // Then call this
     }
+
+    const submitAlert = async () => {
+        try {
+            const data = JSON.stringify({
+                token: localStorage.getItem("token"),
+                name: alertForm.name,
+                description: alertForm.description,
+                groupchat_id: selectedChat[2],
+                start_time: alertForm.start_time,
+                end_time: alertForm.end_time
+            });
+
+            const response = await fetch("https://roomie.ddns.net:8080/alert/addAlert", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: data
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to submit alert");
+            }
+
+            alert("Alert created!");
+            setIsAlertModalOpen(false);
+            setAlertForm({ name: "", description: "", start_time: "", end_time: "" });
+
+        } catch (error) {
+            console.error("Error submitting alert:", error);
+        }
+    }
+
 
 
     // Request Roommate
@@ -251,24 +289,66 @@ function Chat({ selectedChat }) {
 
 
                 <button onClick={openModal} className="chatButton">
-                    <i className="bi bi-hand-thumbs-up"/>
+                    <i className="bi bi-hand-thumbs-up" />
                 </button>
+
+                <button onClick={() => setIsAlertModalOpen(true)} className="chatButton">
+                    <i className="bi bi-exclamation-triangle" />
+                </button>
+
+                {isAlertModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <div className="holdCloseAndH2">
+                                <h2>Create an Alert</h2>
+                                <span className="close-button" onClick={() => setIsAlertModalOpen(false)}>&times;</span>
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Alert Name"
+                                className="form-control mb-2"
+                                value={alertForm.name}
+                                onChange={(e) => setAlertForm({ ...alertForm, name: e.target.value })}
+                            />
+                            <textarea
+                                placeholder="Description"
+                                className="form-control mb-2"
+                                value={alertForm.description}
+                                onChange={(e) => setAlertForm({ ...alertForm, description: e.target.value })}
+                            />
+                            <input
+                                type="datetime-local"
+                                className="form-control mb-2"
+                                value={alertForm.start_time}
+                                onChange={(e) => setAlertForm({ ...alertForm, start_time: e.target.value })}
+                            />
+                            <input
+                                type="datetime-local"
+                                className="form-control mb-2"
+                                value={alertForm.end_time}
+                                onChange={(e) => setAlertForm({ ...alertForm, end_time: e.target.value })}
+                            />
+                            <button onClick={submitAlert} className="chatButton yesButton">Submit Alert</button>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Modal with full-screen overlay */}
                 {isModalOpen && (
                     <div className="modal-overlay">
-                    {requestStatus === "No Request Yet" && (
-                        <div className="modal-content">
-                            <div className="holdCloseAndH2">
-                                <h2>Would you like to be Roomies?</h2>
-                                <span className="close-button" onClick={closeModal}>&times;</span>
+                        {requestStatus === "No Request Yet" && (
+                            <div className="modal-content">
+                                <div className="holdCloseAndH2">
+                                    <h2>Would you like to be Roomies?</h2>
+                                    <span className="close-button" onClick={closeModal}>&times;</span>
+                                </div>
+                                <div className="button-cluster">
+                                    <button onClick={() => handleRequestChoice(0)} className="chatButton noButton">No</button>
+                                    <button onClick={() => handleRequestChoice(1)} className="chatButton yesButton">Yes</button>
+                                </div>
                             </div>
-                            <div className="button-cluster">
-                                <button onClick={() => handleRequestChoice(0)} className="chatButton noButton">No</button>
-                                <button onClick={() => handleRequestChoice(1)} className="chatButton yesButton">Yes</button>
-                            </div>
-                        </div>
-                    )}
+                        )}
 
                     {requestStatus === "Pending" && (
                         <div className="modal-content">
@@ -302,23 +382,23 @@ function Chat({ selectedChat }) {
                 )}
 
                 <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyPress}
-                onInput={(e) => {
-                    e.target.style.height = "50px"; // Reset height to auto to recalculate
-                    e.target.style.height = `${e.target.scrollHeight}px`; // Set new height
-                }}
-                style={{ resize: "none", overflowY: "hidden" }} // Prevent manual resizing
-                placeholder="Type a message..."
-                className="messageTextBox form-control"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    onInput={(e) => {
+                        e.target.style.height = "50px"; // Reset height to auto to recalculate
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Set new height
+                    }}
+                    style={{ resize: "none", overflowY: "hidden" }} // Prevent manual resizing
+                    placeholder="Type a message..."
+                    className="messageTextBox form-control"
                 />
                 {/* <textarea value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKeyPress} style={{resize: "none"}} className="form-control" type="text"/> */}
                 <button onClick={sendMessage} className="chatButton">
-                    <i className="bi bi-send"/>
+                    <i className="bi bi-send" />
                 </button>
             </div>
-            
+
         </div>
     )
 

@@ -17,11 +17,12 @@ p {
     margin-bottom: 20px;
     justify-items: center;
     border-radius: 15px;
-    border-color:  #6f42c1; /* This can be changed to color scheme
-                            or maybe will be chosen based on user picture?? */
+    border-color:  #6f42c1;
     border-width: 1px;
     border-style: solid;
     display: block;
+    transform: rotateY(0deg);
+    z-index: 2;
 }
 
 .potential-roomate-back {
@@ -34,12 +35,23 @@ p {
     padding-right: 10px;
     padding-top:10px;
     border-radius: 15px;
-    border-color:  #6f42c1; /* This can be changed to color scheme
-                            or maybe will be chosen based on user picture?? */
+    border-color:  #6f42c1;
     border-width: 1px;
     border-style: solid; 
     display: block;
-    color: whitesmoke
+    color: whitesmoke;
+    transform: rotateY(180deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.potential-roomate-front,
+.potential-roomate-back {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    position: absolute;
 }
 
 .more-user-info {
@@ -108,4 +120,21 @@ p {
     transition: background-color .1s ease-out;
     color: white;
     border-radius: 50%;
+}
+
+.flip-container {
+    position: relative;
+    height: 400px;
+    width: 350px;
+    margin-bottom: 20px;
+    perspective: 1000px;
+}
+
+/* make card rotate left (counter-clockwise) */
+.flip-container.flipped .potential-roomate-front {
+    transform: rotateY(-180deg);
+}
+
+.flip-container.flipped .potential-roomate-back {
+    transform: rotateY(0deg);
 }
