@@ -258,23 +258,27 @@ function Matching() {
                         </button>
                     </>
                 ) : (
-                    <Spinner load={"potential roommate..."}/>
+                    <Spinner load={"potential roommate..."} />
                 )
             ) : roommate != null ? (
                 <>
-                    <div
-                        onClick={swapSides}
-                        className={isFront ? "potential-roomate-front" : "potential-roomate-back"}
-                        style={isFront ? { backgroundImage: `url(${getAvatarUrl(roommate)})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                    <div className={`flip-container ${isFront ? '' : 'flipped'}`}>
+                        <div
+                            onClick={swapSides}
+                            className="potential-roomate-front"
+                            style={{ backgroundImage: `url(${getAvatarUrl(roommate)})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                         >
-                        {isFront ? (
                             <div className="user_info">
-                                <p>{roommate.name}, {roommate.age}
+                                <p>{roommate.name}, {age}
                                     <br />
                                     Bloomsburg University
                                 </p>
                             </div>
-                        ) : (
+                        </div>
+                        <div
+                            onClick={swapSides}
+                            className="potential-roomate-back"
+                        >
                             <div className="more-user-info">
                                 <h3>More about {roommate.name}</h3>
                                 <dl>
@@ -282,15 +286,15 @@ function Matching() {
                                     <dd>{roommate.major}</dd>
                                     <dt>Bio:</dt>
                                     <dd>{(() => {
-                                            try {
-                                                return decodeURIComponent(roommate.about_me);
-                                            } catch (e) {
-                                                return roommate.about_me;
-                                            }
-                                        })()}</dd>
+                                        try {
+                                            return decodeURIComponent(roommate.about_me);
+                                        } catch (e) {
+                                            return roommate.about_me;
+                                        }
+                                    })()}</dd>
                                 </dl>
                             </div>
-                        )}
+                        </div>
                     </div>
 
                     <div className="match-button-cluster">
