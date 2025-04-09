@@ -1,0 +1,237 @@
+body {
+    margin: 0;
+    padding-bottom: 50px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #ffffff;
+}
+
+.dashboard-wrapper {
+    width: 100%;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 30px 0px 30px;
+}
+
+.logo {
+    text-align: left !important;
+    align-self: flex-start !important;
+    margin: 0;
+}
+
+.logo img {
+    margin: 0 !important;
+    display: block !important;
+    height: 40px !important;
+}
+
+.nav-links a {
+    margin-left: 30px;
+    color: #6F42C1;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #7738EB;
+}
+
+.hero-section {
+    background: #6F42C1;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 12px #0000001f;
+    height: auto;
+}
+
+.hero-section h1 {
+    margin: 0;
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.hero-section h2 {
+    margin: 10px 0;
+    font-size: 60px;
+    font-weight: 400;
+    font-family: 'League Spartan';
+    font-weight: lighter;
+    line-height: 40px;
+}
+
+.hero-section p {
+    font-size: 20px;
+    line-height: 1.6;
+    font-family: 'League Spartan';
+    font-weight: normal;
+}
+
+.main-content {
+    display: flex;
+    padding: 15px 50px 50px 50px;
+}
+
+.left-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.feature-box {
+    display: flex;
+    border: 1px solid #eaeaea;
+    border-radius: 6px;
+    gap: 3rem;
+    padding: 20px;
+    box-shadow: 0 2px 4px #0000000d;
+    width: 40rem;
+}
+
+.feature-emoji {
+    font-size: 5rem;
+}
+
+.feature-info h3 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 600;
+    font-family: "DM Sans", sans-serif;
+}
+
+.feature-info p {
+    font-size: 14px;
+    margin: 10px 0;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 400;
+}
+
+.dots-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-purple {
+    background-color: #6F42C1;
+}
+
+.dot-green {
+    background-color: #6bac24;
+}
+
+.dot-yellow {
+    background-color: #e49f2f;
+}
+
+.right-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    padding-top: 8px;
+}
+
+.right-option {
+    padding: 14px 10px;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 1.4;
+    font-family: 'DM Sans';
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 8px;
+    background: #6f42c10d;
+    border: none;
+}
+
+.right-option span {
+    display: block;
+    color: #888888;
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: 'DM Sans';
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 30px 15px;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .hero-section h1,
+    .hero-section h2 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+
+    .hero-section p {
+        font-size: 18px;
+        margin-top: 15px;
+    }
+
+    .main-content {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .left-section {
+        padding: 20px;
+    }
+
+    .feature-box {
+        flex-direction: row;
+        gap: 1.5rem;
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+
+    .feature-info h3 {
+        font-size: 22px;
+    }
+
+    .feature-info p {
+        font-size: 14px;
+    }
+
+    .right-section {
+        order: 1;
+        padding: 0 20px;
+        margin-bottom: 10px;
+    }
+
+    .right-option {
+        font-size: 16px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        background: #f5f5f5;
+        border: none;
+    }
+
+    .right-option span {
+        font-size: 13px;
+    }
+
+}
