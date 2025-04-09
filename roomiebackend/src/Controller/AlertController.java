@@ -1,9 +1,6 @@
 package Controller;
 
-import Database.Alert;
-import Database.AlertDao;
-import Database.Dao;
-import Database.SQLConnection;
+import Database.*;
 import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Utils;
@@ -43,9 +40,17 @@ public class AlertController {
 
     public static String getAllAlerts(Map<String, String> data, String method) {
         AlertDao dao = new AlertDao(SQLConnection.getConnection());
-        List<Alert> alerts = dao.getAlerts(Integer.parseInt(data.get("roommateid")));
+        List<Alert> alerts = dao.getAlerts(Integer.parseInt(data.get("groupchat_id")));
 
         Gson gson = new Gson();
         return Utils.assembleHTTPResponse(200, gson.toJson(alerts));
+    }
+
+    public static String getAllAlertResponses(Map<String, String> data, String method) {
+        AlertDao dao = new AlertDao(SQLConnection.getConnection());
+        List<AlertResponse> responses = dao.getAlertResponses(Integer.parseInt(data.get("alert_id")));
+
+        Gson gson = new Gson();
+        return Utils.assembleHTTPResponse(200, gson.toJson(responses));
     }
 }
