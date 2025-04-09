@@ -173,7 +173,7 @@ public class ChatController {
         insertData.put("groupchat_id", data.get("groupchat_id"));
         insertData.put("message", data.get("message"));
 
-        dao.insert(insertData, "ChatHistory");
+        dao.storeMessage(insertData);
 
         response.code = 200;
         return response.toString();

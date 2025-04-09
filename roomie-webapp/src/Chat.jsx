@@ -60,6 +60,8 @@ function Chat({ selectedChat }) {
                     groupchat_id: selectedChat[2],
                     message: text
                 })
+
+                console.log(messageData)
     
                 const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
                     method: "POST",
@@ -234,9 +236,8 @@ function Chat({ selectedChat }) {
 
     return (
         <div className="holdChat">
-            <div className="messageArea" ref={messageAreaRef}>
-                <h5 className="chatNote" >You are chatting with {name}</h5>
-
+            <h5 className="chatNote" >You are chatting with {name}</h5>
+            <div className="messageArea" ref={messageAreaRef}>  
                 {messages.map((msg, index) => (
                     msg.sentBySelf === true ? (
                         <p key={index} className="right bubble"> {msg.message}</p>
@@ -275,10 +276,6 @@ function Chat({ selectedChat }) {
                                 <h2>Pending Status</h2>
                                 <span className="close-button" onClick={closeModal}>&times;</span>
                             </div>
-                            {/* <div className="button-cluster">
-                                <button onClick={() => requestRoommate(0)} className="chatButton noButton">No</button>
-                                <button onClick={() => requestRoommate(1)} className="chatButton yesButton">Yes</button>
-                            </div> */}
                         </div>
                     )}
             

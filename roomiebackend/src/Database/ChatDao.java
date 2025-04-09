@@ -4,11 +4,31 @@ import Tools.Message;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ChatDao extends Dao {
 
     public ChatDao(Connection connection) {
         super(connection);
+    }
+
+    public boolean storeMessage(Map<String, String> data) {
+        if (data == null || data.isEmpty()) {
+            return false;
+        }
+    
+        String query = "INSERT INTO ChatHistory (sender_email, groupchat_id, message) VALUES (?, ?, ?)";
+    
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, data.get("sender_email"));
+            stmt.setInt(2, Integer.parseInt(data.get("groupchat_id")));
+            stmt.setString(3, data.get("message"));
+    
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException | NumberFormatException e) {
+            // Log the error if needed
+            return false;
+        }
     }
 
     public List<String> getGroupChatEmails(String email, int groupchatId) {

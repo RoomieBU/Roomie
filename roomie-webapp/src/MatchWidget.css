@@ -33,7 +33,7 @@
     /* background-color: green; */
     min-width: 250px;          /* Minimum width of the container */
     min-height: 300px;         /* Minimum height of the container */
-    max-width: 100%;           /* Maximum width will be the container's parent width */
+    max-width: 250px;           /* Maximum width will be the container's parent width */
     max-height: 200px;
     border-radius: 15px;
     background-image: url("https://ui-avatars.com/api/?name=SL&background=random");
@@ -44,7 +44,7 @@
     background-color: #6f42c1;
     min-width: 250px;          /* Minimum width of the container */
     min-height: 300px;         /* Minimum height of the container */
-    max-width: 100%;           /* Maximum width will be the container's parent width */
+    max-width: 250px;           /* Maximum width will be the container's parent width */
     max-height: 200px;
     border-radius: 15px;
     padding: 10px;
@@ -55,6 +55,7 @@
 .more-user-info {
     display: flex;
     flex-direction: column;
+    width: 240px;   
 }
 
 .user_info {
