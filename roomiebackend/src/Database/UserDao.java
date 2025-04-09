@@ -399,7 +399,34 @@ public class UserDao extends Dao{
     }
 
 
+    public List<String> getMatchEmails(String email) {
+        List<String> matchedEmails = new ArrayList<>();
+        String query = "SELECT email1, email2 FROM UserMatches WHERE email1 = ? OR email2 = ?";
     
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, email);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String email1 = rs.getString("email1");
+                    String email2 = rs.getString("email2");
+    
+                    // Add the email that is NOT the one being searched
+                    if (!email.equals(email1)) {
+                        matchedEmails.add(email1);
+                    }
+                    if (!email.equals(email2)) {
+                        matchedEmails.add(email2);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // You can log this properly if needed
+        }
+    
+        return matchedEmails;
+    }
     
 
 

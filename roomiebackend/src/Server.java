@@ -61,7 +61,7 @@ public class Server {
             router.addRoute("/matches/getChatInformation", MatchController::sendChatInformation); // <---- HERE
 
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
-            // router.addRoute("/matches/getMatchList", MatchController::getLikedList);
+            router.addRoute("/matches/getMatchList", MatchController::sendMatchList);
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);

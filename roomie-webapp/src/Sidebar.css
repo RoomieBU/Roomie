@@ -124,7 +124,14 @@
     gap: 30px;
     align-items: center;
     justify-content: right;
+    position: sticky;
+    top: 0; /* Fixes the group chat options at the top */
+    background-color: white; /* Ensure the background covers the content */
+    z-index: 10; /* Ensures the top part stays above the scrolling content */
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Optional, to visually separate the sticky header */
 }   
+
 
 .purpleBtn {
     color: #6f42c1;

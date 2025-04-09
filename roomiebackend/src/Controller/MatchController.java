@@ -3,11 +3,57 @@ package Controller;
 import Database.*;
 import Tools.Auth;
 import Tools.HTTPResponse;
+import Tools.Message;
 import Tools.Utils;
 import java.util.*;
+import javax.xml.crypto.Data;
 
 
 public class MatchController {
+
+    // public static String sendChatHistory(Map<String, String> data, String method) {
+    //         ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+    //         String email = Auth.getEmailfromToken(data.get("token"));
+    //         int groupId = Integer.parseInt(data.get("groupchat_id"));
+    //         List<Message> messageList = dao.getChatHistory(groupId);
+    //         for (Message m : messageList) {
+    //             if (m.getSenderEmail().equals(email)) {
+    //                 m.selfSent();
+    //             }
+    //         }
+    //         Gson gson = new Gson();
+    //         return Utils.assembleHTTPResponse(200, gson.toJson(messageList));
+    //     }
+
+
+    // this.userId = userId;
+    //     this.username = username;
+    //     this.email = email;
+    //     this.firstName = firstName;
+    //     this.lastName = lastName;
+    //     this.aboutMe = aboutMe;
+    //     this.dateOfBirth = dateOfBirth;
+    //     this.createdAt = createdAt;
+    //     this.registered = registered;
+    //     this.school = school;
+    //     \this.major = major;
+
+    public static String sendMatchList(Map<String, String> data, String method) {
+        String email = Auth.getEmailfromToken(data.get("token"));
+        UserDao dao = new UserDao(SQLConnection.getConnection());
+        List<String> matchEmails = dao.getMatchEmails(email);
+
+        Gson gson = new Gson();
+
+        List<User> matchInformation = new ArrayList<>();
+
+        for(String e : matchEmails) {
+            matchInformation.add(dao.getUserByEmail(e));
+        }
+
+        return Utils.assembleHTTPResponse(200, gson.toJson(matchInformation));
+    }
 
     public static String sendChatInformation(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
