@@ -68,7 +68,6 @@ body {
 
 .hero {
   position: relative;
-  min-height: calc(100vh - 70px);
   display: flex;
   align-items: center;
   padding: 2rem;
@@ -79,16 +78,6 @@ body {
   z-index: 1;
   max-width: 600px;
   color: var(--black);
-}
-
-.hero-content h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.hero-content p {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
 }
 
 .signup-button {

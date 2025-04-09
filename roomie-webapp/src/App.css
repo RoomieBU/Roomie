@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 :root {
   font-family: 'Roboto', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -27,8 +31,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
+  margin: -15px;
+  padding: 0px 60px 0px 45px;
 }
 
 .navbar-left .logo {
@@ -51,6 +55,12 @@
   align-items: center;
 }
 
+.logo img {
+      margin: 0 !important;
+        display: block !important;
+        height: 40px !important;
+}
+
 .navbar-right ul {
   list-style: none;
   display: flex;
@@ -64,6 +74,34 @@
   transition: color 0.2s ease;
 }
 
+.navbar-right li a {
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 2px;
+  margin-left: 30px;
+  color: #6F42C1;
+  font-weight: 600;
+  font-size: 20px;
+  font-family: "DM Sans", sans-serif;
+}
+
+.navbar-right li a:hover {
+  color: #7738EB !important;
+}
+
+.navbar a {
+  margin-left: 30px;
+  color: #6F42C1;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: "Roboto", sans-serif;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  color: #7738EB;
+}
+
 .hero {
   position: relative;
   flex: 1;
@@ -75,6 +113,14 @@
   background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(111, 66, 193, 1) 91%);
   background-size: cover;
   padding: 3rem;
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 4px 12px #0000001f;
+}
+
+.hero {
+  height: 65vh;
+  align-items: center !important;
+  max-block-size: fit-content;
 }
 
 .hero-content {
@@ -88,6 +134,7 @@
   font-size: 7rem;
   margin-bottom: 1rem;
   font-family: "Chewy";
+  margin-top: 80px !important;
 }
 
 .hero-content p {
@@ -118,6 +165,11 @@ a {
   text-decoration: none !important;
   padding: 2px !important;
   color: #6F42C1;
+}
+
+.arrow-down {
+  margin-bottom: 50px !important;
+  margin-top: 0 !important;
 }
 
 @keyframes bounce {
@@ -152,10 +204,6 @@ a {
     font-size: 1.1rem;
     color: white;
   }
-}
-
-.arrow-down {
-  margin-top: 40px;
 }
 
 .arrow-down a {
@@ -220,13 +268,22 @@ a {
 .text-box h3 {
   margin-bottom: 0.5rem !important;
   color: #6f42c1 !important;
-  font-family: "League Spartan" !important;
+  font-family: "DM Sans" !important;
+  font-weight: 200;
+  text-align: center;
+  padding: 15px;
 }
 
 .text-box p {
   font-size: 0.9rem !important;
   line-height: 1.4 !important;
   color: #5d495b !important;
+  margin-bottom: 1.5rem;
+  font-family: "DM Sans";
+  font-weight: initial;
+  text-wrap: auto;
+  text-wrap-style: balance;
+  text-align: center;
 }
 
 p.dashboard-p {

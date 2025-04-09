@@ -13,6 +13,7 @@ import TempImageDemo from "./TempImageDemo";
 import Edit from "./Edit";
 import About from './About';
 import RoommateManagementDashboard from './RoommateManagementDashboard';
+import roomieLogo from './assets/roomie-favicon.svg';
 
 function AppWrapper() {
   const location = useLocation();
@@ -29,9 +30,11 @@ function AppWrapper() {
       {showHeader && (
         <header className="navbar">
           <div className="navbar-left">
-            <Link to="/" className="logo-link">
-              <h2 className="logo">ROOMIE.</h2>
-            </Link>
+            <div className="logo">
+              <a href="/">
+                <img src={roomieLogo} alt="Roomie Logo" />
+              </a>
+            </div>
           </div>
           <nav className="navbar-right">
             <ul>

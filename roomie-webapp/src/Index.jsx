@@ -26,7 +26,7 @@ function Index() {
                 <div className="column">
                     <div className="text-box">
                         <h3>MATCH.</h3>
-                        <p>Our advanced matching system allows you to be matched with those you <em>truly</em> get along with.</p>
+                        <p>Our advanced matching system allows you to be matched with those you <em>truly</em> get along with. Build meaningful university connections and friendships that will last a lifetime.</p>
                     </div>
                 </div>
                 <div className="column">
@@ -37,8 +37,8 @@ function Index() {
                 </div>
                 <div className="column">
                     <div className="text-box">
-                        <h3>BUILD.</h3>
-                        <p>Build meaningful university connections and friendships that will last a lifetime.</p>
+                        <h3>MANAGE.</h3>
+                        <p>Manage roommate interactions using our roommate management dashboard features, which include a shared calendar, a chat system, an alert system, and more!</p>
                     </div>
                 </div>
             </section>
