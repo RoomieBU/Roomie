@@ -133,15 +133,20 @@ html {
 .hero-content h1 {
   font-size: 7rem;
   margin-bottom: 1rem;
-  font-family: "Chewy";
+  font-family: "League Spartan";
   margin-top: 80px !important;
+  font-weight: bolder;
+  text-shadow: 1px 1px 10px purple;
+  text-align: center;
+  margin-left: 25px;
 }
 
 .hero-content p {
   font-size: 2rem;
   margin-bottom: 2rem;
-  font-family: "League Spartan", sans-serif;
+  font-family: "DM Sans", sans-serif;
   color: white;
+  font-weight: 200;
 }
 
 .signup-button {
@@ -153,7 +158,8 @@ html {
   border-radius: 4px !important;
   cursor: pointer !important;
   transition: background-color 0.2s ease !important;
-  font-family: 'League Spartan' !important;
+  font-family: 'DM Sans' !important;
+  margin-right: 10px;
 }
 
 .signup-button:hover {
@@ -170,6 +176,7 @@ a {
 .arrow-down {
   margin-bottom: 50px !important;
   margin-top: 0 !important;
+  margin-right: 10px;
 }
 
 @keyframes bounce {

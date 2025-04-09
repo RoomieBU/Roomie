@@ -42,9 +42,9 @@ const About = () => {
 
     return (
         <div className="about-container">
-            <section className="hero-section">
-                <div className="hero-content">
-                    <h1>About Roomie.</h1>
+            <section className="hero-section2">
+                <div className="hero-content2">
+                    <h1>About ROOMIE.</h1>
                 </div>
             </section>
 

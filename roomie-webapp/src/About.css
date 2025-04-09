@@ -1,8 +1,6 @@
 .about-container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    color: #333;
+    color: #333333;
 }
 
 h1, h2, h3 {
@@ -15,31 +13,33 @@ p {
     margin-bottom: 1.5rem;
 }
 
-.hero-section {
+.hero-section2 {
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     padding: 2rem 0;
     border-radius: 0 0 20px 20px;
     margin-bottom: 2rem;
     text-align: center;
-    height: 200px;
+    height: 300px;
+    width: 99vw !important;
 }
 
-.hero-content {
+.hero-content2 {
     max-width: 800px;
     margin: 0 auto;
 }
 
-.hero-content h1 {
+.hero-content2 h1 {
     margin-bottom: 1rem;
     font-family: 'League Spartan';
     font-weight: bolder;
     text-shadow: 1px 1px 10px purple;
     text-align: center;
-    margin-left: 25px;
+    margin-top: 80px;
+    font-size: 80px;
 }
 
-.hero-content p {
+.hero-content2 p {
     font-size: 2rem;
     margin-bottom: 2rem;
     font-family: 'League Spartan';
@@ -148,7 +148,7 @@ p {
 }
 
 @media (max-width: 768px) {
-    .hero-section {
+    .hero-section2 {
         padding: 3rem 0;
     }
 
