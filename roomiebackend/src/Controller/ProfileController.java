@@ -5,12 +5,20 @@ import Database.MatchingPriorityDao;
 import Database.SQLConnection;
 import Tools.Auth;
 import Tools.HTTPResponse;
-import Tools.Utils;
-
 import java.sql.Connection;
 import java.util.*;
 
 public class ProfileController {
+
+    public static String sendUserEmail(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+        String token = data.get("token");
+        String userEmail = Auth.getEmailfromToken(token);
+
+        response.setMessage("email", userEmail);
+        response.code = 200;
+        return response.toString();
+    }
 
     public static String getProfile(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();

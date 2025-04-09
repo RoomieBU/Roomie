@@ -24,7 +24,7 @@
 }
 
 .chatBox.selected {
-    background-color: #7b49d8; /* A slightly lighter purple */
+    background-color: #8951f0; /* A slightly lighter purple */
     box-shadow: 0 0 0 2px white; /* White outline to indicate selection */
 }
 
@@ -151,5 +151,5 @@
 }
 
 .chatBox.gSelected {
-    background-color: maroon; /* green for selected */
+    background-color: #3f266e; /* green for selected */
 }
