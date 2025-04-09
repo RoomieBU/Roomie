@@ -83,7 +83,11 @@ public class Server {
             router.addRoute("/chat/resetRoommateRequestChoice", ChatController::resetRoommateRequestChoice);
             router.addRoute("/chat/createGroupChat", ChatController::createGroupChat);
 
-            
+            // Alerts
+            router.addRoute("/alert/addAlert", AlertController::createAlert);
+            router.addRoute("/alert/addAlertReaction", AlertController::addAlertReaction);
+            router.addRoute("/alert/getAllAlerts", AlertController::getAllAlerts);
+            router.addRoute("/alert/getAllResponses", AlertController::getAllAlertResponses);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");

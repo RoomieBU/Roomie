@@ -5,21 +5,19 @@ public class Alert {
     private String name;
     private String sender;
     private String description;
-    private int roommateid;
+    private int groupchatId;
     private String start_time;
     private String end_time;
 
-    // Full constructor
-    public Alert(String name, String sender, String description, int roommateid, String start_time, String end_time) {
+    public Alert(String name, String sender, String description, int groupchatId, String start_time, String end_time) {
         this.name = name;
         this.sender = sender;
         this.description = description;
-        this.roommateid = roommateid;
+        this.groupchatId = groupchatId;
         this.start_time = start_time;
         this.end_time = end_time;
     }
 
-    // Getters
     public String getName() {
         return name;
     }
@@ -32,8 +30,8 @@ public class Alert {
         return description;
     }
 
-    public int getRoommateid() {
-        return roommateid;
+    public int getGroupchatId() {
+        return groupchatId;
     }
 
     public String getStart_time() {
@@ -44,7 +42,6 @@ public class Alert {
         return end_time;
     }
 
-    // Setters
     public void setName(String name) {
         this.name = name;
     }
@@ -57,8 +54,8 @@ public class Alert {
         this.description = description;
     }
 
-    public void setRoommateid(int roommateid) {
-        this.roommateid = roommateid;
+    public void setGroupchatId(int roommateid) {
+        this.groupchatId = groupchatId;
     }
 
     public void setStart_time(String start_time) {
