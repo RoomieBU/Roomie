@@ -12,6 +12,7 @@ import Preferences from "./Preferences";
 import TempImageDemo from "./TempImageDemo";
 import Edit from "./Edit";
 import About from './About';
+import RoommateManagementDashboard from './RoommateManagementDashboard';
 
 function AppWrapper() {
   const location = useLocation();
@@ -57,8 +58,8 @@ function AppWrapper() {
         <Route path="/fileSubmit" element={<FileSubmit />} />
         <Route path="/user/images" element={<TempImageDemo />} />
         <Route path="/profile/edit" element={<Edit />} />
-        {/* This will eventually link to a new About.jsx page that will introduce the team, but for now this is just a placeholder for that */}
         <Route path="/About" element={<About />} />
+        <Route path="/RoommateManagementDashboard" element={<RoommateManagementDashboard />} />
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
