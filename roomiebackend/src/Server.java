@@ -62,6 +62,7 @@ public class Server {
 
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             router.addRoute("/matches/getMatchList", MatchController::sendMatchList);
+            router.addRoute("/matches/isUserCurrentRoommate", MatchController::isUserCurrentRoommate);
 
             // Profile Info Route
             router.addRoute("/profile/getProfile", ProfileController::getProfile);

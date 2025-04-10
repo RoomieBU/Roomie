@@ -124,7 +124,7 @@ public class Dao {
                 String key = entry.getKey();
                 String value = entry.getValue();
 
-                if ("registered".equals(key)) {
+                if ("registered".equals(key) || "confirmed".equals(key)) {
                     // Convert "true"/"false" string to boolean for BIT(1)
                     boolean registeredValue = "true".equalsIgnoreCase(value);
                     stmt.setBoolean(index++, registeredValue);

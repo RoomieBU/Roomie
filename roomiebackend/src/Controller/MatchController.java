@@ -82,6 +82,24 @@ public class MatchController {
         return response.toString();
     }
 
+    // Check if user is in a groupchat that has confirmed to be roommates, and if so return the groupchat id
+    public static String isUserCurrentRoommate(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+        List<GroupChat> groupchats = dao.getGroupchats(email);
+
+        for (GroupChat gc : groupchats) {
+            if (gc.getConfirmed()) {
+                response.code = 200;
+                response.setMessage("groupchatid", Integer.toString(gc.getGroupchatId()));
+                break;
+            }
+        }
+
+        return response.toString();
+    }
 
     public static String getNextMatch(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();

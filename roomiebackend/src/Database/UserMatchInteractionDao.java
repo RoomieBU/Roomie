@@ -103,4 +103,55 @@ public class UserMatchInteractionDao extends Dao{
         }
         return false;
     }
+
+    public boolean isAllAccepted(int groupchatId) {
+        String query = "SELECT COUNT(*) AS total, SUM(accepted) AS accepted_count " +
+                "FROM UserRoommateRequests WHERE groupchat_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, groupchatId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int total = rs.getInt("total");
+                int acceptedCount = rs.getInt("accepted_count");
+
+                return total == acceptedCount;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Also get every groupchat
+    public List<GroupChat> getAllGroupchats() {
+        String query = "SELECT * FROM GroupChat";
+        List<GroupChat> gcList = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                GroupChat gc = new GroupChat(
+                        rs.getInt("id"),
+                        rs.getString("email1"),
+                        rs.getString("email2"),
+                        rs.getString("email3"),
+                        rs.getString("email4"),
+                        rs.getString("email5"),
+                        rs.getString("email6"),
+                        rs.getBoolean("confirmed")
+                );
+                gcList.add(gc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gcList;
+    }
+
+    public void setGroupchatAccepted(int groupchatId) {
+        String query = "";
+    }
 }
