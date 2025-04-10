@@ -127,7 +127,7 @@ public class UserMatchInteractionDao extends Dao{
 
     // Also get every groupchat
     public List<GroupChat> getAllGroupchats() {
-        String query = "SELECT * FROM GroupChat";
+        String query = "SELECT * FROM GroupChats";
         List<GroupChat> gcList = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             ResultSet rs = stmt.executeQuery();
