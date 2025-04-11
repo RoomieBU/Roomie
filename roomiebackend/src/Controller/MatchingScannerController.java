@@ -36,7 +36,6 @@ public class MatchingScannerController extends Thread{
                 // Also, check all GroupChats and see if everyone is accepted
                 for (GroupChat gc : dao.getAllGroupchats()) {
                     if (dao.isAllAccepted(gc.getGroupchatId())) {
-                        System.out.println("This groupchat is confirmed somehow: " + gc.getGroupchatId());
                         dao.set(Map.of("confirmed", "true"), gc.getGroupchatId(), "GroupChats");
                     }
                 }

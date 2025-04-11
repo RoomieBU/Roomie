@@ -105,16 +105,18 @@ public class UserMatchInteractionDao extends Dao{
     }
 
     public boolean isAllAccepted(int groupchatId) {
-        String query = "SELECT COUNT(*) AS total, SUM(accepted) AS accepted_count " +
+        String query = "SELECT COUNT(*) AS total, SUM(CASE WHEN accepted = 1 THEN 1 ELSE 0 END) AS accepted_count " +
                 "FROM UserRoommateRequests WHERE groupchat_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, groupchatId);
-
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 int total = rs.getInt("total");
                 int acceptedCount = rs.getInt("accepted_count");
+
+                // If no requests exist, return false
+                if (total == 0) return false;
 
                 return total == acceptedCount;
             }
@@ -124,6 +126,7 @@ public class UserMatchInteractionDao extends Dao{
 
         return false;
     }
+
 
     // Also get every groupchat
     public List<GroupChat> getAllGroupchats() {
