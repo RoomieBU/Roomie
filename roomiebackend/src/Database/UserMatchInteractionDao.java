@@ -105,27 +105,40 @@ public class UserMatchInteractionDao extends Dao{
     }
 
     public boolean isAllAccepted(int groupchatId) {
-        String query = "SELECT COUNT(*) AS total, SUM(CASE WHEN accepted = 1 THEN 1 ELSE 0 END) AS accepted_count " +
-                "FROM UserRoommateRequests WHERE groupchat_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, groupchatId);
-            ResultSet rs = stmt.executeQuery();
+        String countEmailsQuery = "SELECT " +
+                "((email1 IS NOT NULL) + (email2 IS NOT NULL) + (email3 IS NOT NULL) + " +
+                "(email4 IS NOT NULL) + (email5 IS NOT NULL) + (email6 IS NOT NULL)) AS member_count " +
+                "FROM GroupChats WHERE id = ?";
 
-            if (rs.next()) {
-                int total = rs.getInt("total");
-                int acceptedCount = rs.getInt("accepted_count");
+        String acceptedQuery = "SELECT COUNT(*) AS accepted_count " +
+                "FROM UserRoommateRequests WHERE groupchat_id = ? AND accepted = 1";
 
-                // If no requests exist, return false
-                if (total == 0) return false;
+        try (
+                PreparedStatement emailStmt = connection.prepareStatement(countEmailsQuery);
+                PreparedStatement acceptedStmt = connection.prepareStatement(acceptedQuery)
+        ) {
+            emailStmt.setInt(1, groupchatId);
+            ResultSet emailRs = emailStmt.executeQuery();
 
-                return total == acceptedCount;
+            if (!emailRs.next()) return false; // groupchat not found
+
+            int memberCount = emailRs.getInt("member_count");
+
+            acceptedStmt.setInt(1, groupchatId);
+            ResultSet acceptedRs = acceptedStmt.executeQuery();
+
+            if (acceptedRs.next()) {
+                int acceptedCount = acceptedRs.getInt("accepted_count");
+                return acceptedCount == memberCount;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return false;
     }
+
 
 
     // Also get every groupchat
