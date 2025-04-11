@@ -11,6 +11,21 @@ function Dashboard() {
     const navigate = useNavigate();
     const [profilePictureUrl, setProfilePictureUrl] = useState("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Default profile picture
 
+    // First, check if user is in an accepted roommate group. If so, redirect them to roomie.ddns.net/roommatemanagementdashboard
+    useEffect(() => {
+        const checkIfConfirmed = async () => {
+            const response = await fetch("https://roomie.ddns.net:8080/matches/isUserCurrentRoommate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") }),
+            });
+
+            if (response.ok) { navigate("/RoommateManagementDashboard"); }
+        };
+        checkIfConfirmed();
+    }, [navigate]);
+
+
     // Fetch profile picture URL on component mount
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -194,34 +209,34 @@ function Dashboard() {
                 ref={containerRef}
                 className={`split-panel-container border rounded ${isDraggingRef.current ? "no-select" : ""}`}
             >
-                
+
 
                 {splitScreen && (
-                <>
-                    {/* Left Panel */}
-                    <div className="left-panel" style={{ width: `${leftWidth}%` }}>
-                        <Sidebar onChatSelect={handleChatSelect} chatHistory={handleChatHistory} currentView={currentView} />
-                    </div>
-                    {/* Divider */}
-                    <div
-                        ref={dividerRef}
-                        className="divider bg-secondary"
-                        onMouseDown={handleMouseDown}
-                        onMouseOver={() => dividerRef.current.classList.add("divider-hover")}
-                        onMouseOut={() => dividerRef.current.classList.remove("divider-hover")}
-                    />
-                    {/* Right Panel */}
-                    <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
-                        {hideDefault ? null : <p>Roomie.</p>}
-                        {hideMatching ? null : <Matching />}
-                        {hideChat ? null : <Chat selectedChat={selectedChat}/>}
-                    </div>
-                </>
+                    <>
+                        {/* Left Panel */}
+                        <div className="left-panel" style={{ width: `${leftWidth}%` }}>
+                            <Sidebar onChatSelect={handleChatSelect} chatHistory={handleChatHistory} currentView={currentView} />
+                        </div>
+                        {/* Divider */}
+                        <div
+                            ref={dividerRef}
+                            className="divider bg-secondary"
+                            onMouseDown={handleMouseDown}
+                            onMouseOver={() => dividerRef.current.classList.add("divider-hover")}
+                            onMouseOut={() => dividerRef.current.classList.remove("divider-hover")}
+                        />
+                        {/* Right Panel */}
+                        <div className="right-panel bg-white p-3" style={{ width: `${100 - leftWidth - 0.5}%` }}>
+                            {hideDefault ? null : <p>Roomie.</p>}
+                            {hideMatching ? null : <Matching />}
+                            {hideChat ? null : <Chat selectedChat={selectedChat} />}
+                        </div>
+                    </>
                 )}
 
-                {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")}/>}
+                {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")} />}
 
-                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")}/>}
+                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")} />}
 
 
             </div>
