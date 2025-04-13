@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
-import Matching from "./Matching";
-import Chat from "./Chat";
+import Matching from "../components/Matching";
+import Chat from "../components/Chat";
 import Profile from "./Profile";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 import Edit from "./Edit";
 
 function Dashboard() {

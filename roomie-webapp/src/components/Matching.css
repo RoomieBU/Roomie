@@ -12,7 +12,6 @@ p {
 .potential-roomate-front {
     height: 400px;
     width: 350px;
-    background-image: url("src/assets/transparent.jpg");
     background-size: 189% 100%;
     margin-bottom: 20px;
     justify-items: center;

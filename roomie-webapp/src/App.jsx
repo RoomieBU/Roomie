@@ -1,18 +1,18 @@
 
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from "react-router-dom";
-import Index from "./Index";
-import Profile from "./Profile";
-import Login from "./Login";
-import Signup from "./SignUp";
-import Registration from "./Registration";
-import Dashboard from "./Dashboard";
-import Matching from "./Matching";
-import FileSubmit from "./FileSubmit";
-import Preferences from "./Preferences";
+import Index from "./pages/Index";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Signup from "./pages/SignUp";
+import Registration from "./pages/Registration";
+import Dashboard from "./pages/Dashboard";
+import Matching from "./components/Matching";
+import FileSubmit from "./components/FileSubmit";
+import Preferences from "./pages/Preferences";
 import TempImageDemo from "./TempImageDemo";
-import Edit from "./Edit";
-import About from './About';
-import RoommateManagementDashboard from './RoommateManagementDashboard';
+import Edit from "./pages/Edit";
+import About from './pages/About';
+import RoommateManagementDashboard from './pages/RoommateManagementDashboard';
 import roomieLogo from './assets/roomie-favicon.svg';
 
 function AppWrapper() {

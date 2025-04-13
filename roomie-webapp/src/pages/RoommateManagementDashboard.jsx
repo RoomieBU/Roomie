@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './RoommateManagementDashboard.css';
-import roomieLogo from './assets/roomie-favicon.svg';
+import roomieLogo from '../assets/roomie-favicon.svg';
 
 const RoommateManagementDashboard = () => {
     const [groupchatid, setGroupchat] = useState('');

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import './profile.css';  // Import the CSS file
-import Spinner from "./Spinner"
+import Spinner from "../components/Spinner"
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {

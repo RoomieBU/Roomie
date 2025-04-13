@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import Spinner from "./Spinner"
+import Spinner from "../components/Spinner"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
