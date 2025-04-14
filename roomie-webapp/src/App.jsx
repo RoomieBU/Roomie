@@ -14,6 +14,7 @@ import Edit from "./pages/Edit";
 import About from './pages/About';
 import RoommateManagementDashboard from './pages/RoommateManagementDashboard';
 import roomieLogo from './assets/roomie-favicon.svg';
+import RoommateRating from './pages/RoommateRating';
 
 function AppWrapper() {
   const location = useLocation();
@@ -63,6 +64,7 @@ function AppWrapper() {
         <Route path="/profile/edit" element={<Edit />} />
         <Route path="/About" element={<About />} />
         <Route path="/RoommateManagementDashboard" element={<RoommateManagementDashboard />} />
+        <Route path="/RoommateRating" element={<RoommateRating />} />
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
