@@ -170,7 +170,8 @@ public class ChatDao extends Dao {
                         rs.getString("email3"), 
                         rs.getString("email4"), 
                         rs.getString("email5"), 
-                        rs.getString("email6"));
+                        rs.getString("email6"),
+                        rs.getBoolean("confirmed"));
                     chatList.add(gc);
                 }
             }

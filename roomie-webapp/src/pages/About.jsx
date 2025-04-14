@@ -1,10 +1,10 @@
 import React from 'react';
 import './About.css';
-import SalImg from './assets/salimage.jpeg';
-import EmilyImg from './assets/emilyimage.jpg';
-import MattImg from './assets/mattimage.jpg';
-import RileyImg from './assets/rileyimage.jpg';
-import SamImg from './assets/samimage.jpg';
+import SalImg from '../assets/salimage.jpeg';
+import EmilyImg from '../assets/emilyimage.jpg';
+import MattImg from '../assets/mattimage.jpg';
+import RileyImg from '../assets/rileyimage.jpg';
+import SamImg from '../assets/samimage.jpg';
 
 const About = () => {
     const teamMembers = [
@@ -42,9 +42,9 @@ const About = () => {
 
     return (
         <div className="about-container">
-            <section className="hero-section">
-                <div className="hero-content">
-                    <h1>About Roomie.</h1>
+            <section className="hero-section2">
+                <div className="hero-content2">
+                    <h1>About ROOMIE.</h1>
                 </div>
             </section>
 

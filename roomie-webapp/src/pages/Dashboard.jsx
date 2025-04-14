@@ -1,15 +1,30 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
-import Matching from "./Matching";
-import Chat from "./Chat";
+import Matching from "../components/Matching";
+import Chat from "../components/Chat";
 import Profile from "./Profile";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 import Edit from "./Edit";
 
 function Dashboard() {
     const navigate = useNavigate();
     const [profilePictureUrl, setProfilePictureUrl] = useState("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Default profile picture
+
+    // First, check if user is in an accepted roommate group. If so, redirect them to roomie.ddns.net/roommatemanagementdashboard
+    useEffect(() => {
+        const checkIfConfirmed = async () => {
+            const response = await fetch("https://roomie.ddns.net:8080/matches/isUserCurrentRoommate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") }),
+            });
+
+            if (response.ok) { navigate("/RoommateManagementDashboard"); }
+        };
+        checkIfConfirmed();
+    }, [navigate]);
+
 
     // Fetch profile picture URL on component mount
     useEffect(() => {
@@ -194,7 +209,7 @@ function Dashboard() {
                 ref={containerRef}
                 className={`split-panel-container border rounded ${isDraggingRef.current ? "no-select" : ""}`}
             >
-                
+
 
                 {splitScreen && (
                 <>
@@ -219,9 +234,9 @@ function Dashboard() {
                 </>
                 )}
 
-                {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")}/>}
+                {!hideProfile && <Profile onEditProfile={() => handleViewChange("Edit")} />}
 
-                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")}/>}
+                {!hideEdit && <Edit onProfile={() => handleViewChange("Profile")} />}
 
 
             </div>

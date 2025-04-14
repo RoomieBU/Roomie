@@ -34,11 +34,11 @@ public class Alert {
         return groupchatId;
     }
 
-    public String getStart_time() {
+    public String getStartTime() {
         return start_time;
     }
 
-    public String getEnd_time() {
+    public String getEndTime() {
         return end_time;
     }
 

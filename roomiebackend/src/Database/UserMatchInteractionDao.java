@@ -103,4 +103,71 @@ public class UserMatchInteractionDao extends Dao{
         }
         return false;
     }
+
+    public boolean isAllAccepted(int groupchatId) {
+        String countEmailsQuery = "SELECT " +
+                "((email1 IS NOT NULL) + (email2 IS NOT NULL) + (email3 IS NOT NULL) + " +
+                "(email4 IS NOT NULL) + (email5 IS NOT NULL) + (email6 IS NOT NULL)) AS member_count " +
+                "FROM GroupChats WHERE id = ?";
+
+        String acceptedQuery = "SELECT COUNT(*) AS accepted_count " +
+                "FROM UserRoommateRequests WHERE groupchat_id = ? AND accepted = 1";
+
+        try (
+                PreparedStatement emailStmt = connection.prepareStatement(countEmailsQuery);
+                PreparedStatement acceptedStmt = connection.prepareStatement(acceptedQuery)
+        ) {
+            emailStmt.setInt(1, groupchatId);
+            ResultSet emailRs = emailStmt.executeQuery();
+
+            if (!emailRs.next()) return false; // groupchat not found
+
+            int memberCount = emailRs.getInt("member_count");
+
+            acceptedStmt.setInt(1, groupchatId);
+            ResultSet acceptedRs = acceptedStmt.executeQuery();
+
+            if (acceptedRs.next()) {
+                int acceptedCount = acceptedRs.getInt("accepted_count");
+                return acceptedCount == memberCount;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+
+    // Also get every groupchat
+    public List<GroupChat> getAllGroupchats() {
+        String query = "SELECT * FROM GroupChats";
+        List<GroupChat> gcList = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                GroupChat gc = new GroupChat(
+                        rs.getInt("id"),
+                        rs.getString("email1"),
+                        rs.getString("email2"),
+                        rs.getString("email3"),
+                        rs.getString("email4"),
+                        rs.getString("email5"),
+                        rs.getString("email6"),
+                        rs.getBoolean("confirmed")
+                );
+                gcList.add(gc);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return gcList;
+    }
+
+    public void setGroupchatAccepted(int groupchatId) {
+        String query = "";
+    }
 }

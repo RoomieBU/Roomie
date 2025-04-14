@@ -12,8 +12,10 @@ public class GroupChat {
     private String email4;
     private String email5;
     private String email6;
+
+    private boolean confirmed;
     
-    public GroupChat(int id, String email1, String email2, String email3, String email4, String email5, String email6)
+    public GroupChat(int id, String email1, String email2, String email3, String email4, String email5, String email6, boolean confirmed)
     {
         this.groupchatId = id;
         this.email1 = email1;
@@ -22,6 +24,7 @@ public class GroupChat {
         this.email4 = email4;
         this.email5 = email5;
         this.email6 = email6;
+        this.confirmed = confirmed;
     }
 
 
@@ -32,4 +35,5 @@ public class GroupChat {
     public String getEmail4() { return email4; }
     public String getEmail5() { return email5; }
     public String getEmail6() { return email6; }
+    public boolean getConfirmed() { return confirmed; }
 }
