@@ -278,7 +278,9 @@ function Chat({ selectedChat }) {
             <div className="messageArea" ref={messageAreaRef}>  
                 {messages.map((msg, index) => (
                     msg.sentBySelf === true ? (
-                        <p key={index} className="right bubble"> {decodeURIComponent(msg.message)}</p>
+                        <> 
+                            <p key={index} className="right bubble"> {decodeURIComponent(msg.message)}</p>
+                        </>
                     ) : (
                         <p key={index} className="left bubble"> {decodeURIComponent(msg.message)}</p>
                     )

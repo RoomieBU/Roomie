@@ -2,11 +2,36 @@ import "./MatchWidget.css";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-function MatchWidget({ firstName, lastName, major, aboutMe, school, age, picture }) {
+function MatchWidget({ firstName, lastName, major, aboutMe, school, dob, picture }) {
     const [isFront, setIsFront] = useState(true);
 
     function toggleSide() {
         setIsFront(!isFront);
+    }
+
+    function calculateAge(dateString) {
+        // Parse the date string using the Date constructor
+        const birthDate = new Date(dateString);
+    
+        if (isNaN(birthDate.getTime())) {
+            throw new Error("Invalid date format. Expected format: 'MMM D, YYYY' (e.g., 'Aug 7, 2002')");
+        }
+    
+        const currentDate = new Date();
+    
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+    
+        const currentMonth = currentDate.getMonth();
+        const birthMonth = birthDate.getMonth();
+    
+        if (
+            currentMonth < birthMonth ||
+            (currentMonth === birthMonth && currentDate.getDate() < birthDate.getDate())
+        ) {
+            age--;
+        }
+    
+        return age;
     }
 
     return (
@@ -27,7 +52,7 @@ function MatchWidget({ firstName, lastName, major, aboutMe, school, age, picture
                 {isFront ? (
                     <div className="user_info">
                         <p>
-                            {firstName} {lastName}, {age}
+                            {firstName} {lastName}, {calculateAge(dob)}
                             <br />
                             {school}
                         </p>
@@ -54,7 +79,7 @@ MatchWidget.propTypes = {
     major: PropTypes.string,
     aboutMe: PropTypes.string,
     school: PropTypes.string,
-    age: PropTypes.number,
+    dob: PropTypes.number,
     picture: PropTypes.string
 };
 

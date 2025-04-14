@@ -340,7 +340,7 @@ function Sidebar({ currentView, onChatSelect }) {
                                                 lastName={match.lastName}
                                                 major={match.major}
                                                 school={match.school}
-                                                age={match.dateOfBirth}
+                                                dob={match.dateOfBirth}
                                                 aboutMe={decodeURIComponent(match.aboutMe)}
                                                 picture={match.profilePicture}
                                                 />
