@@ -134,9 +134,9 @@ function Dashboard() {
         setSelectedChat(chat);
     };
 
-    const handleChatHistory = (chatHistory) => {
-        setChatHistory(chatHistory)
-    }
+    // const handleChatHistory = (chatHistory) => {
+    //     setChatHistory(chatHistory)
+    // }
 
     function showRelevantComponent(action) {
         setHideMatching(true);
@@ -200,7 +200,7 @@ function Dashboard() {
                 <>
                     {/* Left Panel */}
                     <div className="left-panel" style={{ width: `${leftWidth}%` }}>
-                        <Sidebar onChatSelect={handleChatSelect} chatHistory={handleChatHistory} currentView={currentView} />
+                        <Sidebar onChatSelect={handleChatSelect}  currentView={currentView} />
                     </div>
                     {/* Divider */}
                     <div

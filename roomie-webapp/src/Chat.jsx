@@ -67,7 +67,7 @@ function Chat({ selectedChat }) {
                 const messageData = JSON.stringify({
                     token: localStorage.getItem("token"),
                     groupchat_id: selectedChat[2],
-                    message: text
+                    message: encodeURIComponent(text)
                 })
 
                 const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
@@ -278,15 +278,14 @@ function Chat({ selectedChat }) {
             <div className="messageArea" ref={messageAreaRef}>  
                 {messages.map((msg, index) => (
                     msg.sentBySelf === true ? (
-                        <p key={index} className="right bubble"> {msg.message}</p>
+                        <p key={index} className="right bubble"> {decodeURIComponent(msg.message)}</p>
                     ) : (
-                        <p key={index} className="left bubble"> {msg.message}</p>
+                        <p key={index} className="left bubble"> {decodeURIComponent(msg.message)}</p>
                     )
                 ))}
 
             </div>
             <div className="messageInput">
-
 
                 <button onClick={openModal} className="chatButton">
                     <i className="bi bi-hand-thumbs-up" />

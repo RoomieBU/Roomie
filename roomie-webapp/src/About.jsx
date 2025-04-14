@@ -10,9 +10,9 @@ const About = () => {
     const teamMembers = [
         {
             id: 1,
-            name: 'Sal La Marca',
+            name: 'Salvatore La Marca',
             img: SalImg,
-            bio: 'TBD'
+            bio: 'Software developer with an interest in data visualization, web development, and artificial intelligence.'
         },
         {
             id: 2,
