@@ -21,7 +21,7 @@ const RoommateRating = () => {
             <div className="dashboard-wrapper">
                 <header className="dashboard-header">
                     <div className="logo">
-                        <a href="/"><img src={roomieLogo} alt="Roomie Logo" /></a>
+                        <a href="/RoommateManagementDashboard"><img src={roomieLogo} alt="Roomie Logo" /></a>
                     </div>
                     <div className="nav-links">
                         <a href="/dashboard">EDIT PROFILE</a>

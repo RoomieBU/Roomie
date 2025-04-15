@@ -94,6 +94,7 @@ body {
     padding: 20px;
     box-shadow: 0 2px 4px #0000000d;
     width: 40rem;
+    background: #6f42c10d;
 }
 
 .feature-emoji {
@@ -129,6 +130,16 @@ body {
     display: inline-block;
 }
 
+.alert-button {
+    background-color: #ffffff;
+    border: 1px solid #6F42C1;
+    color: purple;
+}
+
+.alert-button:hover {
+    background-color: #a145a1;
+}
+
 .dot-purple {
     background-color: #6F42C1;
 }
@@ -160,6 +171,7 @@ body {
     border-radius: 8px;
     background: #6f42c10d;
     border: none;
+    border: 1px solid #eaeaea;
 }
 
 .right-option span {
@@ -260,4 +272,35 @@ body {
 
 .alert-list .card-text {
     font-size: 0.95rem;
+}
+
+.text-muted {
+    margin-top: 5px;
+    text-align: center;
+    font-family: 'DM Sans';
+    font-weight: 500;
+}
+
+.alert-text h1 {
+    color: #6F42C1;
+    font-family: 'DM Sans';
+}
+
+.alert-text p {
+    color:#888888;
+    font-family: 'DM Sans';
+    margin-top: 10px;
+    font-weight: 400;
+}
+
+.alert-text button {
+    font-family: 'DM Sans';
+}
+
+button.btn.btn-success {
+    background-color: #6F42C1;
+}
+
+button.btn.btn-success:hover {
+    background-color: #683eb5;
 }

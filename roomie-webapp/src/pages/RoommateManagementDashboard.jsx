@@ -105,18 +105,20 @@ const RoommateManagementDashboard = () => {
 
             <section className="alert-section container my-4">
                 <div className="container alert-list mt-4 items-center space-y-4">
-                    <h1>Roommate Alerts</h1>
                     <button
                         type="button"
-                        className="btn btn-primary dot-purple"
+                        className="btn btn-primary alert-button"
                         data-bs-toggle="modal"
                         data-bs-target="#addAlertModal"
                     >
-                        ➕ Create Alert
+                        ➕ Send Your Roommate an Alert
                     </button>
+                    <div className="alert-text">
+                        <p>Alert your roommate on important reminders.</p>
+                    </div>
                     <div className="row">
                         {alerts.length === 0 ? (
-                            <p className="text-muted">No alerts yet for this group.</p>
+                            <p className="text-muted">No alerts at the moment.</p>
                         ) : (
                             alerts.map((alert, index) => (
                                 <div key={index} className="col-md-4 col-sm-6 mb-3">
@@ -206,8 +208,10 @@ const RoommateManagementDashboard = () => {
                     <a href="/RoommateRating">
                         <div className="right-option">⭐ Rate Your Roommate<br /><span>Give your roommate a rating out of 5</span></div>
                     </a>
-                    <div className="right-option">🔔 Send Your Roommate an Alert<br /><span>Alert your roommate on important reminders</span></div>
-                    <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority</span></div>
+                    <a href="/RoommateReporting">
+                        <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority</span></div>
+                    </a>
+                    <div className="right-option">🚩 View Issues<br /><span>View issues submitted by roommates</span></div>
                 </div>
             </main>
         </div>

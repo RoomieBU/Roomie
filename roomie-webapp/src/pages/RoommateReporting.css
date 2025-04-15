@@ -1,0 +1,124 @@
+.reporting-header {
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 15px 15px 10px #6f42c138;
+    height: 300px;
+    align-content: center;
+    background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(111, 66, 193, 1) 91%);
+    background-size: cover;
+}
+
+.reporting-header h1 {
+    margin: 0;
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: "DM Sans";
+}
+
+.reporting-header h2 {
+    margin: 10px 0;
+    font-family: 'DM Sans';
+    font-weight: 200;
+    line-height: 40px;
+    font-size: 25px;
+    text-wrap: auto;
+    text-wrap-style: balance;
+    text-align: center;
+    max-width: 800px;
+    place-self: center;
+}
+
+.reporting-header p {
+    font-size: 20px;
+    line-height: 1.6;
+    font-family: "DM Sans";
+    font-weight: normal;
+    max-width: 900px;
+    place-self: center;
+    margin-top: 22px;
+}
+
+.reporting-box {
+    background: #f2f2f5;
+    width: 80%;
+    max-width: 700px;
+    margin: 40px auto;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.reporting-text {
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-size: 22px;
+    text-wrap: auto;
+    text-wrap-style: balance;
+    text-align: left;
+    font-family: 'DM Sans';
+}
+
+.specific-issue textarea {
+    width: 100%;
+    height: 100px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    resize: none;
+    margin-top: 10px;
+}
+
+.specific-issue label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-align: left;
+    font-size: 20px;
+    font-family: "DM Sans";
+}
+
+.submit-button {
+    background-color: #742dd6;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.confirmation {
+    text-align: center;
+}
+
+.dashboard-link {
+    display: inline-block;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #742dd6;
+    font-weight: bold;
+}
+
+.anonymous-checkbox {
+    text-align: left;
+    padding: 5px;
+    margin: 15px;
+    font-size: 18px;
+}
+
+.anonymous-checkbox label {
+    display: inline-block;
+    margin: 8px;
+    padding-left: 5px;
+    font-family: 'DM Sans';
+    font-size: 18px;
+}
+
+.anonymous-checkbox input[type="checkbox"] {
+    transform: scale(1.5);
+}
