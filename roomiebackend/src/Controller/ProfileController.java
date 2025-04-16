@@ -133,7 +133,6 @@ public class ProfileController {
     }
 
     public static String getUserNameByEmail(String email) {
-        HTTPResponse response = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
         Dao dao = new Dao(conn);
 
@@ -146,15 +145,9 @@ public class ProfileController {
         if (userData != null) {
             String firstName = userData.get("first_name");
             String lastName = userData.get("last_name");
-            String fullName = (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
-
-            response.setMessage("name", fullName.trim());
-            response.code = 200;
+            return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "").trim();
         } else {
-            response.setMessage("message", "User not found");
-            response.code = 404;
+            return ""; // Return an empty string if user not found
         }
-
-        return response.toString();
     }
 }
