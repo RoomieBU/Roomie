@@ -205,6 +205,9 @@ const RoommateManagementDashboard = () => {
                 </div>
 
                 <div className="right-section">
+                    <a href="/housingOptions">
+                        <div className="right-option">🏠 View Housing Options<br /><span>Checkout your school's various housing options.</span></div>
+                    </a>
                     <a href="/RoommateRating">
                         <div className="right-option">⭐ Rate Your Roommate<br /><span>Give your roommate a rating out of 5</span></div>
                     </a>
