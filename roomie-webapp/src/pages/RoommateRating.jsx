@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import roomieLogo from '../assets/roomie-favicon.svg';
+import './RoommateRating.css';
 
 const RoommateRating = () => {
     const [roommates, setRoommates] = useState([]);
