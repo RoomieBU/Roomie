@@ -64,6 +64,9 @@ p {
     font-weight: 400;
     font-size: 3rem;
     color: #612EC0;
+    text-wrap: auto;
+    text-wrap-style: balance;
+    text-align: center;
 }
 
 .mission-content p {
@@ -71,6 +74,9 @@ p {
     font-weight: 400;
     font-size: 1.3rem;
     color: #612EC0;
+    text-wrap: auto;
+    text-wrap-style: balance;
+    text-align: center;
 }
 
 .stats-container {

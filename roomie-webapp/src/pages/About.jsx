@@ -60,7 +60,7 @@ const About = () => {
                 </div>
             </section>
 
-            <section className="team-section">
+            <section id="team-section" className="team-section">
                 <h2>Meet Our Team</h2>
                 <p className="team-subtitle">The passionate developers behind the application.</p>
 
