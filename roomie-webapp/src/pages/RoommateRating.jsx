@@ -33,17 +33,17 @@ const RoommateRating = () => {
     const fetchChats = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getGroupchats", {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getConfirmedRoommates", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") })
             });
     
-            if (!response.ok) throw new Error("Failed to fetch groupchats");
+            if (!response.ok) throw new Error("Failed to fetch Roommates");
             const result = await response.json();
             setGroupChats(result);
         } catch (error) {
-            console.error("Error fetching groupchats: ", error);
+            console.error("Error fetching Roommates", error);
         } finally {
             setLoading(false);
         }
