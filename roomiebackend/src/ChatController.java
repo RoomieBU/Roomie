@@ -8,6 +8,8 @@ import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Utils;
 import com.google.gson.Gson;
+
+import Controller.ProfileController;
 import Tools.Message;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -225,6 +227,33 @@ public class ChatController {
 
         String email = Auth.getEmailfromToken(data.get("token"));
         List<GroupChat> groupChats = dao.getConfirmedRoommates(email);
+        // For each group chat, fetch and set the names for each email
+        for (GroupChat chat : groupChats) {
+            if (chat.getEmail1() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail1());
+                chat.setName1(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+            if (chat.getEmail2() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail2());
+                chat.setName2(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+            if (chat.getEmail3() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail3());
+                chat.setName3(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+            if (chat.getEmail4() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail4());
+                chat.setName4(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+            if (chat.getEmail5() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail5());
+                chat.setName5(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+            if (chat.getEmail6() != null) {
+                String name = ProfileController.getUserNameByEmail(chat.getEmail6());
+                chat.setName6(new Gson().fromJson(name, Map.class).get("name").toString());
+            }
+        }
         Gson gson = new Gson();
 
         return Utils.assembleHTTPResponse(200, gson.toJson(groupChats));

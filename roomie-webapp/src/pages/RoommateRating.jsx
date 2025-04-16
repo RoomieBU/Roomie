@@ -42,6 +42,21 @@ const RoommateRating = () => {
             if (!response.ok) throw new Error("Failed to fetch Roommates");
             const result = await response.json();
             setGroupChats(result);
+            
+            // Process the groupChats to extract unique emails
+            const uniqueEmails = new Set();
+            result.forEach(chat => {
+                if (chat.email1) uniqueEmails.add(chat.email1);
+                if (chat.email2) uniqueEmails.add(chat.email2);
+                if (chat.email3) uniqueEmails.add(chat.email3);
+                if (chat.email4) uniqueEmails.add(chat.email4);
+                if (chat.email5) uniqueEmails.add(chat.email5);
+                if (chat.email6) uniqueEmails.add(chat.email6);
+            });
+            
+            // Convert Set to array and filter out the current user's email
+            const roommateEmails = Array.from(uniqueEmails).filter(email => email !== userEmail);
+            setRoommates(roommateEmails);
         } catch (error) {
             console.error("Error fetching Roommates", error);
         } finally {
@@ -51,8 +66,13 @@ const RoommateRating = () => {
 
     useEffect(() => {
         fetchUserEmail();
-        fetchChats();
     }, []);
+
+    useEffect(() => {
+        if (userEmail) {
+            fetchChats();
+        }
+    }, [userEmail]);
     
 
     const handleRating = (value) => {
@@ -78,9 +98,9 @@ const RoommateRating = () => {
             </div>
             
             <header className="rating-header">
-                <h1>Rate Your “ROOMIE.”</h1>
+                <h1>Rate Your "ROOMIE."</h1>
                 <p>
-                    Let us know how your roommate matching experience has been with “ROOMIE.”, and help us
+                    Let us know how your roommate matching experience has been with "ROOMIE.", and help us
                     with any potential improvements to our match-making techniques in the future.
                 </p>
             </header>
@@ -88,25 +108,25 @@ const RoommateRating = () => {
                 {!submitted ? (
                     <>
                         <p className="question-text">
-                            Did you find that our application matched you with your “dream” roommate? Let us know
+                            Did you find that our application matched you with your "dream" roommate? Let us know
                             below.
                         </p>
 
                         {/* Dropdown to choose which roommate to rate */}
                         <div className="roommate-select">
-                        <label htmlFor="roommate">Who are you rating?</label>
-                        <select
-                            id="roommate"
-                            value={selectedRoommate}
-                            onChange={e => setSelectedRoommate(e.target.value)}
-                        >
-                            <option value="" disabled>— Select a roommate —</option>
-                            {roommates.map(r => (
-                            <option key={r.id} value={r.id}>
-                                {r.name}
-                            </option>
-                            ))}
-                        </select>
+                            <label htmlFor="roommate">Who are you rating?</label>
+                            <select
+                                id="roommate"
+                                value={selectedRoommate}
+                                onChange={e => setSelectedRoommate(e.target.value)}
+                            >
+                                <option value="" disabled>— Select a roommate —</option>
+                                {roommates.map((email, index) => (
+                                    <option key={index} value={email}>
+                                        {email}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <div className="stars">
                             {[1, 2, 3, 4, 5].map((value) => (
