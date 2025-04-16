@@ -180,4 +180,38 @@ public class ChatDao extends Dao {
         }
         return chatList;
     }
+
+    public List<GroupChat> getConfirmedRoommates(String email) {
+        String query = "SELECT * FROM GroupChats WHERE confirmed = 1 AND (email1 = ? OR email2 = ? OR email3 = ? OR email4 = ? OR email5 = ? OR email6 = ?)";
+    
+        List<GroupChat> confirmedChats = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, email);
+            stmt.setString(3, email);
+            stmt.setString(4, email);
+            stmt.setString(5, email);
+            stmt.setString(6, email);
+    
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    GroupChat gc = new GroupChat(
+                        rs.getInt("id"),
+                        rs.getString("email1"),
+                        rs.getString("email2"),
+                        rs.getString("email3"),
+                        rs.getString("email4"),
+                        rs.getString("email5"),
+                        rs.getString("email6"),
+                        rs.getBoolean("confirmed")
+                    );
+                    confirmedChats.add(gc);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return confirmedChats;
+    }
+    
 }
