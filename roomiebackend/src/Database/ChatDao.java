@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import Controller.ProfileController;
 
 public class ChatDao extends Dao {
 
@@ -195,14 +196,23 @@ public class ChatDao extends Dao {
     
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    // Fetch names using ProfileController
+                    String name1 = ProfileController.getUserNameByEmail(rs.getString("email1"));
+                    String name2 = ProfileController.getUserNameByEmail(rs.getString("email2"));
+                    String name3 = ProfileController.getUserNameByEmail(rs.getString("email3"));
+                    String name4 = ProfileController.getUserNameByEmail(rs.getString("email4"));
+                    String name5 = ProfileController.getUserNameByEmail(rs.getString("email5"));
+                    String name6 = ProfileController.getUserNameByEmail(rs.getString("email6"));
+
+                    // Store names in the email fields
                     GroupChat gc = new GroupChat(
                         rs.getInt("id"),
-                        rs.getString("email1"),
-                        rs.getString("email2"),
-                        rs.getString("email3"),
-                        rs.getString("email4"),
-                        rs.getString("email5"),
-                        rs.getString("email6"),
+                        name1,
+                        name2,
+                        name3,
+                        name4,
+                        name5,
+                        name6,
                         rs.getBoolean("confirmed")
                     );
                     confirmedChats.add(gc);
