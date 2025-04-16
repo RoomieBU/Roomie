@@ -54,8 +54,9 @@ const RoommateRating = () => {
                 if (chat.email6) uniqueEmails.add(chat.email6);
             });
             
-            // Convert Set to array and filter out the current user's email
-            const roommateEmails = Array.from(uniqueEmails).filter(email => email !== userEmail);
+            // Convert Set to array, filter out the current user's email, and remove empty values
+            const roommateEmails = Array.from(uniqueEmails)
+                .filter(email => email && email.trim() !== "" && email !== userEmail);
             setRoommates(roommateEmails);
         } catch (error) {
             console.error("Error fetching Roommates", error);
