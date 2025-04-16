@@ -25,6 +25,8 @@ const RoommateRating = () => {
         } catch (error) {
             console.error("Error fetching user email: ", error);
         }
+
+        fetchUserEmail();
     };
 
     const fetchChats = async () => {
@@ -44,6 +46,8 @@ const RoommateRating = () => {
         } finally {
             setLoading(false);
         }
+
+        fetchChats();
     };
     
 
