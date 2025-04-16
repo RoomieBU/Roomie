@@ -1,0 +1,122 @@
+
+.centerAll {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 80px;
+}
+
+.rating-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.housing-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 85%;
+}
+
+.housing-name {
+    font-family: 'DM Sans' !important;
+}
+
+.name-left {
+    --_p: 0;
+    border-bottom-left-radius: 0 0;
+    place-self: start;
+    margin-left: 25px;
+  }
+.name-right {
+    --_p: 100%;
+    border-bottom-right-radius: 0 0;
+    place-self: end;
+    margin-right: 25px;
+}
+
+.housing-data-space {
+    margin-top: 35px;
+    height: 500px;
+    width: max-content;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 25px 0 25px;
+    flex-direction: column;
+    
+}
+
+.image-space {
+    background-color: tan;
+    height: 400px;
+    width: 500px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 1s ease-in-out;
+    opacity: 1;
+    border-radius: 30px;
+    border-width: 2px;
+}
+
+.image-border {
+    border-radius: 30px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: maroon;
+    height: 400px;
+    width: 500px;
+    overflow: hidden;
+    margin-top: 25px;
+}
+
+/* This class will be toggled in React to create the fade effect */
+.image-space.fade {
+    opacity: 0;
+}
+
+.iright {
+    box-shadow: 5px 5px 0px maroon;
+}
+
+.ileft {
+    box-shadow: -5px 5px 0px maroon;
+}
+
+.list-space {
+    height: 400px;
+    width: max-content;
+    min-width: 300px;
+}
+
+.housing-list {
+    list-style: square;
+    margin-left: 45px;
+}
+
+.housing-item {
+    font-family: 'League Spartan';
+    color: maroon;
+    font-size: 2em;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+  }
+  
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+  }
+  
+  
+.section {
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+}
