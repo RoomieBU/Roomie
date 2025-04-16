@@ -20,6 +20,10 @@ public class RatingController {
         String ratedEmail = data.get("rated_user");
         int ratingValue = Integer.parseInt(data.get("rating_value"));
         String comment = data.get("comment");
+        System.out.println("Reviewer email: " + reviewerEmail);
+        System.out.println("Rated email: " + ratedEmail);
+        System.out.println("Rating value: " + ratingValue);
+        System.out.println("Comment: " + comment);
 
         // Fetch user IDs based on emails
         int reviewerId = userDao.getIDfromEmail(reviewerEmail);
