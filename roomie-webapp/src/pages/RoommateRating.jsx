@@ -3,10 +3,49 @@ import './RoommateRating.css';
 import roomieLogo from '../assets/roomie-favicon.svg';
 
 const RoommateRating = () => {
+    const [roommates, setRoommates] = useState([]);
+    const [selectedRoommate, setSelectedRoommate] = useState('');
     const [rating, setRating] = useState(0);
     const [hovered, setHovered] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [feedback, setFeedback] = useState('');
+
+    // Get what groupchats the user is part of
+    const fetchUserEmail = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/profile/getUserEmail", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") })
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch user email");
+            const result = await response.json();
+            setUserEmail(result.email);
+        } catch (error) {
+            console.error("Error fetching user email: ", error);
+        }
+    };
+
+    const fetchChats = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getGroupchats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") })
+            });
+    
+            if (!response.ok) throw new Error("Failed to fetch groupchats");
+            const result = await response.json();
+            setGroupChats(result);
+        } catch (error) {
+            console.error("Error fetching groupchats: ", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
 
     const handleRating = (value) => {
         setRating(value);
@@ -44,6 +83,23 @@ const RoommateRating = () => {
                             Did you find that our application matched you with your “dream” roommate? Let us know
                             below.
                         </p>
+
+                        {/* Dropdown to choose which roommate to rate */}
+                        <div className="roommate-select">
+                        <label htmlFor="roommate">Who are you rating?</label>
+                        <select
+                            id="roommate"
+                            value={selectedRoommate}
+                            onChange={e => setSelectedRoommate(e.target.value)}
+                        >
+                            <option value="" disabled>— Select a roommate —</option>
+                            {roommates.map(r => (
+                            <option key={r.id} value={r.id}>
+                                {r.name}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
                         <div className="stars">
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <span
