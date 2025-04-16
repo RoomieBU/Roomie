@@ -80,8 +80,26 @@ const RoommateRating = () => {
         setRating(value);
     };
 
-    const handleSubmit = () => {
-        setSubmitted(true);
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/rating/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: localStorage.getItem("token"),
+                    rated_user: selectedRoommate,
+                    rating_value: rating,
+                    comment: feedback
+                })
+            });
+
+            if (!response.ok) throw new Error("Failed to submit rating");
+            const result = await response.json();
+            console.log(result.message);
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Error submitting rating: ", error);
+        }
     };
 
     return (

@@ -91,6 +91,9 @@ public class Server {
             router.addRoute("/alert/getAllAlerts", AlertController::getAllAlerts);
             router.addRoute("/alert/getAllResponses", AlertController::getAllAlertResponses);
 
+            // Rating routes
+            router.addRoute("/rating/submit", RatingController::submitRoommateRating);
+
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");
                 new Thread(() -> {
