@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import './RoommateRating.css';
+import React, { useState, useEffect } from 'react';
 import roomieLogo from '../assets/roomie-favicon.svg';
 
 const RoommateRating = () => {
@@ -9,6 +8,9 @@ const RoommateRating = () => {
     const [hovered, setHovered] = useState(0);
     const [submitted, setSubmitted] = useState(false);
     const [feedback, setFeedback] = useState('');
+    const [userEmail, setUserEmail] = useState('');
+    const [groupChats, setGroupChats] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     // Get what groupchats the user is part of
     const fetchUserEmail = async () => {
@@ -25,8 +27,6 @@ const RoommateRating = () => {
         } catch (error) {
             console.error("Error fetching user email: ", error);
         }
-
-        fetchUserEmail();
     };
 
     const fetchChats = async () => {
@@ -46,9 +46,12 @@ const RoommateRating = () => {
         } finally {
             setLoading(false);
         }
-
-        fetchChats();
     };
+
+    useEffect(() => {
+        fetchUserEmail();
+        fetchChats();
+    }, []);
     
 
     const handleRating = (value) => {
