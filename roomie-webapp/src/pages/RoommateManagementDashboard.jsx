@@ -209,12 +209,12 @@ const RoommateManagementDashboard = () => {
                         <div className="right-option">🏠 View Housing Options<br /><span>Checkout your school's various housing options.</span></div>
                     </a>
                     <a href="/RoommateRating">
-                        <div className="right-option">⭐ Rate Your Roommate<br /><span>Give your roommate a rating out of 5</span></div>
+                        <div className="right-option">⭐ Rate Your Roommate<br /><span>Give your roommate a rating out of 5.</span></div>
                     </a>
                     <a href="/RoommateReporting">
-                        <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority</span></div>
+                        <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority.</span></div>
                     </a>
-                    <div className="right-option">🚩 View Issues<br /><span>View issues submitted by roommates</span></div>
+                    <div className="right-option">🚩 View Issues<br /><span>View issues submitted by roommates.</span></div>
                 </div>
             </main>
         </div>
