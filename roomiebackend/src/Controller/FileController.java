@@ -123,4 +123,50 @@ public class FileController {
 
         return response.toString();
     }
+
+    /**
+     * Deletes file from a given post request
+     * @param data json payload
+     * @param method post request
+     * @return http response
+     */
+    public static String deleteFile(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+
+        // Get user email from token
+        String token = data.get("token");
+        String userEmail = Auth.getEmailfromToken(token);
+        if (userEmail == null) {
+            response.setMessage("message", "Invalid token.");
+            return response.toString();
+        }
+
+        // Get user Id
+        UserDao userDao = new UserDao(SQLConnection.getConnection());
+        Map<String, String> userData = userDao.getData(Collections.singletonList("user_id"), userEmail);
+        String userIdStr = userData.get("user_id");
+        int userId = Integer.parseInt(userIdStr);
+
+
+        // get filename and filepath from given url
+        String fileURL = data.get("file_url");
+        fileURL = fileURL.substring(fileURL.lastIndexOf('/')+1);
+        String filePath = "/var/www/images/" + fileURL;
+
+        // delete file
+        File file = new File(filePath);
+        if (file.exists()) {
+            if (file.delete()) {
+                response.setMessage("message", "File deleted successfully.");
+            } else {
+                response.setMessage("message", "File does not exist.");
+            }
+        }
+
+        // delete from database
+        UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
+        userImageDao.deleteImage(userId, fileURL);
+
+        return response.toString();
+    }
 }

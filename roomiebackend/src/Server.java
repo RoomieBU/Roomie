@@ -54,6 +54,7 @@ public class Server {
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
+            router.addRoute("/user/deleteImage", FileController::deleteFile);
 
             // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);

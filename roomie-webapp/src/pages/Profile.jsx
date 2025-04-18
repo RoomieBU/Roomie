@@ -72,6 +72,36 @@ function Profile({ onEditProfile }) {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + userImages.length) % userImages.length);
     };
 
+    const onDeleteImage = async () => {
+        const token = localStorage.getItem("token");
+        const file_url = userImages[currentIndex];
+
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/user/deleteImage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: token,
+                    file_url: file_url
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                // remove deleted image from the array
+                const updatedImages = userImages.filter((_, idx) => idx !== currentIndex);
+                setUserImages(updatedImages);
+                setCurrentIndex((prev) => Math.min(prev, updatedImages.length - 1));
+                alert("Image deleted successfully.");
+            } else {
+                alert(result.message || "Failed to delete image.");
+            }
+        } catch (error) {
+            console.error("Delete failed: ", error);
+            alert("An error occurred while deleting the image.");
+        }
+    }
+
     return (
         <div className="profile-container">
             {isLoading ? (
@@ -107,6 +137,11 @@ function Profile({ onEditProfile }) {
                     ) : (
                         <p>No images available</p>
                     )}
+
+                    {/* Edit Profile Button */}
+                    <button className="delete-image-btn" onClick={onDeleteImage}>
+                        Delete
+                    </button>
 
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
