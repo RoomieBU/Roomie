@@ -147,46 +147,28 @@ public class FileController {
         String userIdStr = userData.get("user_id");
         int userId = Integer.parseInt(userIdStr);
 
-        // Debug: Check if userId is valid
-        System.out.println("User ID: " + userId);
 
-        // Get filename and filepath from given URL
+        // get filename and filepath from given url
         String fileURL = data.get("file_url");
         String filePath = "/var/www/images/" + fileURL;
+        String databasePath = "https://roomie.ddns.net/images/" + fileURL;
 
-        // Debug: Check the file path
-        System.out.println("File path to delete: " + filePath);
-
-        // Delete file
+        // delete file
         File file = new File(filePath);
         if (file.exists()) {
             if (file.delete()) {
                 response.setMessage("message", "File deleted successfully.");
             } else {
-                response.setMessage("message", "File could not be deleted.");
+                response.setMessage("message", "File does not exist.");
             }
-        } else {
-            response.setMessage("message", "File does not exist.");
         }
 
-        // Debug: Check if file was deleted
-        System.out.println("File exists after delete attempt: " + file.exists());
-
-        // Delete from database
+        // delete from database
         UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-        boolean deleteSuccess = userImageDao.deleteImage(userId, filePath);
+        userImageDao.deleteImage(userId, databasePath);
 
-        // Debug: Check if the deletion was successful
-        if (deleteSuccess) {
-            System.out.println("Database deletion successful.");
-            response.setMessage("message", "File and database entry deleted successfully.");
-        } else {
-            System.out.println("Database deletion failed.");
-            response.setMessage("message", "Failed to delete from the database.");
-        }
+
 
         return response.toString();
     }
-
-
 }
