@@ -67,6 +67,19 @@ public class UserImagesDao {
         return urls;
     }
 
+    public boolean deleteImage(int userId, String fileURL) {
+        String query = "DELETE FROM UserImages WHERE user_id = ? AND image_url = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, fileURL);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0; // returns true if a row was actually deleted
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting image URL", e);
+        }
+    }
+
+
     public void closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import './profile.css';  // Import the CSS file
-import Spinner from "../components/Spinner"
+import './profile.css';
+import Spinner from "../components/Spinner";
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
@@ -16,6 +16,28 @@ function Profile({ onEditProfile }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
 
+    // Fetch user images (reusable function)
+    const getUserImages = useCallback(async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/user/images", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") })
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch images");
+            const result = await response.json();
+
+            if (result.images) {
+                const imageArray = result.images.split(",");
+                setUserImages(imageArray);
+            } else {
+                setUserImages([]);
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    }, []);
 
     // Fetch profile information
     useEffect(() => {
@@ -40,29 +62,10 @@ function Profile({ onEditProfile }) {
         getProfile();
     }, []);
 
-    // Fetch user images
+    // Load user images on mount
     useEffect(() => {
-        const getUserImages = async () => {
-            try {
-                const response = await fetch("https://roomie.ddns.net:8080/user/images", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token: localStorage.getItem("token") })
-                });
-
-                if (!response.ok) throw new Error("Failed to fetch images");
-                const result = await response.json();
-
-                if (result.images) {
-                    const imageArray = result.images.split(",");
-                    setUserImages(imageArray);
-                }
-            } catch (error) {
-                setError(error.message);
-            }
-        };
         getUserImages();
-    }, []);
+    }, [getUserImages]);
 
     const nextImage = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % userImages.length);
@@ -72,11 +75,40 @@ function Profile({ onEditProfile }) {
         setCurrentIndex((prevIndex) => (prevIndex - 1 + userImages.length) % userImages.length);
     };
 
+    const onDeleteImage = async () => {
+        const token = localStorage.getItem("token");
+        let file_url = userImages[currentIndex];
+        file_url = file_url.substring(file_url.lastIndexOf('/') + 1);
+
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/user/deleteImage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: token,
+                    file_url: file_url
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                await getUserImages(); // Refresh images
+                setCurrentIndex((prev) => Math.max(0, prev - 1));
+                alert("Image deleted successfully.");
+            } else {
+                alert(result.message || "Failed to delete image.");
+            }
+        } catch (error) {
+            console.error("Delete failed: ", error);
+            alert("An error occurred while deleting the image.");
+        }
+    }
+
     return (
         <div className="profile-container">
             {isLoading ? (
                 <div className="loading-container">
-                    <Spinner load={"profile..."}/>
+                    <Spinner load={"profile..."} />
                 </div>
             ) : profile ? (
                 <div className="profile-content">
@@ -108,6 +140,10 @@ function Profile({ onEditProfile }) {
                         <p>No images available</p>
                     )}
 
+                    <button className="delete-image-btn" onClick={onDeleteImage}>
+                        Delete
+                    </button>
+
                     {/* Profile Details Grid */}
                     <div className="profile-details-grid">
                         <div className="detail-item">
@@ -132,14 +168,12 @@ function Profile({ onEditProfile }) {
                                     try {
                                         return decodeURIComponent(profile.about_me);
                                     } catch (e) {
-                                        return profile.about_me || "No bio available.";  // Fallback to the raw string or "No bio available" if decoding fails
+                                        return profile.about_me || "No bio available.";
                                     }
                                 })()}
                             </span>
                         </div>
 
-
-                        {/* Edit Profile Button */}
                         <button className="edit-profile-btn" onClick={onEditProfile}>
                             Edit Profile
                         </button>

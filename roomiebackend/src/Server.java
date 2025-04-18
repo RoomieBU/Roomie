@@ -54,6 +54,7 @@ public class Server {
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
             router.addRoute("/user/images", ImageController::getUserImages);
+            router.addRoute("/user/deleteImage", FileController::deleteFile);
 
             // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
@@ -78,6 +79,7 @@ public class Server {
              */
             router.addRoute("/chat/sendMessage", ChatController::receiveMessage);
             router.addRoute("/chat/getGroupchats", ChatController::sendGroupChats);
+            router.addRoute("/chat/getConfirmedRoommates", ChatController::sendConfirmedRoommates);
             router.addRoute("/chat/getChatHistory", ChatController::sendChatHistory);
             router.addRoute("/chat/requestRoommate", ChatController::receiveRoommateRequest);
             router.addRoute("/chat/getRoommateRequestStatus", ChatController::sendRoommateRequestStatus);
@@ -89,6 +91,9 @@ public class Server {
             router.addRoute("/alert/addAlertReaction", AlertController::addAlertReaction);
             router.addRoute("/alert/getAllAlerts", AlertController::getAllAlerts);
             router.addRoute("/alert/getAllResponses", AlertController::getAllAlertResponses);
+
+            // Rating routes
+            router.addRoute("/rating/submit", RatingController::submitRoommateRating);
 
             if (DEV_CONSOLE) {
                 System.out.println("[Notice] Development console is active. Type 'help' for commands list");

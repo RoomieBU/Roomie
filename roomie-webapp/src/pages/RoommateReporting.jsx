@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './RoommateReporting.css';
 import roomieLogo from '../assets/roomie-favicon.svg';
 
@@ -6,6 +6,18 @@ const RoommateReporting = () => {
     const [feedback, setFeedback] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [isAnonymous, setIsAnonymous] = useState(false);
+    const [groupChatMembers, setGroupChatMembers] = useState([]);
+
+    useEffect(() => {
+        // Fetch group chat members from the backend
+        fetch('/api/getGroupChatMembers') // Replace with your actual API endpoint
+            .then(response => response.json())
+            .then(data => {
+                // Filter out empty or null names
+                const filteredMembers = data.filter(member => member.name && member.name.trim() !== "");
+                setGroupChatMembers(filteredMembers);
+            });
+    }, []);
 
     const handleSubmit = () => {
         setSubmitted(true);
@@ -51,6 +63,16 @@ const RoommateReporting = () => {
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
                             />
+                        </div>
+                        <div className="dropdown">
+                            <label>Select Roommate:</label>
+                            <select>
+                                {groupChatMembers.map(member => (
+                                    <option key={member.id} value={member.id}>
+                                        {member.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         <button className="submit-button" onClick={handleSubmit}>
                             Submit

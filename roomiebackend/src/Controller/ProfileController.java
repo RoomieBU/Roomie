@@ -131,4 +131,23 @@ public class ProfileController {
 
         return response.toString();
     }
+
+    public static String getUserNameByEmail(String email) {
+        Connection conn = SQLConnection.getConnection();
+        Dao dao = new Dao(conn);
+
+        // Fetch user data
+        List<String> userDataColumns = new ArrayList<>();
+        userDataColumns.add("first_name");
+        userDataColumns.add("last_name");
+        Map<String, String> userData = dao.get(userDataColumns, email, "Users");
+
+        if (userData != null) {
+            String firstName = userData.get("first_name");
+            String lastName = userData.get("last_name");
+            return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "").trim();
+        } else {
+            return ""; // Return an empty string if user not found
+        }
+    }
 }

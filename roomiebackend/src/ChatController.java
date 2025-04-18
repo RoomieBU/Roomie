@@ -8,6 +8,8 @@ import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Utils;
 import com.google.gson.Gson;
+
+import Controller.ProfileController;
 import Tools.Message;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -215,6 +217,16 @@ public class ChatController {
 
         String email = Auth.getEmailfromToken(data.get("token"));
         List<GroupChat> groupChats = dao.getGroupchats(email);
+        Gson gson = new Gson();
+
+        return Utils.assembleHTTPResponse(200, gson.toJson(groupChats));
+    }
+
+    public static String sendConfirmedRoommates(Map<String, String> data, String method) {
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+
+        String email = Auth.getEmailfromToken(data.get("token"));
+        List<GroupChat> groupChats = dao.getConfirmedRoommates(email);
         Gson gson = new Gson();
 
         return Utils.assembleHTTPResponse(200, gson.toJson(groupChats));
