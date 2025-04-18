@@ -149,6 +149,10 @@ html {
   font-weight: 200;
 }
 
+h1, h2, h3 {
+  font-family: "DM Sans"
+}
+
 .signup-button {
   background-color: #fff1fc !important;
   border: none !important;
@@ -164,6 +168,16 @@ html {
 
 .signup-button:hover {
   background-color: #ebc6eb !important;
+}
+
+.form-control {
+  border: var(--bs-border-width) solid #6f42c1;
+  border-radius: 20px;
+}
+
+label {
+  margin: 5px;
+  font-family: "DM Sans";
 }
 
 a {
@@ -295,4 +309,25 @@ a {
 
 p.dashboard-p {
   margin-top: 10px;
+  color: #370e5f9e;
+  font-family: "DM Sans";
+}
+
+h1.dashboard-h1 {
+  font-size: 50px;
+  font-weight: 200;
+}
+
+h1.dashboard2-h1 {
+  font-size: 50px;
+  font-weight: 900;
+  color: blueviolet;
+}
+
+button.btn.btn-primary.w-100 {
+  background: blueviolet;
+}
+
+button.btn.btn-primary.w-100:hover {
+  background: #7738EB;
 }
