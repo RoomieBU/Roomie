@@ -164,7 +164,9 @@ public class FileController {
 
         // delete from database
         UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-        userImageDao.deleteImage(userId, fileURL);
+        userImageDao.deleteImage(userId, filePath);
+
+
 
         return response.toString();
     }
