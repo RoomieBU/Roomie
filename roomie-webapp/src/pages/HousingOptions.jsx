@@ -68,6 +68,9 @@ function HousingOptions() {
                         <div className="housing-data-space">
                             <h1 className="housing-name name-left">Traditional Residence Halls</h1>
                             <div className="list-space">
+                                <p>
+
+                                </p>
                                 <ul className="housing-list">
                                     <li className="housing-item">Columbia Hall</li>
                                     <li className="housing-item">Elwell Hall</li>
@@ -94,6 +97,9 @@ function HousingOptions() {
                         <div className="housing-data-space">
                             <h1 className="housing-name name-right">Suite-Style Residence Hall</h1>
                             <div className="list-space ">
+                                <p>
+
+                                </p>
                                 <ul className="housing-list">
                                     <li className="housing-item">David L. Soltz Hall</li>
                                 </ul>
@@ -105,6 +111,9 @@ function HousingOptions() {
                         <div className="housing-data-space">
                             <h1 className="housing-name name-left">Apartment Complexes</h1>
                             <div className="list-space">
+                                <p className="housing-description">
+                                    Range in size from 2 to 6-person single bedroom apartments with shared kitchen, living room and bathroom(s).
+                                </p>
                                 <ul className="housing-list">
                                     <li className="housing-item">Jessica S. Kozloff Apartments</li>
                                     <li className="housing-item" >Montgomery Place Apartments</li>

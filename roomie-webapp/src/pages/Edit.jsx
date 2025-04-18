@@ -236,7 +236,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                 }
             }
 
-            navigate("/dashboard");
+            onProfile
         } catch (error) {
             setProfileError(error.message);
         }

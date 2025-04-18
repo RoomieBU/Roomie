@@ -120,3 +120,10 @@
     width: 90%;
     justify-content: space-between;
 }
+
+.housing-description {
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
