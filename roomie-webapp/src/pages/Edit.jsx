@@ -323,7 +323,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                     </div>
                     <button
                         type="submit"
-                        className="btn btn-primary w-100 mt-3"  
+                        className="btn btn-primary w-100 mt-3"
                     >
                         Save Changes
                     </button>

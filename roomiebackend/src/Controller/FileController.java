@@ -147,27 +147,46 @@ public class FileController {
         String userIdStr = userData.get("user_id");
         int userId = Integer.parseInt(userIdStr);
 
+        // Debug: Check if userId is valid
+        System.out.println("User ID: " + userId);
 
-        // get filename and filepath from given url
+        // Get filename and filepath from given URL
         String fileURL = data.get("file_url");
         String filePath = "/var/www/images/" + fileURL;
 
-        // delete file
+        // Debug: Check the file path
+        System.out.println("File path to delete: " + filePath);
+
+        // Delete file
         File file = new File(filePath);
         if (file.exists()) {
             if (file.delete()) {
                 response.setMessage("message", "File deleted successfully.");
             } else {
-                response.setMessage("message", "File does not exist.");
+                response.setMessage("message", "File could not be deleted.");
             }
+        } else {
+            response.setMessage("message", "File does not exist.");
         }
 
-        // delete from database
+        // Debug: Check if file was deleted
+        System.out.println("File exists after delete attempt: " + file.exists());
+
+        // Delete from database
         UserImagesDao userImageDao = new UserImagesDao(SQLConnection.getConnection());
-        userImageDao.deleteImage(userId, filePath);
+        boolean deleteSuccess = userImageDao.deleteImage(userId, filePath);
 
-
+        // Debug: Check if the deletion was successful
+        if (deleteSuccess) {
+            System.out.println("Database deletion successful.");
+            response.setMessage("message", "File and database entry deleted successfully.");
+        } else {
+            System.out.println("Database deletion failed.");
+            response.setMessage("message", "Failed to delete from the database.");
+        }
 
         return response.toString();
     }
+
+
 }
