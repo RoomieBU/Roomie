@@ -77,7 +77,8 @@ function Profile({ onEditProfile }) {
 
     const onDeleteImage = async () => {
         const token = localStorage.getItem("token");
-        const file_url = userImages[currentIndex];
+        let file_url = userImages[currentIndex];
+        file_url = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
 
         try {
             const response = await fetch("https://roomie.ddns.net:8080/user/deleteImage", {

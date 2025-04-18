@@ -150,7 +150,6 @@ public class FileController {
 
         // get filename and filepath from given url
         String fileURL = data.get("file_url");
-        fileURL = fileURL.substring(fileURL.lastIndexOf('/')+1);
         String filePath = "/var/www/images/" + fileURL;
 
         // delete file
