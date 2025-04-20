@@ -85,6 +85,7 @@ public class Server {
             router.addRoute("/chat/getRoommateRequestStatus", ChatController::sendRoommateRequestStatus);
             router.addRoute("/chat/resetRoommateRequestChoice", ChatController::resetRoommateRequestChoice);
             router.addRoute("/chat/createGroupChat", ChatController::createGroupChat);
+            router.addRoute("/chat/getAllUserInformation", ChatController::sendAllUserInformation);
 
             // Alerts
             router.addRoute("/alert/addAlert", AlertController::createAlert);

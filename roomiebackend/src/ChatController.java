@@ -1,3 +1,4 @@
+import Controller.MatchController;
 import Database.ChatDao;
 import Database.Dao;
 import Database.GroupChat;
@@ -10,6 +11,7 @@ import Tools.Utils;
 import com.google.gson.Gson;
 
 import Controller.ProfileController;
+import Database.ChatInformation;
 import Tools.Message;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -194,6 +196,25 @@ public class ChatController {
         response.code = 200;
         
         return response.toString();
+    }
+
+    // send all user info
+    public static String sendAllUserInformation(Map<String, String> data, String method) {
+        ChatDao dao = new ChatDao(SQLConnection.getConnection());
+        UserDao userDao = new UserDao(SQLConnection.getConnection());
+
+        int groupId = Integer.parseInt(data.get("groupchat_id"));
+        String email = Auth.getEmailfromToken(data.get("token"));
+        List<String> emails = dao.getGroupChatEmails(email, groupId);
+
+        List<ChatInformation> informationList = new ArrayList<>();
+        for(String e : emails) {
+            informationList.add(userDao.getChatInformation(e));
+        }
+
+        Gson gson = new Gson();
+
+        return Utils.assembleHTTPResponse(200, gson.toJson(informationList));
     }
     
     public static String sendChatHistory(Map<String, String> data, String method) {
