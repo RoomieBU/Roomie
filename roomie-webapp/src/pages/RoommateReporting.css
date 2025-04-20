@@ -4,10 +4,12 @@
     padding: 40px 20px;
     border-radius: 0 0 15px 15px;
     box-shadow: 15px 15px 10px #6f42c138;
-    height: 300px;
     align-content: center;
     background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(111, 66, 193, 1) 91%);
     background-size: cover;
+    height: 250px;
+    margin: 0;
+    padding-top: 40px;
 }
 
 .reporting-header h1 {

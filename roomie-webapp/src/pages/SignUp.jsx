@@ -49,7 +49,7 @@ function SignUp() {
                 </p>
                 <form onSubmit={handleSubmit(onSubmit)} className="w-50">
                     <div className="mb-3">
-                        <label className="dashboard-p">School Email</label>
+                        <label className="dashboard-p">School Email:</label>
                         <input
                             type="email"
                             className={`form-control ${errors.email ? "is-invalid" : ""}`}
@@ -59,7 +59,7 @@ function SignUp() {
                     </div>
 
                     <div className="mb-3">
-                        <label className="dashboard-p">Password</label>
+                        <label className="dashboard-p">Password:</label>
                         <input
                             type="password"
                             className={`form-control ${errors.password ? "is-invalid" : ""}`}

@@ -47,7 +47,9 @@ body {
     padding: 40px 20px;
     border-radius: 0 0 15px 15px;
     box-shadow: 0 4px 12px #0000001f;
-    height: auto;
+    height: 250px;
+    margin: 0;
+    padding-top: 20px;
     background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(111, 66, 193, 1) 91%);
     background-size: cover;
 }
