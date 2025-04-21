@@ -127,7 +127,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
         }
 
         // Resize the profile image to 150x150
-        resizeImage(file, 150, 150)
+        resizeImage(file, 600, 600)
             .then((resizedDataUrl) => {
                 setSelectedProfilePicture(resizedDataUrl);
             })
