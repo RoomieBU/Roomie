@@ -70,7 +70,7 @@ function AppWrapper() {
         <Route path="/RoommateRating" element={<RoommateRating />} />
         <Route path="/RoommateReporting" element={<RoommateReporting />} />
         <Route path="/housingOptions" element={<HousingOptions/>}/>
-        <Route path="/roommateChat" element={<RoommateChat/>}/>
+        <Route path="/RoommateChat" element={<RoommateChat/>}/>
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

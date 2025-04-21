@@ -1,34 +1,16 @@
-import roomieLogo from "../assets/roomie-favicon.svg"
+import RoommateNavBar from "../components/RoommateNavBar";
 import "./RoommateChat.css"
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 
 function RoommateChat() {
 
     const [groupchat, setGroupchat] = useState()
-    const [userEmail, setUserEmail] = useState("")
-    const [messages, setMessages] = useState([])
     const [chatHistory, setChatHistory] = useState([])
     const [groupchatMembers, setGroupchatMembers] = useState([])
     const [emailToNameMap, setEmailToNameMap] = useState({});
+    const [text, setText] = useState("")
 
-
-    // get user email
-    const fetchUserEmail = async () => {
-        try {
-            const response = await fetch("https://roomie.ddns.net:8080/profile/getUserEmail", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token: localStorage.getItem("token") })
-            });
-
-            if (!response.ok) throw new Error("Failed to fetch user email");
-            const result = await response.json();
-            console.log("EMAIL", result)
-            setUserEmail(result.email);
-        } catch (error) {
-            console.error("Error fetching user email: ", error);
-        }
-    };
+    const bottomRef = useRef(null)
 
     // get groupchat id
     const checkIfConfirmed = async () => {
@@ -45,7 +27,6 @@ function RoommateChat() {
     };
 
     useEffect(() => {
-        fetchUserEmail()
         checkIfConfirmed();
     }, []);
 
@@ -122,19 +103,75 @@ function RoommateChat() {
     }, [groupchat, getAllUserInformation])
 
 
+    const scrollToBottom = () => {
+        requestAnimationFrame(() => {
+            bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        });
+    };
+    
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatHistory]);
+
+
+    // send message to db
+    function sendMessage() {
+
+        if (text.length === 0) return
+
+
+        const newMessage = {
+            groupChatId: 3,
+            id: 0,
+            message: text,
+            senderEmail: "slamarca@gmail.com",
+            sentBySelf: true,
+            timestamp: new Date()
+        }
+
+        setChatHistory((prevMessages) => [...prevMessages, newMessage])
+
+        const sendMessageData = async () => {
+            try {
+                const messageData = JSON.stringify({
+                    token: localStorage.getItem("token"),
+                    groupchat_id: groupchat,
+                    message: encodeURIComponent(text)
+                })
+
+                const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: messageData,
+                });
+
+                if (!response.ok) {
+                    throw new Error("Message Data Sending failed. Please try again.");
+                }
+
+            } catch (error) {
+                console.error("HERE we are", error)
+            }
+        }
+        sendMessageData()
+
+        setText("")
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevents default behavior (new line)
+            sendMessage(e);
+            e.target.style.height = "50px"
+        }
+    }
 
 
     return (
         <>
-            <header className="dashboard-header">
-                <div className="logo">
-                    <a href="/"><img src={roomieLogo} alt="Roomie Logo" /></a>
-                </div>
-                <div className="nav-links">
-                    <a href="/Dashboard">EDIT PROFILE</a>
-                    <a href="/">SIGN OUT.</a>
-                </div>
-            </header>
+            <RoommateNavBar/>
 
             <div className="chat-page-container">
                 <div className="chat-wrapper">
@@ -151,19 +188,26 @@ function RoommateChat() {
                             />))}
                     </div>
                     <div className="chat-area">
-
                         {chatHistory.map((msg, index) => (
                             <div
-                            key={index}
-                            className={`bubble ${msg.sentBySelf ? "right" : "left"}`}
+                                key={index}
+                                className={`bubble ${msg.sentBySelf ? "right" : "left"}`}
                             >
-                            <label>{emailToNameMap[msg.senderEmail]?.firstName} {emailToNameMap[msg.senderEmail]?.lastName}</label>
-                            <div className="message-text">{msg.message}</div>
+                                {emailToNameMap[msg.senderEmail] && (
+                                    <label>
+                                        {emailToNameMap[msg.senderEmail]?.firstName} {emailToNameMap[msg.senderEmail]?.lastName}
+                                    </label>
+                                )}
+                                <div className="message-text">{decodeURIComponent(msg.message)}</div>
                             </div>
                         ))}
+                        <div ref={bottomRef} />
                     </div>
                     <div className="message-input">
                         <textarea
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            onKeyDown={handleKeyPress}
                             onInput={(e) => {
                                 e.target.style.height = "50px"; // Reset height to auto to recalculate
                                 e.target.style.height = `${e.target.scrollHeight}px`; // Set new height
@@ -172,7 +216,7 @@ function RoommateChat() {
                             placeholder="Type a message..."
                             className="messageTextBox form-control"
                         />
-                        <button className="chatButton">
+                        <button className="chatButton" onClick={sendMessage}>
                             <i className="bi bi-send" />
                         </button>
                     </div>

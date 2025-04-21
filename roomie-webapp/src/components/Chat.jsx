@@ -270,6 +270,7 @@ function Chat({ selectedChat }) {
     const closeModal = () => {
         setIsModalOpen(false);
     };
+    
 
 
     return (

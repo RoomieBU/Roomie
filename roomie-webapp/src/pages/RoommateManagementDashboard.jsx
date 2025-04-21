@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './RoommateManagementDashboard.css';
-import roomieLogo from '../assets/roomie-favicon.svg';
+import RoommateNavBar from '../components/RoommateNavBar';
 
 const RoommateManagementDashboard = () => {
     const [groupchatid, setGroupchat] = useState('');
@@ -85,17 +85,12 @@ const RoommateManagementDashboard = () => {
         }
     };
 
+
+    
+
     return (
         <div className="dashboard-wrapper">
-            <header className="dashboard-header">
-                <div className="logo">
-                    <a href="/"><img src={roomieLogo} alt="Roomie Logo" /></a>
-                </div>
-                <div className="nav-links">
-                    <a href="/Dashboard">EDIT PROFILE</a>
-                    <a href="/">SIGN OUT.</a>
-                </div>
-            </header>
+            <RoommateNavBar/>
 
             <section className="hero-section">
                 <h1>ROOMIE.</h1>
@@ -174,20 +169,20 @@ const RoommateManagementDashboard = () => {
 
             <main className="main-content">
 
-
-
                 <div className="left-section">
                     <div className="feature-box">
                         <div className="feature-emoji"><p>📲</p></div>
-                        <div className="feature-info">
-                            <h3>Chat Room</h3>
-                            <p>Start a private conversation with your roommate. Discuss cleaning schedules, grocery lists, and more.</p>
-                            <div className="dots-row">
-                                <span className="dot dot-purple"></span><span>You</span>
-                                <span className="dot dot-green"></span><span>Emily</span>
-                                <span className="dot dot-yellow"></span><span>Matthew</span>
+                        <a href="/roommateChat">
+                            <div className="feature-info">
+                                <h3>Chat Room</h3>
+                                <p>Start a private conversation with your roommate. Discuss cleaning schedules, grocery lists, and more.</p>
+                                <div className="dots-row">
+                                    <span className="dot dot-purple"></span><span>You</span>
+                                    <span className="dot dot-green"></span><span>Emily</span>
+                                    <span className="dot dot-yellow"></span><span>Matthew</span>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
                     <div className="feature-box">

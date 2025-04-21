@@ -1,0 +1,77 @@
+/* Default (desktop): No changes needed */
+
+.nav-links a {
+    margin-left: 30px;
+    color: #6F42C1;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: "Roboto", sans-serif;
+    text-decoration: none;
+}
+
+.nav-links a:hover {
+    color: #7738EB;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 30px;
+    flex-wrap: wrap;
+}
+
+.left-lean {
+    margin-right: auto;
+}
+
+/* Tablet - Medium screen changes */
+@media (max-width: 1024px) {
+    .dashboard-header {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        
+    }
+
+    .nav-links a {
+        margin-left: 20px;
+        font-size: 0.95rem;
+    }
+
+    .left-lean {
+        margin-right: 0;
+    }
+}
+
+/* Mobile - Full vertical layout */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        
+        margin-top: 10px;
+    }
+
+    .nav-links a {
+        margin: 0; /* reset margin to let gap handle spacing */
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .left-lean {
+        margin-right: 0;
+    }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './RoommateReporting.css';
-import roomieLogo from '../assets/roomie-favicon.svg';
+import RoommateNavBar from '../components/RoommateNavBar'; // Adjust the path as needed
 
 const RoommateReporting = () => {
     const [feedback, setFeedback] = useState("");
@@ -26,15 +26,7 @@ const RoommateReporting = () => {
     return (
         <div className="rating-container">
             <div className="dashboard-wrapper">
-                <header className="dashboard-header">
-                    <div className="logo">
-                        <a href="/RoommateManagementDashboard"><img src={roomieLogo} alt="Roomie Logo" /></a>
-                    </div>
-                    <div className="nav-links">
-                        <a href="/dashboard">EDIT PROFILE</a>
-                        <a href="/">SIGN OUT.</a>
-                    </div>
-                </header>
+                <RoommateNavBar/>
             </div>
 
             <header className="reporting-header">

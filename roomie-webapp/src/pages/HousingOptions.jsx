@@ -1,5 +1,5 @@
 import "./HousingOptions.css"
-import roomieLogo from '../assets/roomie-favicon.svg';
+import RoommateNavBar from "../components/RoommateNavBar"
 
 import columbia from '../assets/housingImages/Columbia.jpg'
 import elwell from '../assets/housingImages/Elwell.jpg'
@@ -46,15 +46,7 @@ function HousingOptions() {
 
     return (
         <div>
-            <header className="dashboard-header">
-                <div className="logo">
-                    <a href="/"><img src={roomieLogo} alt="Roomie Logo" /></a>
-                </div>
-                <div className="nav-links">
-                    <a href="/Dashboard">EDIT PROFILE</a>
-                    <a href="/">SIGN OUT.</a>
-                </div>
-            </header>
+            <RoommateNavBar/>
             <header className="rating-header">
                 <h1>Housing at Bloomsburg</h1>
                 <p>
@@ -68,8 +60,8 @@ function HousingOptions() {
                         <div className="housing-data-space">
                             <h1 className="housing-name name-left">Traditional Residence Halls</h1>
                             <div className="list-space">
-                                <p>
-
+                                <p className="housing-description">
+                                    Rooms of different genders next to each other on the same hallway with gender assigned restrooms.
                                 </p>
                                 <ul className="housing-list">
                                     <li className="housing-item">Columbia Hall</li>
@@ -97,8 +89,8 @@ function HousingOptions() {
                         <div className="housing-data-space">
                             <h1 className="housing-name name-right">Suite-Style Residence Hall</h1>
                             <div className="list-space ">
-                                <p>
-
+                                <p className="housing-description">
+                                    Range in size from 1 to 4-spanerson single bedroom, shared bathroom and common space suites.
                                 </p>
                                 <ul className="housing-list">
                                     <li className="housing-item">David L. Soltz Hall</li>

@@ -9,12 +9,7 @@ body {
     width: 100%;
 }
 
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px 30px 0px 30px;
-}
+
 
 .logo {
     text-align: left !important;
@@ -28,18 +23,7 @@ body {
     height: 40px !important;
 }
 
-.nav-links a {
-    margin-left: 30px;
-    color: #6F42C1;
-    font-weight: 600;
-    font-size: 1rem;
-    font-family: "Roboto", sans-serif;
-    text-decoration: none;
-}
 
-.nav-links a:hover {
-    color: #7738EB;
-}
 
 .hero-section {
     color: white;

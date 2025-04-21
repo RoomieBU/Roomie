@@ -32,11 +32,12 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    min-height: 72px;
     justify-content: center;
     align-items: center;
     gap: 20px;
     padding: 10px 0;
-
+    background-image: linear-gradient(19deg, rgba(195, 34, 161, 0.888) 0%, rgb(111, 66, 193) 91%);
     border-bottom: 2px solid #6f42c1;
 }
 
@@ -87,13 +88,17 @@
     object-fit: cover;
     border-radius: 100%;
     border-width: 2px;
-    border-color: black;
+    border-color: white;
     border-style: solid;
     align-items: center;
-    background-color: coral;
+    background-color: gray;
     align-items: center;
     display: flex;
     justify-content: center;
+}
+
+.roommate-picture:hover {
+    
 }
 
 
