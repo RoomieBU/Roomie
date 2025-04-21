@@ -1,4 +1,3 @@
-
 import roomieLogo from "../assets/roomie-favicon.svg"
 import "./RoommateChat.css"
 import { useEffect, useState, useCallback } from "react";
@@ -10,7 +9,7 @@ function RoommateChat() {
     const [messages, setMessages] = useState([])
     const [chatHistory, setChatHistory] = useState([])
     const [groupchatMembers, setGroupchatMembers] = useState([])
-    const [chatInformation, setChatInformation] = useState([])
+    const [emailToNameMap, setEmailToNameMap] = useState({});
 
 
     // get user email
@@ -50,9 +49,6 @@ function RoommateChat() {
         checkIfConfirmed();
     }, []);
 
-    // send message to database
-    
-
     // get chatHistory
     const getChatHistory = async (id) => {
         try {
@@ -75,21 +71,37 @@ function RoommateChat() {
     }
 
     // get groupchat user information --> all users in the groupchatID
-    // first name, last name, profile picture
     const getAllUserInformation = useCallback(async () => {
         try {
             const response = await fetch("https://roomie.ddns.net:8080/chat/getAllUserInformation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ groupchat_id: groupchat,
+                body: JSON.stringify({
+                    groupchat_id: groupchat,
                     token: localStorage.getItem("token")
-                 })
+                })
             });
-            
+    
             if (!response.ok) throw new Error("Failed to fetch all user information");
-            console.log(response)
+    
+            const result = await response.json(); // ✅ this parses the actual data
+            console.log("User info:", result);
+    
+            setGroupchatMembers(result); // ✅ now setting actual user data
 
-            setGroupchatMembers(response);
+            const emailMap = {};
+            result.forEach(member => {
+                emailMap[member.email] = {
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    profilePicture: member.profilePicture,
+                };
+            });
+
+            console.log("emailMap: ", emailMap)
+
+            setEmailToNameMap(emailMap); // ✅ store mapping
+
         } catch (error) {
             console.error("Error fetching all user information", error);
             return null;
@@ -109,43 +121,6 @@ function RoommateChat() {
         }
     }, [groupchat, getAllUserInformation])
 
-    
-
-    // const getChatInformation = async () => {
-
-    //     const Chat = function (firstName, lastName, groupChatId, profilePicture) {
-    //         this.firstName = firstName;
-    //         this.lastName = lastName;
-    //         this.groupChatId = groupChatId;
-    //         this.profilePicture = profilePicture;
-    //     };
-        
-
-    //     try {
-    //         const response = await fetch("https://roomie.ddns.net:8080/matches/getChatInformation", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ email })
-    //         });
-
-    //         if (!response.ok) throw new Error("Failed to fetch chat info");
-
-    //         const chatInfo = await response.json();
-    //         groupchatMembers.push(new Chat(
-    //             chatInfo.first_name,
-    //             chatInfo.last_name,
-    //             groupchat,
-    //             chatInfo.profile_picture_url
-    //         ));
-            
-    //     } catch (error) {
-    //         console.error("Error fetching chat information", error);
-    //         return null;
-    //     }
-
-    //     setGroupchatMembers(groupchatMembers)
-    // }
-
 
 
 
@@ -164,9 +139,16 @@ function RoommateChat() {
             <div className="chat-page-container">
                 <div className="chat-wrapper">
                     <div className="chat-header">
-                        <div className="roommate-picture">JL</div >
-                        <div className="roommate-picture">JD</div >
-                        <div className="roommate-picture">SK</div >
+                        {groupchatMembers.map((member, index) => (
+                            <div
+                            key={index}
+                            className="roommate-picture"
+                            style={{
+                                backgroundImage: `url(${member.profilePicture})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }}
+                            />))}
                     </div>
                     <div className="chat-area">
 
@@ -175,16 +157,13 @@ function RoommateChat() {
                             key={index}
                             className={`bubble ${msg.sentBySelf ? "right" : "left"}`}
                             >
-                            <label>{msg.senderEmail}</label>
+                            <label>{emailToNameMap[msg.senderEmail]?.firstName} {emailToNameMap[msg.senderEmail]?.lastName}</label>
                             <div className="message-text">{msg.message}</div>
                             </div>
                         ))}
                     </div>
                     <div className="message-input">
                         <textarea
-                            // value={text}
-                            // onChange={(e) => setText(e.target.value)}
-                            // onKeyDown={handleKeyPress}
                             onInput={(e) => {
                                 e.target.style.height = "50px"; // Reset height to auto to recalculate
                                 e.target.style.height = `${e.target.scrollHeight}px`; // Set new height
@@ -193,8 +172,7 @@ function RoommateChat() {
                             placeholder="Type a message..."
                             className="messageTextBox form-control"
                         />
-                        {/* onClick={sendMessage} */}
-                        <button  className="chatButton">
+                        <button className="chatButton">
                             <i className="bi bi-send" />
                         </button>
                     </div>

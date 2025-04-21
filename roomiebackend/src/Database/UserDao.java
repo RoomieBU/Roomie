@@ -112,7 +112,8 @@ public class UserDao extends Dao{
                 ChatInformation chatInfo = new ChatInformation(
                     rs.getString("first_name"),
                     rs.getString("last_name"),
-                    rs.getString("profile_picture_url")
+                    rs.getString("profile_picture_url"),
+                    email
                 );
 
                  return chatInfo;

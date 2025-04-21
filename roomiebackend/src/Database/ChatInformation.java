@@ -5,12 +5,25 @@ public class ChatInformation {
     private String profilePicture;
     private String firstName;
     private String lastName;
+    private String email;
 
-    public ChatInformation(String firstName, String lastName, String profilePicture) {
+    public ChatInformation(String firstName, String lastName, String profilePicture, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.profilePicture = profilePicture;
+        this.email = email;
     }
+
+    // Getter for email
+    public String getEmail() {
+        return email;
+    }
+
+    // Setter for email
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     
     // Getter for profilePicture
     public String getProfilePicture() {
