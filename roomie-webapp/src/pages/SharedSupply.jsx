@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './SharedSupply.css';
 import RoommateNavBar from '../components/RoommateNavBar';
@@ -11,6 +11,18 @@ const SharedSupply = () => {
     const [editItem, setEditItem] = useState({ id: null, quantity: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    const checkAndCreateSupplyList = async () => {
+      const payload = { token: localStorage.getItem('token') };
+      const res = await fetch('https://roomie.ddns.net/checkAndCreateSupplyList', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+          throw new Error('Could not initialize supply list');
+    }
+
 
     const getItems = async () => {
         setLoading(true);

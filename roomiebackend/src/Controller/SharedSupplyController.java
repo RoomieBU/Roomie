@@ -31,7 +31,7 @@ public class SharedSupplyController {
      * edits an existing item count
      * @param data token, item, new count
      * @param method POST
-     * @return http response 
+     * @return http response
      */
     public String editItem(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
