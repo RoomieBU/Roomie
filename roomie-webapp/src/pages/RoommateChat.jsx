@@ -120,13 +120,9 @@ function RoommateChat() {
         if (text.length === 0) return;
 
         const newMessage = {
-            groupChatId: groupchat,
-            id: 0,
-            message: text,
-            senderEmail: "slamarca@gmail.com",
             sentBySelf: true,
-            timestamp: new Date(),
-        };
+            message: text
+        }
 
         setChatHistory((prevMessages) => [...prevMessages, newMessage]);
 
