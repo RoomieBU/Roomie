@@ -171,7 +171,7 @@ const RoommateManagementDashboard = () => {
 
                 <div className="left-section">
                     <div className="feature-box">
-                        <div className="feature-emoji"><p>📲</p></div>
+                        <div className="feature-emoji"><p>✉️</p></div>
                         <a href="/roommateChat">
                             <div className="feature-info">
                                 <h3>Chat Room</h3>
