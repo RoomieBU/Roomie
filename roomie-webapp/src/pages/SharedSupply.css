@@ -1,0 +1,36 @@
+.inventory-title {
+    color: #6F42C1;
+}
+
+.add-btn {
+    background-color: #6F42C1;
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+    border-radius: 30px;
+}
+
+.add-btn:hover {
+    background-color: #50269E;
+}
+
+.list-group-item {
+    border-left: 5px solid #7738EB;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #3F1E7C;
+    color: white;
+}
+
+.btn-outline-danger {
+    color: #B94A48;
+    border-color: #B94A48;
+}
+
+.btn-outline-danger:hover {
+    background-color: #B94A48;
+    color: white;
+}
