@@ -1,0 +1,110 @@
+.bg-purple {
+    background-color: #6F42C1 !important;
+}
+
+.calendar-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px #0000001a;
+    overflow: hidden;
+}
+
+.calendar-card .card-header {
+    background-color: #6F42C1;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.calendar-card .card-body {
+    padding: 1rem;
+}
+
+.purple-calendar {
+    width: 100%;
+}
+
+.purple-calendar .react-calendar {
+    border: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.purple-calendar .react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.purple-calendar .react-calendar__navigation button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: #6F42C1;
+    transition: color 0.2s ease;
+    font-family: 'DM Sans';
+}
+
+.purple-calendar .react-calendar__navigation button:disabled {
+    color: #cccccc;
+    cursor: default;
+}
+
+.purple-calendar .react-calendar__month-view__weekdays {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555555;
+    font-family: 'DM Sans';
+}
+
+.purple-calendar .react-calendar__tile {
+    position: relative;
+    height: 3.5rem;
+    padding: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border-radius: 0.5rem;
+    font-family: 'DM Sans';
+}
+
+.purple-calendar .react-calendar__tile:hover {
+    background-color: #6838eb56;
+    transform: translateY(-2px);
+}
+
+.purple-calendar .react-calendar__tile--now {
+    background-color: #7738ebc7;
+}
+
+.purple-calendar .react-calendar__tile--active {
+    background-color: blueviolet;
+    color: #ffffff;
+}
+
+.shared-calendar-event-list {
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.7rem;
+    color: #333333;
+}
+
+.shared-calendar-event-list li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rating-header {
+    height: 300px;
+}
+
+.centerAll {
+    margin-top: 40px;
+    padding-bottom: 40px;
+}

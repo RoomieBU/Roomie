@@ -176,26 +176,18 @@ const RoommateManagementDashboard = () => {
                             <div className="feature-info">
                                 <h3>Chat Room</h3>
                                 <p>Start a private conversation with your roommate. Discuss cleaning schedules, grocery lists, and more.</p>
-                                <div className="dots-row">
-                                    <span className="dot dot-purple"></span><span>You</span>
-                                    <span className="dot dot-green"></span><span>Emily</span>
-                                    <span className="dot dot-yellow"></span><span>Matthew</span>
-                                </div>
                             </div>
                         </a>
                     </div>
 
                     <div className="feature-box">
                         <div className="feature-emoji"><p>🗓️</p></div>
+                        <a href="/SharedCalendar">
                         <div className="feature-info">
                             <h3>Access Shared Calendar</h3>
                             <p>Share a calendar with your roommates. Input class schedules, events, and more.</p>
-                            <div className="dots-row">
-                                <span className="dot dot-purple"></span><span>You</span>
-                                <span className="dot dot-green"></span><span>Emily</span>
-                                <span className="dot dot-yellow"></span><span>Matthew</span>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
