@@ -71,7 +71,9 @@ function AppWrapper() {
         <Route path="/RoommateRating" element={<RoommateRating />} />
         <Route path="/RoommateReporting" element={<RoommateReporting />} />
         <Route path="/housingOptions" element={<HousingOptions/>}/>
-        <Route path="/RoommateChat" element={<RoommateChat/>}/>
+        <Route path="/RoommateChat" element={<RoommateChat />} />
+        <Route path="/SharedCalendar" element={<SharedCalendar />} />
+        <Route path="/SharedSupply" element={<SharedSupply />} />
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
