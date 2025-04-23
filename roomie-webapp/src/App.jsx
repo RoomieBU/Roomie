@@ -17,6 +17,7 @@ import RoommateRating from './pages/RoommateRating';
 import RoommateReporting from './pages/RoommateReporting';
 import HousingOptions from "./pages/HousingOptions";
 import RoommateChat from "./pages/RoommateChat";
+import SharedSupply from "./pages/SharedSupply";
 import SharedCalendar from "./pages/SharedCalendar";
 
 function AppWrapper() {
@@ -70,8 +71,7 @@ function AppWrapper() {
         <Route path="/RoommateRating" element={<RoommateRating />} />
         <Route path="/RoommateReporting" element={<RoommateReporting />} />
         <Route path="/housingOptions" element={<HousingOptions/>}/>
-        <Route path="/RoommateChat" element={<RoommateChat />} />
-        <Route path="/SharedCalendar" element={<SharedCalendar />} />
+        <Route path="/RoommateChat" element={<RoommateChat/>}/>
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
