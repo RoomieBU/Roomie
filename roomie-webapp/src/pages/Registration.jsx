@@ -60,7 +60,7 @@ function Registration() {
             return;
         }
 
-        resizeImage(file, 600, 800)
+        resizeImage(file, 1800, 2400)
             .then((resizedDataUrl) => {
                 setSelectedProfilePicture(resizedDataUrl);
             })
