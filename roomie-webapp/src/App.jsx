@@ -18,6 +18,7 @@ import RoommateRating from './pages/RoommateRating';
 import RoommateReporting from './pages/RoommateReporting';
 import HousingOptions from "./pages/HousingOptions";
 import RoommateChat from "./pages/RoommateChat";
+import SharedSupply from "./pages/SharedSupply";
 
 function AppWrapper() {
   const location = useLocation();
@@ -71,6 +72,7 @@ function AppWrapper() {
         <Route path="/RoommateReporting" element={<RoommateReporting />} />
         <Route path="/housingOptions" element={<HousingOptions/>}/>
         <Route path="/RoommateChat" element={<RoommateChat/>}/>
+        <Route path="/SharedSupply" element={<SharedSupply/>}/>
         {/* Redirect unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

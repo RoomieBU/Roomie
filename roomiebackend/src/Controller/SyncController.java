@@ -17,7 +17,7 @@ public class SyncController{
         while (true) {
             Thread.sleep(1000);
             mpc.pauseThread();
-            Thread.sleep(10000);
+            Thread.sleep(100);
             mpc.resumeThread();
         }
     }

@@ -127,7 +127,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
         }
 
         // Resize the profile image to 150x150
-        resizeImage(file, 150, 150)
+        resizeImage(file, 600, 600)
             .then((resizedDataUrl) => {
                 setSelectedProfilePicture(resizedDataUrl);
             })
@@ -156,7 +156,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
 
         // Resize each user image to 600x800
         const resizedImagesPromises = files.map((file) =>
-            resizeImage(file, 600, 800)
+            resizeImage(file, 1800, 2400)
         );
 
         Promise.all(resizedImagesPromises)
