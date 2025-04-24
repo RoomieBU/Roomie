@@ -74,7 +74,7 @@ public class SupplyItemDao extends Dao {
         if (groupChatId < 0) return false;
 
         // 1) check if already exists
-        String checkSql = "SELECT 1 FROM SharedSupply WHERE group_chat_id = ? LIMIT 1";
+        String checkSql = "SELECT 1 FROM SupplyList WHERE group_chat_id = ? LIMIT 1";
         try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
             checkStmt.setInt(1, groupChatId);
             try (ResultSet rs = checkStmt.executeQuery()) {
@@ -89,7 +89,7 @@ public class SupplyItemDao extends Dao {
         }
 
         // 2) not found, insert a new one
-        String insertSql = "INSERT INTO SharedSupply (group_chat_id) VALUES (?)";
+        String insertSql = "INSERT INTO SupplyList (group_chat_id) VALUES (?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             insertStmt.setInt(1, groupChatId);
             int affected = insertStmt.executeUpdate();
@@ -172,7 +172,7 @@ public class SupplyItemDao extends Dao {
         if (listId < 0) return false;
 
         String idStr   = data.get("id");
-        String name    = data.get("name");
+        String name    = data.get("item");
         String amount  = data.get("amount");
 
         System.out.println("[DEBUG] editItem: id = " + idStr + ", name = " + name + ", amount = " + amount);

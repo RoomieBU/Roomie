@@ -6,6 +6,7 @@ import Database.SupplyItemDao;
 import Tools.Auth;
 import Tools.HTTPResponse;
 
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,35 +22,37 @@ public class SharedSupplyController {
     public static String getItems(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
+        try {
+            SupplyItemDao dao = new SupplyItemDao(conn);
+            List<Item> items = dao.getItems(data.get("token"));
 
-        // Get a list of items
-        String token = data.get("token");
-        SupplyItemDao dao = new SupplyItemDao(conn);
-        List<Item> items = dao.getItems(token);
+            if (items.isEmpty()) {
+                response.setMessage("message", "No items found.");
+                response.code = 404;
+                return response.toString();
+            }
 
-        if (items == null || items.isEmpty()) {
-            response.setMessage("message", "No items found.");
-            response.code = 404;
-            return response.toString();
+            StringBuilder sb = new StringBuilder();
+            for (Item it : items) {
+                sb.append(it.getId())
+                        .append("|")
+                        .append(URLEncoder.encode(it.getName(), "UTF-8")) // Encode name
+                        .append("|")
+                        .append(it.getAmount())
+                        .append("|")
+                        .append(it.getLastPurchased())
+                        .append(",");
+            }
+            if (sb.length() > 0) sb.setLength(sb.length() - 1);
+
+            response.setMessage("items", sb.toString());
+            response.code = 200;
+        } catch (Exception e) {
+            response.code = 500;
+            response.setMessage("message", "Server error");
+        } finally {
+            try { conn.close(); } catch (Exception e) {}
         }
-
-        // Build a simple CSV of items: id|name|amount|lastPurchased
-        StringBuilder sb = new StringBuilder();
-        for (Item it : items) {
-            sb.append(it.getId())
-                    .append("|")
-                    .append(it.getName())
-                    .append("|")
-                    .append(it.getAmount())
-                    .append("|")
-                    .append(it.getLastPurchased())
-                    .append(",");
-        }
-        // remove trailing comma
-        if (sb.length() > 0) sb.setLength(sb.length() - 1);
-
-        response.setMessage("items", sb.toString());
-        response.code = 200;
         return response.toString();
     }
 
@@ -66,12 +69,29 @@ public class SharedSupplyController {
         // Add item
         String token = data.get("token");
         String item = data.get("item");
-        String amount = data.get("amount");
+        String amountStr = data.get("amount");
+
+        // Validate inputs
+        if (item == null || item.trim().isEmpty()) {
+            response.code = 400;
+            response.setMessage("message", "Item name required");
+            return response.toString();
+        }
+
+        int amount = -1;
+        try {
+            amount = Integer.parseInt(amountStr);
+            if (amount < 1) throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            response.code = 400;
+            response.setMessage("message", "Invalid quantity");
+            return response.toString();
+        }
 
         // put data into database
         Map<String, String> itemData = new HashMap<>();
         itemData.put("name", item);
-        itemData.put("amount", amount);
+        itemData.put("amount", amountStr);
 
         SupplyItemDao dao = new SupplyItemDao(conn);
         boolean ok = dao.addItem(token, itemData);
