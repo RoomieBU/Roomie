@@ -122,3 +122,18 @@
     color: #742dd6;
     font-weight: bold;
 }
+
+.feature-info {
+    margin-top: 20px;
+}
+
+.feature-info p {
+    text-wrap: auto;
+    text-wrap-style: balance;
+    font-size: 16px;
+    color: #888888;
+}
+
+.feature-info h3 {
+    font-size: 30px;
+}
