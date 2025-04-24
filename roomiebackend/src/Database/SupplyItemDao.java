@@ -67,6 +67,7 @@ public class SupplyItemDao extends Dao {
     public boolean createSharedSupply(String token) {
         // get group chat id
         int groupChatId = getGroupChatId(token);
+        if (groupChatId < 0) return false;
 
         // 1) check if already exists
         String checkSql = "SELECT 1 FROM SharedSupply WHERE group_chat_id = ? LIMIT 1";
@@ -101,8 +102,10 @@ public class SupplyItemDao extends Dao {
     public List<Item> getItems(String token) {
         // get gc id
         int groupChatId = getGroupChatId(token);
+        if (groupChatId < 0) return new ArrayList<>();
         // get list id
         int listId = getListId(groupChatId);
+        if (listId < 0) return new ArrayList<>();
 
         String query = "Select * FROM Item WHERE list_id = ?";
         List<Item> items = new ArrayList<>();
@@ -111,6 +114,7 @@ public class SupplyItemDao extends Dao {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Item item = new Item(
+                  rs.getInt("id"),
                   rs.getInt("list_id"),
                   rs.getString("name"),
                   rs.getInt("amount"),
@@ -139,6 +143,7 @@ public class SupplyItemDao extends Dao {
 
         String name   = data.get("name");
         String amount = data.get("amount");
+
 
         String sql = "INSERT INTO Item (list_id, name, amount, last_purchased) VALUES (?, ?, ?, CURRENT_DATE())";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -176,6 +181,25 @@ public class SupplyItemDao extends Dao {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean deleteItem(String token, String idStr) {
+        int groupChatId = getGroupChatId(token);
+        if (groupChatId < 0) return false;
+        int listId = getListId(groupChatId);
+        if (listId < 0) return false;
+
+        int id;
+        try { id = Integer.parseInt(idStr); } catch (NumberFormatException e) { return false; }
+
+        String sql = "DELETE FROM Item WHERE id = ? AND list_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.setInt(2, listId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace(); return false;
         }
     }
 
