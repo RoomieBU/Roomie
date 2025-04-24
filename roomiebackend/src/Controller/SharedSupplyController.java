@@ -18,7 +18,7 @@ public class SharedSupplyController {
      * @param method POST
      * @return http response with string containing all items and counts of a shared supply
      */
-    public String getItems(Map<String, String> data, String method) {
+    public static String getItems(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
 
@@ -59,7 +59,7 @@ public class SharedSupplyController {
      * @param method POST
      * @return http response
      */
-    public String addItem(Map<String, String> data, String method){
+    public static String addItem(Map<String, String> data, String method){
         HTTPResponse response = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
 
@@ -93,7 +93,7 @@ public class SharedSupplyController {
      * @param method POST
      * @return http response
      */
-    public String editItem(Map<String, String> data, String method) {
+    public static String editItem(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
 
@@ -140,7 +140,7 @@ public class SharedSupplyController {
     }
 
     /** ensures a SharedSupply row exists for this user’s group */
-    public String checkAndCreateSupplyList(Map<String,String> data, String method) {
+    public static String checkAndCreateSupplyList(Map<String,String> data, String method) {
         HTTPResponse resp = new HTTPResponse();
         Connection conn = SQLConnection.getConnection();
         String token = data.get("token");

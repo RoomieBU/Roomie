@@ -21,6 +21,9 @@ public class SupplyItemDao extends Dao {
     public int getGroupChatId(String token) {
         // get email from token
         String email = Auth.getEmailfromToken(token);
+
+        System.out.println("[DEBUG] getGroupChatId: email from token = " + email);
+
         // query for gc
         String query = "SELECT * FROM GroupChats WHERE (email1 = ? OR email2 = ? OR email3 = ? OR email4 = ? OR email5 = ? OR email6 = ?) AND confirmed = 1";
         int id = -1;
@@ -35,6 +38,7 @@ public class SupplyItemDao extends Dao {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("group_chat_id");
+                System.out.println("[DEBUG] getGroupChatId: found group_chat_id = " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,6 +124,7 @@ public class SupplyItemDao extends Dao {
                   rs.getInt("amount"),
                   rs.getDate("last_purchased")
                 );
+                System.out.println("[DEBUG] getItems: retrieved item " + item.getName() + " x" + item.getAmount());
                 items.add(item);
             }
         } catch (SQLException e) {
@@ -144,12 +149,13 @@ public class SupplyItemDao extends Dao {
         String name   = data.get("name");
         String amount = data.get("amount");
 
+        System.out.println("[DEBUG] addItem: name = " + name + ", amount = " + amount);
 
         String sql = "INSERT INTO Item (list_id, name, amount, last_purchased) VALUES (?, ?, ?, CURRENT_DATE())";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, listId);
             stmt.setString(2, name);
-            stmt.setInt(3, Integer.parseInt(amount));  // you may want to validate/handle NumberFormatException
+            stmt.setInt(3, Integer.parseInt(amount));
             int rows = stmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
@@ -168,6 +174,8 @@ public class SupplyItemDao extends Dao {
         String idStr   = data.get("id");
         String name    = data.get("name");
         String amount  = data.get("amount");
+
+        System.out.println("[DEBUG] editItem: id = " + idStr + ", name = " + name + ", amount = " + amount);
 
         String sql = "UPDATE Item SET name = ?, amount = ? WHERE id = ? AND list_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {

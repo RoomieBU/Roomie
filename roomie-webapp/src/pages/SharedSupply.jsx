@@ -13,10 +13,12 @@ const SharedSupply = () => {
   const [error, setError] = useState('');
 
   const checkAndCreateSupplyList = async () => {
+    const payload = { token: localStorage.getItem('token') };
+    console.log('[DEBUG] checkAndCreateSupplyList payload:', payload);
     const res = await fetch('https://roomie.ddns.net/checkAndCreateSupplyList', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: localStorage.getItem('token') }),
+      body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error('Could not initialize supply list');
   };
@@ -26,13 +28,16 @@ const SharedSupply = () => {
     setError('');
     try {
       await checkAndCreateSupplyList();
+      const payload = { token: localStorage.getItem('token') };
+      console.log('[DEBUG] getItems payload:', payload);
       const res = await fetch('https://roomie.ddns.net/getItems', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: localStorage.getItem('token') }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Could not load items');
       const data = await res.json();
+      console.log('[DEBUG] getItems response data:', data);
       const arr = data.items
         ? data.items.split(',').map(row => {
             const [id, name, amount, lastPurchased] = row.split('|');
@@ -53,14 +58,16 @@ const SharedSupply = () => {
     setLoading(true);
     setError('');
     try {
+      const payload = {
+        token: localStorage.getItem('token'),
+        item: newItem.name.trim(),
+        amount: parseInt(newItem.quantity, 10)
+      };
+      console.log('[DEBUG] handleAdd payload:', payload);
       const res = await fetch('https://roomie.ddns.net/addItem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: localStorage.getItem('token'),
-          item: newItem.name.trim(),
-          amount: parseInt(newItem.quantity, 10)
-        }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Add failed');
       setShowAdd(false);
@@ -77,15 +84,17 @@ const SharedSupply = () => {
     setLoading(true);
     setError('');
     try {
+      const payload = {
+        token: localStorage.getItem('token'),
+        id: editItem.id,
+        item: items.find(i => i.id === editItem.id).name,
+        amount: parseInt(editItem.quantity, 10)
+      };
+      console.log('[DEBUG] handleEdit payload:', payload);
       const res = await fetch('https://roomie.ddns.net/editItem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: localStorage.getItem('token'),
-          id: editItem.id,
-          item: items.find(i => i.id === editItem.id).name,
-          amount: parseInt(editItem.quantity, 10)
-        }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Edit failed');
       setShowEdit(false);
