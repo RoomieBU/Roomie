@@ -185,8 +185,8 @@ const SharedSupply = () => {
     <div className="inventory-container">
       <RoommateNavBar />
       <header className="inventory-header">
-        <h1> Shared List Of Supplies</h1>
-        <h2> Below is a list of your currently shared items, their amounts, and when they were last purchased! </h2>
+        <h1>Supply Inventory.</h1>
+        <h2>Your shared items, quantities, and last purchase dates.</h2>
       </header>
       <div className="container py-5">
 {/*         <h1 className="text-center mb-4 inventory-title">Supply List</h1> */}
