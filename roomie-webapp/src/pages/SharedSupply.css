@@ -1,19 +1,22 @@
-.inventory-title {
-    color: #6F42C1;
-}
-
 .inventory-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     color: white;
     text-align: center;
     padding: 40px 20px;
     border-radius: 0 0 15px 15px;
     box-shadow: 15px 15px 10px #6f42c138;
-    align-content: center;
-    background: linear-gradient(19deg, rgba(195, 34, 161, 0.88763427734375) 0%, rgba(111, 66, 193, 1) 91%);
+    background: linear-gradient(
+      19deg,
+      rgba(195, 34, 161, 0.8876) 0%,
+      rgba(111, 66, 193, 1) 91%
+    );
     background-size: cover;
     height: 250px;
     margin: 0;
-    padding-top: 40px;
 }
 
 .inventory-header h1 {
@@ -26,16 +29,14 @@
 
 .inventory-header h2 {
     margin: 10px 0;
-    font-family: 'DM Sans';
+    font-family: "DM Sans";
     font-weight: 200;
     line-height: 40px;
     font-size: 25px;
-    text-wrap: auto;
-    text-wrap-style: balance;
     text-align: center;
-    max-width: 800px;
-    place-self: center;
+    max-width: 800px;          
 }
+
 
 .add-btn {
   background-color: #6F42C1;
