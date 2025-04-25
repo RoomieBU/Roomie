@@ -20,7 +20,7 @@ function RoommateNavBar () {
                     <a href="/RoommateChat">CHAT.</a>
                 </div>
                 <div className="nav-links">
-                    <a href="/Dashboard">EDIT PROFILE</a>
+                    <a href="/profile">EDIT PROFILE</a>
                     <a onClick={handleSignOut} href="/">SIGN OUT.</a>
                 </div>
             </header>
