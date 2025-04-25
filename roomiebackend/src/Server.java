@@ -98,7 +98,7 @@ public class Server {
             router.addRoute("/alert/addAlertReaction", AlertController::addAlertReaction);
             router.addRoute("/alert/getAllAlerts", AlertController::getAllAlerts);
             router.addRoute("/alert/getAllResponses", AlertController::getAllAlertResponses);
-            router.addRoute("/alert/resolveAlert", AlertController::resolveAlert);
+            router.addRoute("/alert/updateAlertStatus", AlertController::updateAlertStatus);
 
             // Rating routes
             router.addRoute("/rating/submit", RatingController::submitRoommateRating);
