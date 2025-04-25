@@ -37,7 +37,7 @@ public class SupplyItemDao extends Dao {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                id = rs.getInt("group_chat_id");
+                id = rs.getInt("id");
                 System.out.println("[DEBUG] getGroupChatId: found group_chat_id = " + id);
             }
         } catch (SQLException e) {
