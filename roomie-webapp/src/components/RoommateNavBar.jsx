@@ -18,6 +18,7 @@ function RoommateNavBar () {
                     <a href="/RoommateRating">RATE.</a>
                     <a href="/RoommateReporting">REPORT.</a>
                     <a href="/housingOptions">HOUSING.</a>
+                    <a href="/SharedSupply">SUPPLIES.</a>
                     <a href="/RoommateChat">CHAT.</a>
                 </div>
                 <div className="nav-links">

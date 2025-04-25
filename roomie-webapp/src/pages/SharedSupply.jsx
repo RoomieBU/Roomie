@@ -154,7 +154,7 @@ const SharedSupply = () => {
     <div className="inventory-container">
       <RoommateNavBar />
       <div className="container py-5">
-        <h1 className="text-center mb-4 inventory-title">Shared Supply</h1>
+        <h1 className="text-center mb-4 inventory-title">Supply List</h1>
         {error && <div className="alert alert-danger">{decodeURIComponent(error)}</div>}
         {loading && <div className="text-center">Loading…</div>}
 
