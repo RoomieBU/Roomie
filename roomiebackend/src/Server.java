@@ -50,6 +50,12 @@ public class Server {
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
             router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
 
+            // supply list routes
+            router.addRoute("/checkSupplyList", SharedSupplyController::checkAndCreateSupplyList);
+            router.addRoute("/getItems", SharedSupplyController::getItems);
+            router.addRoute("/editItem", SharedSupplyController::editItem);
+            router.addRoute("/addItem", SharedSupplyController::addItem);
+
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);

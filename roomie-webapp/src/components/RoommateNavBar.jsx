@@ -14,9 +14,11 @@ function RoommateNavBar () {
                     <a href="/RoommateManagementDashboard"><img src={roomieLogo} alt="Roomie Logo" /></a>
                 </div>
                 <div className="nav-links left-lean">
-                <a href="/RoommateRating">RATE.</a>
+                    <a href="/SharedCalendar">CALENDAR.</a>
+                    <a href="/RoommateRating">RATE.</a>
                     <a href="/RoommateReporting">REPORT.</a>
                     <a href="/housingOptions">HOUSING.</a>
+                    <a href="/SharedSupply">SUPPLIES.</a>
                     <a href="/RoommateChat">CHAT.</a>
                 </div>
                 <div className="nav-links">

@@ -167,6 +167,7 @@ body {
     margin-top: 4px;
     font-family: 'DM Sans';
     font-size: 14px;
+    margin-left: 5px;
 }
 
 @media (max-width: 768px) {

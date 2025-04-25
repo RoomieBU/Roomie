@@ -1,11 +1,10 @@
 /* Default (desktop): No changes needed */
 
 .nav-links a {
-    margin-left: 30px;
+    margin-left: 20px;
     color: #6F42C1;
-    font-weight: 600;
-    font-size: 1rem;
-    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    font-family: 'DM Sans';
     text-decoration: none;
 }
 
