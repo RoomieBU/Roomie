@@ -29,15 +29,14 @@ public class AlertController {
     public static String resolveAlert(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
 
-        Dao dao = new Dao(SQLConnection.getConnection());
+        AlertDao alertDao = new AlertDao(SQLConnection.getConnection());
+
         int id = Integer.parseInt(data.get("id"));
+        boolean status = Boolean.parseBoolean(data.get("status"));
 
-        Map<String, String> map = new HashMap<>();
-        map.put("complete", "true");
-
-        if(dao.set(map, id, "Alert")) {
+        if(alertDao.setAlertStatus(status, id)) {
             response.code = 200;
-        }else {
+        } else {
             response.code = 400;
         }
 

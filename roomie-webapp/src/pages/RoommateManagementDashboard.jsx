@@ -107,15 +107,15 @@ const RoommateManagementDashboard = () => {
     };
     
 
-    const resolveAlert =  async (id) => {
+    const resolveAlert =  async (alertStatus, alertId) => {
         // alert id
-        console.log(id)
+        console.log(alertId)
 
         try {
             const response = await fetch('https://roomie.ddns.net:8080/alert/resolveAlert', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(id)
+                body: JSON.stringify({status: alertStatus, id: alertId})
             })
 
             if(response.ok) {
@@ -183,7 +183,7 @@ const RoommateManagementDashboard = () => {
                                         <div className="card-body">
                                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                                 <h5 className="card-title">{alert.name}</h5>
-                                                <button onClick={() => resolveAlert(alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                                <button onClick={() => resolveAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
                                             </div>
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}

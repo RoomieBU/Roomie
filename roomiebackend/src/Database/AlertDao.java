@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AlertDao extends Dao {
 
@@ -62,5 +63,21 @@ public class AlertDao extends Dao {
         }
 
         return responses;
+    }
+
+
+    public boolean setAlertStatus(Boolean status, int id) {
+
+        String query = "UPDATE Alert SET complete = ? WHERE id = ?";
+        
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setBoolean(1, status);
+            stmt.setInt(2, id);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
