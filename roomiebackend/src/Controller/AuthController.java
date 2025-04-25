@@ -12,6 +12,7 @@ import java.util.*;
 
 public class AuthController {
     private static final boolean ALLOW_EMAIL_VERIFICATION = false;
+    private static final boolean ALLOW_COMMONWEALTH_CHECK = false; 
     /**
      * Logic for logging in.
      *
@@ -55,7 +56,7 @@ public class AuthController {
         String email = data.get("email");
         
         // check if it is commonwealth email address
-        if (email != null && email.endsWith("@commonwealthu.edu")) {
+        if (!ALLOW_COMMONWEALTH_CHECK || email != null && email.endsWith("@commonwealthu.edu")) {
             // Valid email domain --> now insert
             if (dao.insert(query, "Users")) {
                 String verifyCode = Utils.generateVerifyCode();
