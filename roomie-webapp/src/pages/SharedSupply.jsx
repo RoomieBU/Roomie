@@ -39,7 +39,7 @@ const SharedSupply = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error('Could not load items');
+      if (!res.ok) throw new Error('No Items In List.');
       const data = await res.json();
 
       const parsedItems = data.items?.split(',').reduce((acc, row) => {
