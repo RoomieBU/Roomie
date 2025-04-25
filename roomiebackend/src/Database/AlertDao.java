@@ -21,6 +21,7 @@ public class AlertDao extends Dao {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Alert a = new Alert(
+                            rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("sender"),
                             rs.getString("description"),

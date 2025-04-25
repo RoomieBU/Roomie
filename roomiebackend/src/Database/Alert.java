@@ -2,6 +2,7 @@ package Database;
 
 public class Alert {
 
+    private int id;
     private String name;
     private String sender;
     private String description;
@@ -10,7 +11,8 @@ public class Alert {
     private String end_time;
     private Boolean complete;
 
-    public Alert(String name, String sender, String description, int groupchatId, String start_time, String end_time, Boolean complete) {
+    public Alert(int id, String name, String sender, String description, int groupchatId, String start_time, String end_time, Boolean complete) {
+        this.id = id;
         this.name = name;
         this.sender = sender;
         this.description = description;
@@ -18,6 +20,14 @@ public class Alert {
         this.start_time = start_time;
         this.end_time = end_time;
         this.complete = complete;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

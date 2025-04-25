@@ -5,6 +5,11 @@ import RoommateNavBar from '../components/RoommateNavBar';
 const RoommateManagementDashboard = () => {
     const [groupchatid, setGroupchat] = useState('');
     const [alerts, setAlerts] = useState([]);
+
+    const [completeAlerts, setCompleteAlerts] = useState([]);
+    const [unresolvedAlerts, setUnresolvedAlerts] = useState([])
+
+
     const [form, setForm] = useState({
         name: '',
         groupchat_id: '',
@@ -49,6 +54,21 @@ const RoommateManagementDashboard = () => {
 
                 if (response.ok) {
                     const data = await response.json();
+
+                    const complete = []
+                    const unresolved = []
+
+                    for(const a of data) {
+                        if(a.complete) {
+                            complete.push(a)
+                        } else {
+                            unresolved.push(a)
+                        }
+                    }
+
+                    setCompleteAlerts(complete)
+                    setUnresolvedAlerts(unresolved)
+
                     setAlerts(data);
                     console.log("ALERTS:", data)
                 } else {
@@ -85,7 +105,11 @@ const RoommateManagementDashboard = () => {
             console.error(err);
         }
     };
+    
 
+    const resolveAlert =  (id) => {
+        console.log(id)
+    }
 
     
 
@@ -121,6 +145,48 @@ const RoommateManagementDashboard = () => {
                                     <div className="card h-100">
                                         <div className="card-body">
                                             <h5 className="card-title">{alert.name}</h5>
+                                            <h6 className="card-subtitle mb-2 text-muted">
+                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
+                                            </h6>
+                                            <p className="card-text">{alert.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div className="row">
+                        {unresolvedAlerts.length === 0 ? (
+                            <p className="text-muted">No alerts at the moment.</p>
+                        ) : (
+                            unresolvedAlerts.map((alert, index) => (
+                                <div key={index} className="col-md-4 col-sm-6 mb-3">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <h5 className="card-title">{alert.name}</h5>
+                                                <button onClick={() => resolveAlert(alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                            </div>
+                                            <h6 className="card-subtitle mb-2 text-muted">
+                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
+                                            </h6>
+                                            <p className="card-text">{alert.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div className="row">
+                        {completeAlerts.length === 0 ? (
+                            <p className="text-muted">No alerts at the moment.</p>
+                        ) : (
+                            completeAlerts.map((alert, index) => (
+                                <div key={index} className="col-md-4 col-sm-6 mb-3">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <h5 className="card-title">{alert.name}</h5>
+                                            
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
                                             </h6>
