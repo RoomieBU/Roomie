@@ -26,7 +26,8 @@ public class AlertDao extends Dao {
                             rs.getString("description"),
                             groupchatId,
                             rs.getString("start_time"),
-                            rs.getString("end_time")
+                            rs.getString("end_time"),
+                            rs.getBoolean("complete")
                     );
                     alerts.add(a);
                 }

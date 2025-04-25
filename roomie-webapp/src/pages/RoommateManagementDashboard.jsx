@@ -50,6 +50,7 @@ const RoommateManagementDashboard = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setAlerts(data);
+                    console.log("ALERTS:", data)
                 } else {
                     console.error('Failed to fetch alerts');
                 }
