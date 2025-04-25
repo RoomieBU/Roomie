@@ -88,16 +88,15 @@ public class AlertDao extends Dao {
             stmt.setInt(1, status ? 1 : 0);  // Convert Boolean to 1/0
             stmt.setInt(2, id);
     
-            int rowsAffected = stmt.executeUpdate();
-    
-            if (rowsAffected > 0) {
-                connection.commit(); // Commit the transaction if not using auto-commit
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
                 System.out.println("Alert updated successfully.");
                 return true;
             } else {
                 System.out.println("No records updated. Check if the id exists or if the status is already set.");
                 return false;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
