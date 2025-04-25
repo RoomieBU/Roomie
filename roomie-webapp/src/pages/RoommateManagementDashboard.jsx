@@ -203,7 +203,10 @@ const RoommateManagementDashboard = () => {
                                 <div key={index} className="col-md-4 col-sm-6 mb-3">
                                     <div className="card h-100">
                                         <div className="card-body">
-                                            <h5 className="card-title">{alert.name}</h5>
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <h5 className="card-title">{alert.name}</h5>
+                                                <button onClick={() => resolveAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                            </div>
                                             
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
