@@ -155,14 +155,14 @@ const SharedSupply = () => {
       <RoommateNavBar />
       <div className="container py-5">
         <h1 className="text-center mb-4 inventory-title">Shared Supply</h1>
-        {error && <div className="alert alert-danger">{error}</div>}
+        {error && <div className="alert alert-danger">{decodeURIComponent(error)}</div>}
         {loading && <div className="text-center">Loading…</div>}
 
         <div className="list-group mb-4">
           {items.map(item => (
             <div key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
               <div className="flex-grow-1">
-                <strong>{item.name}</strong>
+                <strong>{decodeURIComponent(item.name)}</strong>
                 <span className="ms-2 text-muted">x{item.quantity}</span>
                 {item.lastPurchased && (
                   <div className="text-muted small mt-1">
@@ -175,7 +175,7 @@ const SharedSupply = () => {
                 onClick={() => {
                   setEditItem({
                     id: item.id,
-                    name: item.name,
+                    name: decodeURIComponent(item.name),
                     quantity: item.quantity
                   });
                   setShowEdit(true);

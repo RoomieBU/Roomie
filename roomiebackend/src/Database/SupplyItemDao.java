@@ -201,7 +201,7 @@ public class SupplyItemDao extends Dao {
         int id;
         try { id = Integer.parseInt(idStr); } catch (NumberFormatException e) { return false; }
 
-        String sql = "DELETE FROM Item WHERE id = ? AND list_id = ?";
+        String sql = "DELETE FROM Item WHERE item_id = ? AND list_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.setInt(2, listId);
