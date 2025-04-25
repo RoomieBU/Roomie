@@ -112,16 +112,16 @@ const RoommateManagementDashboard = () => {
         console.log(alertId)
 
         try {
-            const response = await fetch('https://roomie.ddns.net:8080/alert/resolveAlert', {
+            const response = await fetch('https://roomie.ddns.net:8080/alert/updateAlertStatus', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({status: alertStatus, id: alertId})
             })
 
             if(response.ok) {
-                console.log("Alert resolved")
+                console.log("Alert status updated to: ", alertStatus)
             } else {
-                console.log("Failed to resolve alert")
+                console.log("Failed to update alert to: ", alertStatus)
             }
 
         } catch (err) {
