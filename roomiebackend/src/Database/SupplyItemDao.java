@@ -172,7 +172,7 @@ public class SupplyItemDao extends Dao {
         if (listId < 0) return false;
 
         String idStr   = data.get("id");
-        String name    = data.get("item");
+        String name    = data.get("name");
         String amount  = data.get("amount");
 
         System.out.println("[DEBUG] editItem: id = " + idStr + ", name = " + name + ", amount = " + amount);
