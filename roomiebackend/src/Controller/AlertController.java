@@ -28,20 +28,33 @@ public class AlertController {
 
     public static String resolveAlert(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
-
+    
         AlertDao alertDao = new AlertDao(SQLConnection.getConnection());
-
-        int id = Integer.parseInt(data.get("id"));
-        boolean status = Boolean.parseBoolean(data.get("status"));
-
-        if(alertDao.setAlertStatus(status, id)) {
-            response.code = 200;
-        } else {
+    
+        try {
+            int id = Integer.parseInt(data.get("id"));  // Parsing ID
+            boolean status = Boolean.parseBoolean(data.get("status"));  // Parsing the status
+    
+            // If setAlertStatus returns true, the status was updated
+            if (alertDao.setAlertStatus(status, id)) {
+                response.code = 200;
+                response.setMessage("success", "Alert status updated successfully.");  // Use setMessage here
+            } else {
+                response.code = 400;
+                response.setMessage("setting status fail", "Failed to update alert status. Check if the alert exists and try again.");  // Use setMessage here
+            }
+        } catch (NumberFormatException e) {
             response.code = 400;
+            response.setMessage("Number Fail", "Invalid ID format. Ensure 'id' is a valid integer.");  // Use setMessage here
+        } catch (Exception e) {
+            response.code = 500;
+            response.setMessage("FAIL", "An unexpected error occurred: " + e.getMessage());  // Use setMessage here
         }
-
+    
         return response.toString();
     }
+    
+    
 
     public static String addAlertReaction(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
