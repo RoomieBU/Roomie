@@ -8,13 +8,11 @@ import Tools.Auth;
 import Tools.HTTPResponse;
 import Tools.Mail;
 import Tools.Utils;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 public class AuthController {
     private static final boolean ALLOW_EMAIL_VERIFICATION = false;
+    private static final boolean ALLOW_COMMONWEALTH_CHECK = false; 
     /**
      * Logic for logging in.
      *
@@ -54,19 +52,30 @@ public class AuthController {
         query.put("hashed_password", Utils.hashSHA256(data.get("password")));
 
         Dao dao = new Dao(SQLConnection.getConnection());
-        if (dao.insert(query, "Users")) {
-            String verifyCode = Utils.generateVerifyCode();
-            Map<String, String> verifyCodeFormatted = new HashMap<>();
-            verifyCodeFormatted.put("verify_code", verifyCode);
 
-            dao.set(verifyCodeFormatted, data.get("email"), "Users");
-            Mail emailer = new Mail();
-            emailer.send(data.get("email"), "Roomie Verification Email", "Here is your verification code: " + verifyCode);
-
-            response.setMessage("token", Auth.getToken(data.get("email")));
-            response.code = 200;
+        String email = data.get("email");
+        
+        // check if it is commonwealth email address
+        if (!ALLOW_COMMONWEALTH_CHECK || email != null && email.endsWith("@commonwealthu.edu")) {
+            // Valid email domain --> now insert
+            if (dao.insert(query, "Users")) {
+                String verifyCode = Utils.generateVerifyCode();
+                Map<String, String> verifyCodeFormatted = new HashMap<>();
+                verifyCodeFormatted.put("verify_code", verifyCode);
+    
+                dao.set(verifyCodeFormatted, data.get("email"), "Users");
+                Mail emailer = new Mail();
+                emailer.send(data.get("email"), "Roomie Verification Email", "Here is your verification code: " + verifyCode);
+    
+                response.setMessage("token", Auth.getToken(data.get("email")));
+                response.code = 200;
+            } else {
+                response.code = 400;
+            }
         } else {
-            response.code = 400;
+            // Invalid email domain
+            System.out.println("Email must end with @commonwealthu.edu");
+            response.code = 401;
         }
 
         return response.toString();

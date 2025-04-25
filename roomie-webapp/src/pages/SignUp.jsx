@@ -24,6 +24,10 @@ function SignUp() {
                 }),
             });
 
+            if (response.status === 401) {
+                throw new Error("Provided email must be a valid commonwealthu.edu email");
+            }
+
             if (!response.ok) {
                 throw new Error("User already exists or registration failed.");
             }
@@ -32,7 +36,7 @@ function SignUp() {
 
             // Save token to local storage (optional)
             localStorage.setItem("token", responseData.token);
-
+ 
             navigate("/login"); // Redirect to login page after success
         } catch (error) {
             alert(error.message);

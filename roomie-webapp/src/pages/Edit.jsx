@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner"
+import RoommateNavBar from "../components/RoommateNavBar";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -258,78 +259,80 @@ const resizeImage = (file, maxWidth, maxHeight) => {
     }
 
     return (
-        <div className="container-fluid d-flex align-items-center justify-content-center">
-            <div className="col-12 col-md-6 col-lg-4 text-center">
-                <h1 className="fw-bold mb-4">Edit Your Profile</h1>
-                <form onSubmit={handleSubmit(onSubmit)} className="w-100">
-                    <div className="mb-3">
-                        <label className="form-label">First Name</label>
-                        <input
-                            type="text"
-                            className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
-                            {...register("first_name", { required: "First name is required" })}
-                        />
-                        {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">Last Name</label>
-                        <input
-                            type="text"
-                            className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
-                            {...register("last_name", { required: "Last name is required" })}
-                        />
-                        {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
-                    </div>
-                    <div className="mb-3">
-                        <label className="form-label">About Me</label>
-                        <textarea
-                            className={`form-control ${errors.about_me ? "is-invalid" : ""}`}
-                            {...register("about_me", { required: "Please write something about yourself" })}
-                        />
-                        {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
-                    </div>
+        <>  
+            <div className="container-fluid d-flex align-items-center justify-content-center">
+                <div className="col-12 col-md-6 col-lg-4 text-center">
+                    <h1 className="fw-bold mb-4">Edit Your Profile</h1>
+                    <form onSubmit={handleSubmit(onSubmit)} className="w-100">
+                        <div className="mb-3">
+                            <label className="form-label">First Name</label>
+                            <input
+                                type="text"
+                                className={`form-control ${errors.first_name ? "is-invalid" : ""}`}
+                                {...register("first_name", { required: "First name is required" })}
+                            />
+                            {errors.first_name && <div className="invalid-feedback">{errors.first_name.message}</div>}
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Last Name</label>
+                            <input
+                                type="text"
+                                className={`form-control ${errors.last_name ? "is-invalid" : ""}`}
+                                {...register("last_name", { required: "Last name is required" })}
+                            />
+                            {errors.last_name && <div className="invalid-feedback">{errors.last_name.message}</div>}
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">About Me</label>
+                            <textarea
+                                className={`form-control ${errors.about_me ? "is-invalid" : ""}`}
+                                {...register("about_me", { required: "Please write something about yourself" })}
+                            />
+                            {errors.about_me && <div className="invalid-feedback">{errors.about_me.message}</div>}
+                        </div>
 
-                    {/* Profile Picture Input */}
-                    <div className="mb-3">
-                        <label className="form-label">Profile Picture</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleProfilePictureChange}
-                            className="form-control"
-                        />
-                    </div>
+                        {/* Profile Picture Input */}
+                        <div className="mb-3">
+                            <label className="form-label">Profile Picture</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleProfilePictureChange}
+                                className="form-control"
+                            />
+                        </div>
 
-                    {/* User Images Input */}
-                    <div className="mb-3">
-                        <label className="form-label">Additional User Images</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={handleUserImagesChange}
-                            className="form-control"
-                        />
-                    </div>
+                        {/* User Images Input */}
+                        <div className="mb-3">
+                            <label className="form-label">Additional User Images</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleUserImagesChange}
+                                className="form-control"
+                            />
+                        </div>
 
-                    {profileError && <div className="text-danger mb-3">{profileError}</div>}
-                    <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                        {profileError && <div className="text-danger mb-3">{profileError}</div>}
+                        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                            <button
+                                className="btn btn-secondary w-100 mt-3"
+                                onClick={handleCancel}
+                            >
+                                Cancel
+                            </button>
+                        </div>
                         <button
-                            className="btn btn-secondary w-100 mt-3"
-                            onClick={handleCancel}
+                            type="submit"
+                            className="btn btn-primary w-100 mt-3"
                         >
-                            Cancel
+                            Save Changes
                         </button>
-                    </div>
-                    <button
-                        type="submit"
-                        className="btn btn-primary w-100 mt-3"
-                    >
-                        Save Changes
-                    </button>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
