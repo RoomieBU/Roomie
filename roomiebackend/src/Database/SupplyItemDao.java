@@ -177,7 +177,7 @@ public class SupplyItemDao extends Dao {
 
         System.out.println("[DEBUG] editItem: id = " + idStr + ", name = " + name + ", amount = " + amount);
 
-        String sql = "UPDATE Item SET name = ?, amount = ? WHERE id = ? AND list_id = ?";
+        String sql = "UPDATE Item SET name = ?, amount = ? WHERE item_id = ? AND list_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setInt(2, Integer.parseInt(amount));
