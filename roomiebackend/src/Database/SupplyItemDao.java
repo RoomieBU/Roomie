@@ -118,7 +118,7 @@ public class SupplyItemDao extends Dao {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Item item = new Item(
-                  rs.getInt("id"),
+                  rs.getInt("item_id"),
                   rs.getInt("list_id"),
                   rs.getString("name"),
                   rs.getInt("amount"),
