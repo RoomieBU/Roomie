@@ -67,17 +67,41 @@ public class AlertDao extends Dao {
 
 
     public boolean setAlertStatus(Boolean status, int id) {
-
         String query = "UPDATE Alert SET complete = ? WHERE id = ?";
         
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setBoolean(1, status);
+            // Log the values
+            System.out.println("Updating alert with ID " + id + " to status " + status);
+    
+            // Check if the id exists in the database
+            String selectQuery = "SELECT * FROM Alert WHERE id = ?";
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectQuery)) {
+                selectStmt.setInt(1, id);
+                ResultSet rs = selectStmt.executeQuery();
+                if (!rs.next()) {
+                    System.out.println("No alert found with the given id: " + id);
+                    return false;
+                }
+            }
+    
+            // Set the boolean status to either 1 or 0 based on the status
+            stmt.setInt(1, status ? 1 : 0);  // Convert Boolean to 1/0
             stmt.setInt(2, id);
-
-            return true;
+    
+            int rowsAffected = stmt.executeUpdate();
+    
+            if (rowsAffected > 0) {
+                connection.commit(); // Commit the transaction if not using auto-commit
+                System.out.println("Alert updated successfully.");
+                return true;
+            } else {
+                System.out.println("No records updated. Check if the id exists or if the status is already set.");
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
+    
 }
