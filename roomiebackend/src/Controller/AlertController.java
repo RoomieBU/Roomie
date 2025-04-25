@@ -6,8 +6,10 @@ import Tools.HTTPResponse;
 import Tools.Utils;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.smartcardio.ResponseAPDU;
 
 public class AlertController {
 
@@ -21,6 +23,24 @@ public class AlertController {
         data.put("sender", email);
         dao.insert(data, "Alert");
         response.code = 200;
+        return response.toString();
+    }
+
+    public static String resolveAlert(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+
+        Dao dao = new Dao(SQLConnection.getConnection());
+        int id = Integer.parseInt(data.get("id"));
+
+        Map<String, String> map = new HashMap<>();
+        map.put("complete", "true");
+
+        if(dao.set(map, id, "Alert")) {
+            response.code = 200;
+        }else {
+            response.code = 400;
+        }
+
         return response.toString();
     }
 

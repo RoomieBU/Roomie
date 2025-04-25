@@ -107,8 +107,26 @@ const RoommateManagementDashboard = () => {
     };
     
 
-    const resolveAlert =  (id) => {
+    const resolveAlert =  async (id) => {
+        // alert id
         console.log(id)
+
+        try {
+            const response = await fetch('https://roomie.ddns.net:8080/alert/resolveAlert', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(id)
+            })
+
+            if(response.ok) {
+                console.log("Alert resolved")
+            } else {
+                console.log("Failed to resolve alert")
+            }
+
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     
