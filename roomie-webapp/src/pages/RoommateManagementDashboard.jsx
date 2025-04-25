@@ -280,6 +280,9 @@ const RoommateManagementDashboard = () => {
                 </div>
 
                 <div className="right-section">
+                    <a href="/SharedSupply">
+                        <div className="right-option">🧹 View Shared Supply List<br /><span>View your shared items, quantities, and last purchase dates.</span></div>
+                    </a>
                     <a href="/housingOptions">
                         <div className="right-option">🏠 View Housing Options<br /><span>Checkout your school's various housing options.</span></div>
                     </a>
@@ -289,7 +292,6 @@ const RoommateManagementDashboard = () => {
                     <a href="/RoommateReporting">
                         <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority.</span></div>
                     </a>
-                    <div className="right-option">🚩 View Issues<br /><span>View issues submitted by roommates.</span></div>
                 </div>
             </main>
         </div>
