@@ -150,6 +150,37 @@ const SharedSupply = () => {
     }
   };
 
+  const handleDelete = async (id, name) => {
+    setLoading(true);
+    setError('');
+    try {
+      const payload = {
+        token: localStorage.getItem('token'),
+        id: id,
+        item: encodeURIComponent(name.trim()),
+        amount: 0
+      };
+
+      const res = await fetch("https://roomie.ddns.net:8080/editItem", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Delete failed');
+      }
+
+      await getItems();
+    } catch (e) {
+      setError(e.message);
+      console.error('Delete item error:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="inventory-container">
       <RoommateNavBar />
@@ -170,19 +201,28 @@ const SharedSupply = () => {
                   </div>
                 )}
               </div>
-              <button
-                className="btn btn-sm btn-outline-secondary"
-                onClick={() => {
-                  setEditItem({
-                    id: item.id,
-                    name: decodeURIComponent(item.name),
-                    quantity: item.quantity
-                  });
-                  setShowEdit(true);
-                }}
-              >
-                Edit
-              </button>
+              <div className="d-flex gap-2">
+                <button
+                  className="btn btn-sm btn-outline-secondary"
+                  onClick={() => {
+                    setEditItem({
+                      id: item.id,
+                      name: decodeURIComponent(item.name),
+                      quantity: item.quantity
+                    });
+                    setShowEdit(true);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-sm btn-outline-danger"
+                  onClick={() => handleDelete(item.id, item.name)}
+                  disabled={loading}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
