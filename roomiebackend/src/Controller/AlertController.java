@@ -26,7 +26,7 @@ public class AlertController {
         return response.toString();
     }
 
-    public static String resolveAlert(Map<String, String> data, String method) {
+    public static String updateAlertStatus(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
     
         AlertDao alertDao = new AlertDao(SQLConnection.getConnection());

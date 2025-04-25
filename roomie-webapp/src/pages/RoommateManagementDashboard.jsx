@@ -112,16 +112,16 @@ const RoommateManagementDashboard = () => {
         console.log(alertId)
 
         try {
-            const response = await fetch('https://roomie.ddns.net:8080/alert/resolveAlert', {
+            const response = await fetch('https://roomie.ddns.net:8080/alert/updateAlertStatus', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({status: alertStatus, id: alertId})
             })
 
             if(response.ok) {
-                console.log("Alert resolved")
+                console.log("Alert status updated to: ", alertStatus)
             } else {
-                console.log("Failed to resolve alert")
+                console.log("Failed to update alert to: ", alertStatus)
             }
 
         } catch (err) {
@@ -203,7 +203,10 @@ const RoommateManagementDashboard = () => {
                                 <div key={index} className="col-md-4 col-sm-6 mb-3">
                                     <div className="card h-100">
                                         <div className="card-body">
-                                            <h5 className="card-title">{alert.name}</h5>
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <h5 className="card-title">{alert.name}</h5>
+                                                <button onClick={() => resolveAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                            </div>
                                             
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
