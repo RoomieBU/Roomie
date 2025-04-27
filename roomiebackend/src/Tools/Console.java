@@ -164,7 +164,7 @@ public class Console {
         System.out.print("Enter user email 1: ");
         String email = scan.nextLine().trim();
         long startTime = System.nanoTime();
-        MatchController.calculateAllSimilaritiesForEmail(email); // Maybe there's a better name for this?
+        // MatchController.calculateAllSimilaritiesForEmail(email); // Maybe there's a better name for this?
         long endTime = System.nanoTime();
         double duration = (endTime - startTime) / 1_000_000.0;
         System.out.println("Calculated in " + duration + " milliseconds");

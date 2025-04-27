@@ -37,11 +37,11 @@ public class MatchingPriorityController extends Thread{
                         if (u.getEmail().equals(b.getEmail())) {
                             continue;
                         }
-                        // dao.insert(
-                        //         Map.of("email1", u.getEmail(),
-                        //                 "email2", b.getEmail(),
-                        //                 "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
-                        //         "UserSimilarities");
+                        dao.insert(
+                                Map.of("email1", u.getEmail(),
+                                        "email2", b.getEmail(),
+                                        "similarity_score", String.valueOf(MatchController.getSimilarity(u.getEmail(), b.getEmail()))),
+                                "UserSimilarities");
                     }
                 }
             }
