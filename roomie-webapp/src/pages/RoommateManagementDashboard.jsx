@@ -163,9 +163,6 @@ const RoommateManagementDashboard = () => {
                                     <div className="card h-100">
                                         <div className="card-body">
                                             <h5 className="card-title">{alert.name}</h5>
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
-                                            </h6>
                                             <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
@@ -185,9 +182,6 @@ const RoommateManagementDashboard = () => {
                                                 <h5 className="card-title">{alert.name}</h5>
                                                 <button onClick={() => resolveAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
                                             </div>
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
-                                            </h6>
                                             <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
@@ -208,9 +202,6 @@ const RoommateManagementDashboard = () => {
                                                 <button onClick={() => resolveAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
                                             </div>
                                             
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
-                                            </h6>
                                             <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
@@ -238,14 +229,6 @@ const RoommateManagementDashboard = () => {
                                     <div className="mb-3">
                                         <label className="form-label">Description</label>
                                         <textarea className="form-control" rows="3" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Start Time</label>
-                                        <input type="datetime-local" className="form-control" value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">End Time</label>
-                                        <input type="datetime-local" className="form-control" value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} required />
                                     </div>
                                     <button type="submit" className="btn btn-success">Submit Alert</button>
                                 </form>
