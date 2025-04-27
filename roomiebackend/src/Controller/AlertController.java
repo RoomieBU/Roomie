@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.smartcardio.ResponseAPDU;
+import java.sql.Timestamp;
 
 public class AlertController {
 
@@ -21,8 +22,24 @@ public class AlertController {
 
         data.remove("token");
         data.put("sender", email);
-        System.out.println("Sent Data:");
-        System.out.println(data);
+
+        // Convert start_time and end_time to Timestamp
+        try {
+            if (data.containsKey("start_time")) {
+                data.put("start_time", Timestamp.valueOf(data.get("start_time")).toString());
+            }
+            if (data.containsKey("end_time")) {
+                data.put("end_time", Timestamp.valueOf(data.get("end_time")).toString());
+            }
+        } catch (IllegalArgumentException e) {
+            response.code = 400;
+            response.setMessage("Invalid date format", "Ensure 'start_time' and 'end_time' are in the correct format.");
+            return response.toString();
+        }
+
+        // Log the raw request body
+        System.out.println("Raw Request Body: " + data.toString());
+        
         dao.insert(data, "Alert");
         response.code = 200;
         return response.toString();
