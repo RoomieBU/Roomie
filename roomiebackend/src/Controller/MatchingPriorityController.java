@@ -24,7 +24,7 @@ public class MatchingPriorityController extends Thread{
                 List<User> allUsers = userDao.getAllUsers();
                 for (User u : allUsers) {
                     for (User b : allUsers) {
-                        Thread.sleep(10);
+                        Thread.sleep(100000);
                         synchronized (lock) {
                             while (shouldWait) {
                                 try {
