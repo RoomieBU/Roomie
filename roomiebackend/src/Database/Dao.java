@@ -35,9 +35,9 @@ public class Dao {
 
         String sql = base.append(" (").append(columns).append(") VALUES (").append(placeholders).append(")").toString();
 
-        if (sql != "INSERT INTO UserSimilarities (similarity_score, email1, email2) VALUES (?, ?, ?)")
+        if (table != "UserSimilarities")
             System.out.println(sql);
-            
+
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             int index = 1;
             for (Object value : data.values()) {
