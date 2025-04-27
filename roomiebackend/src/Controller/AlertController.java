@@ -21,6 +21,8 @@ public class AlertController {
 
         data.remove("token");
         data.put("sender", email);
+        System.out.println("Sent Data:");
+        System.out.println(data);
         dao.insert(data, "Alert");
         response.code = 200;
         return response.toString();
