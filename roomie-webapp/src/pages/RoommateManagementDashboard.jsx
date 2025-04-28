@@ -51,6 +51,7 @@ const RoommateManagementDashboard = () => {
                 console.error('Failed to delete unconfirmed group chats.');
             }
         };
+        deleteUnconfirmedChats();
     }, []);
 
 
