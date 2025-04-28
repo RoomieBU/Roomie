@@ -36,6 +36,24 @@ const RoommateManagementDashboard = () => {
         checkIfConfirmed();
     }, []);
 
+    // Auto-delete unconfirmed group chats on page load
+    useEffect(() => {
+        const deleteUnconfirmedChats = async () => {
+            const response = await fetch("https://roomie.ddns.net:8080/delete/unconfirmedChats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") }),
+            });
+
+            if (response.ok) {
+                console.log('Unconfirmed group chats deleted successfully.');
+            } else {
+                console.error('Failed to delete unconfirmed group chats.');
+            }
+        };
+    }, []);
+
+
     useEffect(() => {
         import('bootstrap/dist/js/bootstrap.bundle.min.js');
     }, []);

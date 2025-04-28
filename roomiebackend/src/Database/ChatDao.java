@@ -182,6 +182,7 @@ public class ChatDao extends Dao {
         return chatList;
     }
 
+
     public List<GroupChat> getConfirmedRoommates(String email) {
         String query = "SELECT * FROM GroupChats WHERE confirmed = 1 AND (email1 = ? OR email2 = ? OR email3 = ? OR email4 = ? OR email5 = ? OR email6 = ?)";
     
@@ -215,5 +216,61 @@ public class ChatDao extends Dao {
         }
         return confirmedChats;
     }
+
+    /**
+     * Delete all of a user's unconfirmed group chat history and group chats in a single transaction.
+     * @return true if successful, false otherwise
+     */
+    public boolean deleteUncomfirmedGroupchats(String email) {
+        List<GroupChat> gcs = getGroupchats(email);
+
+        // check if there are any gcs
+        if (gcs == null || gcs.isEmpty()) {
+            return true;
+        }
+
+        String chatHistoryQuery = "DELETE FROM ChatHistory WHERE groupchat_id = ?";
+        String groupChatQuery = "DELETE FROM GroupChat WHERE id = ?";
+
+        try {
+            // Begin transaction
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement historyStmt = connection.prepareStatement(chatHistoryQuery);
+                 PreparedStatement groupChatStmt = connection.prepareStatement(groupChatQuery)) {
+
+                for (GroupChat currentGC : gcs) {
+                    if (!currentGC.getConfirmed()) {
+                        int gcID = currentGC.getGroupchatId();
+
+                        // Delete history
+                        historyStmt.setInt(1, gcID);
+                        historyStmt.executeUpdate();
+
+                        // Delete group chat
+                        groupChatStmt.setInt(1, gcID);
+                        groupChatStmt.executeUpdate();
+                    }
+                }
+
+                connection.commit();  // Commit transaction
+                return true;
+
+            } catch (SQLException e) {
+                // rollback on error
+                connection.rollback();
+                e.printStackTrace();
+                return false;
+            } finally {
+                // Restore default behavior
+                connection.setAutoCommit(true);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     
 }
