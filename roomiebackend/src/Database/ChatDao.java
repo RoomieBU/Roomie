@@ -230,7 +230,7 @@ public class ChatDao extends Dao {
         }
 
         String chatHistoryQuery = "DELETE FROM ChatHistory WHERE groupchat_id = ?";
-        String groupChatQuery = "DELETE FROM GroupChat WHERE id = ?";
+        String groupChatQuery = "DELETE FROM GroupChats WHERE id = ?";
 
         try {
             // Begin transaction
