@@ -172,12 +172,12 @@ public class SupplyItemDao extends Dao {
         if (listId < 0) return false;
 
         String idStr   = data.get("id");
-        String name    = data.get("item");
+        String name    = data.get("name");
         String amount  = data.get("amount");
 
         System.out.println("[DEBUG] editItem: id = " + idStr + ", name = " + name + ", amount = " + amount);
 
-        String sql = "UPDATE Item SET name = ?, amount = ? WHERE id = ? AND list_id = ?";
+        String sql = "UPDATE Item SET name = ?, amount = ? WHERE item_id = ? AND list_id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.setInt(2, Integer.parseInt(amount));

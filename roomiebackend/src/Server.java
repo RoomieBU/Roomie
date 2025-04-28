@@ -56,6 +56,8 @@ public class Server {
             router.addRoute("/editItem", SharedSupplyController::editItem);
             router.addRoute("/addItem", SharedSupplyController::addItem);
 
+            // delete gcs route
+            router.addRoute("/delete/unconfirmedChats", ChatDeleteController::deleteUnconfirmedGroupchats);
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);

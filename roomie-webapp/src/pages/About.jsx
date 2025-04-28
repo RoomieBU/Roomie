@@ -34,9 +34,9 @@ const About = () => {
         },
         {
             id: 5,
-            name: 'Samuel Kapp',
+            name: 'Sam Kapp',
             img: SamImg,
-            bio: 'TBD'
+            bio: 'Software developer with an interest in full stack development.'
         }
     ];
 
