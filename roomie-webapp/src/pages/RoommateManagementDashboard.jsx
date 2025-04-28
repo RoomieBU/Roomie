@@ -107,7 +107,7 @@ const RoommateManagementDashboard = () => {
     };
     
 
-    const resolveAlert =  async (alertStatus, alertId) => {
+    const updateAlert =  async (alertStatus, alertId) => {
         // alert id
         console.log(alertId)
 
@@ -119,10 +119,33 @@ const RoommateManagementDashboard = () => {
             })
 
             if(response.ok) {
-                console.log("Alert status updated to: ", alertStatus)
+                console.log("Alert status updated to: ", alertStatus);
+                
+                // Find the alert in the appropriate list
+                if (alertStatus) { // If setting to complete
+                    // Find the alert in unresolved list
+                    const alertToMove = unresolvedAlerts.find(alert => alert.id === alertId);
+                    if (alertToMove) {
+                        // Remove from unresolved list
+                        setUnresolvedAlerts(prev => prev.filter(alert => alert.id !== alertId));
+                        // Add to complete list with updated status
+                        alertToMove.complete = true;
+                        setCompleteAlerts(prev => [...prev, alertToMove]);
+                    }
+                } else { // If setting to unresolved
+                    // Find the alert in complete list
+                    const alertToMove = completeAlerts.find(alert => alert.id === alertId);
+                    if (alertToMove) {
+                        // Remove from complete list
+                        setCompleteAlerts(prev => prev.filter(alert => alert.id !== alertId));
+                        // Add to unresolved list with updated status
+                        alertToMove.complete = false;
+                        setUnresolvedAlerts(prev => [...prev, alertToMove]);
+                    }
+                }
             } else {
-                console.log("Failed to update alert to: ", alertStatus)
-            }
+                console.log("Failed to update alert to: ", alertStatus);
+            }   
 
         } catch (err) {
             console.error(err);
@@ -153,26 +176,7 @@ const RoommateManagementDashboard = () => {
                     </button>
                     <div className="alert-text">
                         <p>Alert your roommate on important reminders.</p>
-                    </div>
-                    <div className="row">
-                        {alerts.length === 0 ? (
-                            <p className="text-muted">No alerts at the moment.</p>
-                        ) : (
-                            alerts.map((alert, index) => (
-                                <div key={index} className="col-md-4 col-sm-6 mb-3">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h5 className="card-title">{alert.name}</h5>
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
-                                            </h6>
-                                            <p className="card-text">{alert.description}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                    </div>      
                     <div className="row">
                         {unresolvedAlerts.length === 0 ? (
                             <p className="text-muted">No alerts at the moment.</p>
@@ -183,7 +187,7 @@ const RoommateManagementDashboard = () => {
                                         <div className="card-body">
                                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                                 <h5 className="card-title">{alert.name}</h5>
-                                                <button onClick={() => resolveAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                                <button onClick={() => updateAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
                                             </div>
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
@@ -205,7 +209,7 @@ const RoommateManagementDashboard = () => {
                                         <div className="card-body">
                                             <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                                 <h5 className="card-title">{alert.name}</h5>
-                                                <button onClick={() => resolveAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                                <button onClick={() => updateAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
                                             </div>
                                             
                                             <h6 className="card-subtitle mb-2 text-muted">
