@@ -51,6 +51,14 @@ public class Server {
             router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
             router.addRoute("/auth/getStatus", AuthController::getStatus);
 
+            // supply list routes
+            router.addRoute("/checkSupplyList", SharedSupplyController::checkAndCreateSupplyList);
+            router.addRoute("/getItems", SharedSupplyController::getItems);
+            router.addRoute("/editItem", SharedSupplyController::editItem);
+            router.addRoute("/addItem", SharedSupplyController::addItem);
+
+            // delete gcs route
+            router.addRoute("/delete/unconfirmedChats", ChatDeleteController::deleteUnconfirmedGroupchats);
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
@@ -93,6 +101,7 @@ public class Server {
             router.addRoute("/alert/addAlertReaction", AlertController::addAlertReaction);
             router.addRoute("/alert/getAllAlerts", AlertController::getAllAlerts);
             router.addRoute("/alert/getAllResponses", AlertController::getAllAlertResponses);
+            router.addRoute("/alert/updateAlertStatus", AlertController::updateAlertStatus);
 
             // Rating routes
             router.addRoute("/rating/submit", RatingController::submitRoommateRating);

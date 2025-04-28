@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import './profile.css';
 import Spinner from "../components/Spinner";
+import RoommateNavBar from "../components/RoommateNavBar";
 
 function Profile({ onEditProfile }) {
     Profile.propTypes = {
@@ -105,84 +106,88 @@ function Profile({ onEditProfile }) {
     }
 
     return (
-        <div className="profile-container">
-            {isLoading ? (
-                <div className="loading-container">
-                    <Spinner load={"profile..."} />
-                </div>
-            ) : profile ? (
-                <div className="profile-content">
-                    {/* Profile Picture */}
-                    <img
-                        src={profile.profile_picture_url || "/default-profile-pic.jpg"}
-                        alt="Profile"
-                        className="profile-picture-page"
-                    />
-
-                    <h2 className="profile-heading">Profile Information</h2>
-
-                    {/* Image Carousel */}
-                    {userImages.length > 0 ? (
-                        <div className="carousel-container">
-                            <button onClick={prevImage} className="carousel-button left">
-                                &#10094;
-                            </button>
-                            <img
-                                src={userImages[currentIndex]}
-                                alt={`User Image ${currentIndex + 1}`}
-                                className="carousel-image"
-                            />
-                            <button onClick={nextImage} className="carousel-button right">
-                                &#10095;
-                            </button>
-                        </div>
-                    ) : (
-                        <p>No images available</p>
-                    )}
-
-                    <button className="delete-image-btn" onClick={onDeleteImage}>
-                        Delete
-                    </button>
-
-                    {/* Profile Details Grid */}
-                    <div className="profile-details-grid">
-                        <div className="detail-item">
-                            <span className="detail-label">Name:</span>
-                            <span className="detail-value">{profile.name}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">Email:</span>
-                            <span className="detail-value">{profile.email}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">School:</span>
-                            <span className="detail-value">{profile.school || "N/A"}</span>
-                        </div>
-
-                        <div className="detail-item">
-                            <span className="detail-label">About Me:</span>
-                            <span className="detail-value">
-                                {(() => {
-                                    try {
-                                        return decodeURIComponent(profile.about_me);
-                                    } catch (e) {
-                                        return profile.about_me || "No bio available.";
-                                    }
-                                })()}
-                            </span>
-                        </div>
-
-                        <button className="edit-profile-btn" onClick={onEditProfile}>
-                            Edit Profile
-                        </button>
+        <>  
+            {/* {if roommatecontained then show the nav bar} */}
+            {/* <RoommateNavBar/> */}
+            <div className="profile-container">
+                {isLoading ? (
+                    <div className="loading-container">
+                        <Spinner load={"profile..."} />
                     </div>
-                </div>
-            ) : (
-                <p>{error || "No profile data available."}</p>
-            )}
-        </div>
+                ) : profile ? (
+                    <div className="profile-content">
+                        {/* Profile Picture */}
+                        <img
+                            src={profile.profile_picture_url || "/default-profile-pic.jpg"}
+                            alt="Profile"
+                            className="profile-picture-page"
+                        />
+
+                        <h2 className="profile-heading">Profile Information</h2>
+
+                        {/* Image Carousel */}
+                        {userImages.length > 0 ? (
+                            <div className="carousel-container">
+                                <button onClick={prevImage} className="carousel-button left">
+                                    &#10094;
+                                </button>
+                                <img
+                                    src={userImages[currentIndex]}
+                                    alt={`User Image ${currentIndex + 1}`}
+                                    className="carousel-image"
+                                />
+                                <button onClick={nextImage} className="carousel-button right">
+                                    &#10095;
+                                </button>
+                            </div>
+                        ) : (
+                            <p>No images available</p>
+                        )}
+
+                        <button className="delete-image-btn" onClick={onDeleteImage}>
+                            Delete
+                        </button>
+
+                        {/* Profile Details Grid */}
+                        <div className="profile-details-grid">
+                            <div className="detail-item">
+                                <span className="detail-label">Name:</span>
+                                <span className="detail-value">{profile.name}</span>
+                            </div>
+
+                            <div className="detail-item">
+                                <span className="detail-label">Email:</span>
+                                <span className="detail-value">{profile.email}</span>
+                            </div>
+
+                            <div className="detail-item">
+                                <span className="detail-label">School:</span>
+                                <span className="detail-value">{profile.school || "N/A"}</span>
+                            </div>
+
+                            <div className="detail-item">
+                                <span className="detail-label">About Me:</span>
+                                <span className="detail-value">
+                                    {(() => {
+                                        try {
+                                            return decodeURIComponent(profile.about_me);
+                                        } catch (e) {
+                                            return profile.about_me || "No bio available.";
+                                        }
+                                    })()}
+                                </span>
+                            </div>
+
+                            <button className="edit-profile-btn" onClick={onEditProfile}>
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p>{error || "No profile data available."}</p>
+                )}
+            </div>
+        </>
     );
 }
 

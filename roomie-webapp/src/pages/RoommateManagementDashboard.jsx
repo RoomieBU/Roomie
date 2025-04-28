@@ -5,6 +5,11 @@ import RoommateNavBar from '../components/RoommateNavBar';
 const RoommateManagementDashboard = () => {
     const [groupchatid, setGroupchat] = useState('');
     const [alerts, setAlerts] = useState([]);
+
+    const [completeAlerts, setCompleteAlerts] = useState([]);
+    const [unresolvedAlerts, setUnresolvedAlerts] = useState([])
+
+
     const [form, setForm] = useState({
         name: '',
         groupchat_id: '',
@@ -31,6 +36,25 @@ const RoommateManagementDashboard = () => {
         checkIfConfirmed();
     }, []);
 
+    // Auto-delete unconfirmed group chats on page load
+    useEffect(() => {
+        const deleteUnconfirmedChats = async () => {
+            const response = await fetch("https://roomie.ddns.net:8080/delete/unconfirmedChats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: localStorage.getItem("token") }),
+            });
+
+            if (response.ok) {
+                console.log('Unconfirmed group chats deleted successfully.');
+            } else {
+                console.error('Failed to delete unconfirmed group chats.');
+            }
+        };
+        deleteUnconfirmedChats();
+    }, []);
+
+
     useEffect(() => {
         import('bootstrap/dist/js/bootstrap.bundle.min.js');
     }, []);
@@ -49,7 +73,23 @@ const RoommateManagementDashboard = () => {
 
                 if (response.ok) {
                     const data = await response.json();
+
+                    const complete = []
+                    const unresolved = []
+
+                    for(const a of data) {
+                        if(a.complete) {
+                            complete.push(a)
+                        } else {
+                            unresolved.push(a)
+                        }
+                    }
+
+                    setCompleteAlerts(complete)
+                    setUnresolvedAlerts(unresolved)
+
                     setAlerts(data);
+                    console.log("ALERTS:", data)
                 } else {
                     console.error('Failed to fetch alerts');
                 }
@@ -84,7 +124,52 @@ const RoommateManagementDashboard = () => {
             console.error(err);
         }
     };
+    
 
+    const updateAlert =  async (alertStatus, alertId) => {
+        // alert id
+        console.log(alertId)
+
+        try {
+            const response = await fetch('https://roomie.ddns.net:8080/alert/updateAlertStatus', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({status: alertStatus, id: alertId})
+            })
+
+            if(response.ok) {
+                console.log("Alert status updated to: ", alertStatus);
+                
+                // Find the alert in the appropriate list
+                if (alertStatus) { // If setting to complete
+                    // Find the alert in unresolved list
+                    const alertToMove = unresolvedAlerts.find(alert => alert.id === alertId);
+                    if (alertToMove) {
+                        // Remove from unresolved list
+                        setUnresolvedAlerts(prev => prev.filter(alert => alert.id !== alertId));
+                        // Add to complete list with updated status
+                        alertToMove.complete = true;
+                        setCompleteAlerts(prev => [...prev, alertToMove]);
+                    }
+                } else { // If setting to unresolved
+                    // Find the alert in complete list
+                    const alertToMove = completeAlerts.find(alert => alert.id === alertId);
+                    if (alertToMove) {
+                        // Remove from complete list
+                        setCompleteAlerts(prev => prev.filter(alert => alert.id !== alertId));
+                        // Add to unresolved list with updated status
+                        alertToMove.complete = false;
+                        setUnresolvedAlerts(prev => [...prev, alertToMove]);
+                    }
+                }
+            } else {
+                console.log("Failed to update alert to: ", alertStatus);
+            }   
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     
 
@@ -110,19 +195,39 @@ const RoommateManagementDashboard = () => {
                     </button>
                     <div className="alert-text">
                         <p>Alert your roommate on important reminders.</p>
-                    </div>
+                    </div>      
                     <div className="row">
-                        {alerts.length === 0 ? (
+                        {unresolvedAlerts.length === 0 ? (
                             <p className="text-muted">No alerts at the moment.</p>
                         ) : (
-                            alerts.map((alert, index) => (
+                            unresolvedAlerts.map((alert, index) => (
                                 <div key={index} className="col-md-4 col-sm-6 mb-3">
                                     <div className="card h-100">
                                         <div className="card-body">
-                                            <h5 className="card-title">{alert.name}</h5>
-                                            <h6 className="card-subtitle mb-2 text-muted">
-                                                {new Date(alert.start_time).toLocaleString()} → {new Date(alert.end_time).toLocaleString()}
-                                            </h6>
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <h5 className="card-title">{alert.name}</h5>
+                                                <button onClick={() => updateAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                            </div>
+                                            <p className="card-text">{alert.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div className="row">
+                        {completeAlerts.length === 0 ? (
+                            <p className="text-muted">No alerts at the moment.</p>
+                        ) : (
+                            completeAlerts.map((alert, index) => (
+                                <div key={index} className="col-md-4 col-sm-6 mb-3">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                <h5 className="card-title">{alert.name}</h5>
+                                                <button onClick={() => updateAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                                            </div>
+                                            
                                             <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
@@ -151,14 +256,6 @@ const RoommateManagementDashboard = () => {
                                         <label className="form-label">Description</label>
                                         <textarea className="form-control" rows="3" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
                                     </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Start Time</label>
-                                        <input type="datetime-local" className="form-control" value={form.start_time} onChange={(e) => setForm({ ...form, start_time: e.target.value })} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">End Time</label>
-                                        <input type="datetime-local" className="form-control" value={form.end_time} onChange={(e) => setForm({ ...form, end_time: e.target.value })} required />
-                                    </div>
                                     <button type="submit" className="btn btn-success">Submit Alert</button>
                                 </form>
                             </div>
@@ -171,7 +268,7 @@ const RoommateManagementDashboard = () => {
 
                 <div className="left-section">
                     <div className="feature-box">
-                        <div className="feature-emoji"><p>📲</p></div>
+                        <div className="feature-emoji"><p>✉️</p></div>
                         <a href="/roommateChat">
                             <div className="feature-info">
                                 <h3>Chat Room</h3>
@@ -192,6 +289,9 @@ const RoommateManagementDashboard = () => {
                 </div>
 
                 <div className="right-section">
+                    <a href="/SharedSupply">
+                        <div className="right-option">🧹 View Shared Supply List<br /><span>View your shared items, quantities, and last purchase dates.</span></div>
+                    </a>
                     <a href="/housingOptions">
                         <div className="right-option">🏠 View Housing Options<br /><span>Checkout your school's various housing options.</span></div>
                     </a>
@@ -201,7 +301,6 @@ const RoommateManagementDashboard = () => {
                     <a href="/RoommateReporting">
                         <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority.</span></div>
                     </a>
-                    <div className="right-option">🚩 View Issues<br /><span>View issues submitted by roommates.</span></div>
                 </div>
             </main>
         </div>

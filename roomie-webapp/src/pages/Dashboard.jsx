@@ -184,7 +184,7 @@ function Dashboard() {
 
     return (
         <div>
-            <div className="header">
+            <header className="header">
                 <div className="action-section">
                     <button className="header-button" onClick={() => window.location.reload()}>
                         <h4 className="logo">Roomie.</h4>
@@ -203,7 +203,7 @@ function Dashboard() {
                         Log Out.
                     </button>
                 </div>
-            </div>
+            </header>
 
             <div
                 ref={containerRef}
