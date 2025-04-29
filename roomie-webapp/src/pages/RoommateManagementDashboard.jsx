@@ -9,6 +9,8 @@ const RoommateManagementDashboard = () => {
     const [completeAlerts, setCompleteAlerts] = useState([]);
     const [unresolvedAlerts, setUnresolvedAlerts] = useState([])
 
+    const [toggleAlerts, setToggleAlerts] = useState(true)
+
 
     const [form, setForm] = useState({
         name: '',
@@ -185,55 +187,70 @@ const RoommateManagementDashboard = () => {
 
             <section className="alert-section container my-4">
                 <div className="container alert-list mt-4 items-center space-y-4">
-                    <button
-                        type="button"
-                        className="btn btn-primary alert-button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addAlertModal"
-                    >
-                        ➕ Send Your Roommate an Alert
-                    </button>
+                <button
+                    type="button"
+                    className="btn btn-primary alert-button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addAlertModal"
+                >
+                    ➕ Send Your Roommate an Alert
+                </button>
+
+                <button
+                    onClick={() => setToggleAlerts(prevState => !prevState)}
+                    className="btn btn-primary alert-button"
+                    style={{ marginLeft: '10px' }} // Add margin to the left
+                >
+                    {toggleAlerts ? 'Check Resolved Alerts' : 'Check Active Alerts'}
+                </button>
                     <div className="alert-text">
                         <p>Alert your roommate on important reminders.</p>
                     </div>      
                     <div className="row">
-                        {unresolvedAlerts.length === 0 ? (
-                            <p className="text-muted">No alerts at the moment.</p>
-                        ) : (
-                            unresolvedAlerts.map((alert, index) => (
-                                <div key={index} className="col-md-4 col-sm-6 mb-3">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                                <h5 className="card-title">{alert.name}</h5>
-                                                <button onClick={() => updateAlert(true, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                        {toggleAlerts ? (
+                            unresolvedAlerts.length === 0 ? (
+                                <p className="text-muted">No resolved alerts at the moment.</p>
+                            ) : (
+                                unresolvedAlerts.map((alert, index) => (
+                                    <div key={index} className="col-md-4 col-sm-6 mb-3">
+                                        <div className="card h-100">
+                                            <div className="card-body" >
+                                                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                                    <h5 className="card-title">{alert.name}</h5>
+                                                    <button onClick={() => updateAlert(true, alert.id)} className="btn btn-light">
+                                                        <i className="bi bi-x"/>
+                                                    </button>
+                                                </div>
+                                                <p className="card-text">{alert.description}</p>
                                             </div>
-                                            <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
-                                </div>
-                            ))
-                        )}
+                                ))
+                            )
+                        ) : null}
                     </div>
                     <div className="row">
-                        {completeAlerts.length === 0 ? (
-                            <p className="text-muted">No alerts at the moment.</p>
-                        ) : (
-                            completeAlerts.map((alert, index) => (
-                                <div key={index} className="col-md-4 col-sm-6 mb-3">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                                                <h5 className="card-title">{alert.name}</h5>
-                                                <button onClick={() => updateAlert(false, alert.id)} className="btn btn-light"><i className="bi bi-x"/></button>
+                        {!toggleAlerts ? (
+                            completeAlerts.length === 0 ? (
+                                <p className="text-muted">No active alerts at the moment.</p>
+                            ) : (
+                                completeAlerts.map((alert, index) => (
+                                    <div key={index} className="col-md-4 col-sm-6 mb-3">
+                                        <div className="card h-100 resolved-alert">
+                                            <div className="card-body">
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <h5 className="card-title">{alert.name}</h5>
+                                                    <button onClick={() => updateAlert(false, alert.id)} className="btn btn-light">
+                                                        <i className="bi bi-x"/>
+                                                    </button>
+                                                </div>
+                                                <p className="card-text">{alert.description}</p>
                                             </div>
-                                            
-                                            <p className="card-text">{alert.description}</p>
                                         </div>
                                     </div>
-                                </div>
-                            ))
-                        )}
+                                ))
+                            )
+                        ) : null}
                     </div>
                 </div>
 
