@@ -16,8 +16,8 @@
     overflow-y: auto; 
     margin-right: 20px;
     margin-left: 20px;
-    /* margin-top: 20px; */
     scrollbar-width: none;
+    gap: 3px;
 }
 
 .messageArea::-webkit-scrollbar {
@@ -89,6 +89,24 @@
     /* background: linear-gradient(135deg,#FE6D00,#1384C5) border-box; */
     color: #fff;
   }
+
+  .bubble-rounded {
+    max-width: 400px;
+    padding: 8px 20px 10px 20px;
+    border-radius: 1em !important; /* perfect rounded bubble */
+    background: #1384C5; /* or any background you want */
+    color: #fff;
+  } 
+
+  .bubble-rounded.left {
+    margin-left: 0.5em; 
+  }
+
+  .bubble-rounded.right {
+    margin-right: 0.5em; 
+  }
+  
+
   .left {
     --_p: 0;
     border-bottom-left-radius: 0 0;

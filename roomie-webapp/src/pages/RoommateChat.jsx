@@ -182,17 +182,35 @@ function RoommateChat() {
                         ))}
                     </div>
                     <div className="chat-area">
-                        {chatHistory.map((msg, index) => (
-                            <div key={index} className={`bubble ${msg.sentBySelf ? "right" : "left"}`}>
-                                {emailToNameMap[msg.senderEmail] && (
-                                    <label>
-                                        {emailToNameMap[msg.senderEmail]?.firstName}{" "}
-                                        {emailToNameMap[msg.senderEmail]?.lastName}
-                                    </label>
-                                )}
-                                <div className="message-text">{decodeURIComponent(msg.message)}</div>
-                            </div>
-                        ))}
+                        {chatHistory.map((msg, index) => {
+                            const isLastMessageBySender =
+                                index === chatHistory.length - 1 || chatHistory[index + 1].senderEmail !== msg.senderEmail;
+                            const isFirstMessageBySender =
+                                index === 0 || chatHistory[index - 1].senderEmail !== msg.senderEmail;
+
+                            // Determine if it's a stacked middle message (not last)
+                            const isStacked = !isLastMessageBySender;
+
+                            return (
+                                <div key={index} className={`hold-message ${msg.sentBySelf ? "right" : ""}`}>
+                                    {isFirstMessageBySender && emailToNameMap[msg.senderEmail] && (
+                                        <label style={{justifySelf: "right"}}>
+                                            {emailToNameMap[msg.senderEmail]?.firstName}{" "}
+                                            {emailToNameMap[msg.senderEmail]?.lastName}
+                                        </label>
+                                    )}
+                                    <div
+                                        className={`${
+                                            isLastMessageBySender ? "bubble" : "bubble-rounded"
+                                        } ${msg.sentBySelf ? "right" : "left"} ${
+                                            isStacked ? (msg.sentBySelf ? "stacked-right" : "stacked-left") : ""
+                                        }`}
+                                    >
+                                        <div className="message-text">{decodeURIComponent(msg.message)}</div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                         <div ref={bottomRef} />
                     </div>
                     <div className="message-input">

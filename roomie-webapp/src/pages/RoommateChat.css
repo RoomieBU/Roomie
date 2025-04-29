@@ -55,7 +55,7 @@
     scrollbar-width: none;
     width: 100%;
     padding: 20px;
-    gap: 10px;
+    gap: 3px;
 }
 
 
@@ -97,11 +97,16 @@
     justify-content: center;
 }
 
-.roommate-picture:hover {
-    
-}
-
 
 .message-text {
     margin: 4px 0 0 0; /* only top margin */
+}
+
+.hold-message {
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    text-align: right;
+    border-radius: 1rem;
 }

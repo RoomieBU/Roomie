@@ -1,5 +1,5 @@
 import "./Chat.css"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import PropTypes from 'prop-types';
 
 function Chat({ selectedChat }) {
@@ -7,6 +7,9 @@ function Chat({ selectedChat }) {
     const [messages, setMessages] = useState([])
     const [chatHistory, setChatHistory] = useState([])
     const [requestStatus, setRequestStatus] = useState("")
+    const [emailToNameMap, setEmailToNameMap] = useState({});
+
+    const messagesEndRef = useRef(null);
 
     const messageAreaRef = useRef(null)
     const prevMessageCountRef = useRef(0)
@@ -18,6 +21,60 @@ function Chat({ selectedChat }) {
         start_time: "",
         end_time: ""
     })
+
+    const getRoommateRequestStatus = useCallback(async () => {
+        const statusData = JSON.stringify({
+            token: localStorage.getItem("token"),
+            groupchat_id: selectedChat[2],
+        })
+
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getRoommateRequestStatus", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: statusData
+            })
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch roommate request status")
+            }
+
+            const result = await response.json()
+            setRequestStatus(result.status)
+        } catch (error) {
+            console.error("Error fetching roommate request status: ", error)
+        }
+    }, [selectedChat])
+
+    const getAllUserInformation = useCallback(async () => {
+        try {
+            const response = await fetch("https://roomie.ddns.net:8080/chat/getAllUserInformation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    groupchat_id: selectedChat[2],
+                    token: localStorage.getItem("token"),
+                }),
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch all user information");
+
+            const result = await response.json();
+
+            const emailMap = {};
+            result.forEach((member) => {
+                emailMap[member.email] = {
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    profilePicture: member.profilePicture,
+                };
+            });
+
+            setEmailToNameMap(emailMap);
+        } catch (error) {
+            console.error("Error fetching all user information", error);
+        }
+    }, [selectedChat]);
 
     let name = selectedChat ? `${selectedChat[0]} ${selectedChat[1]}` : "..."
 
@@ -32,6 +89,7 @@ function Chat({ selectedChat }) {
             }
 
             fetchChatHistoryAndStatus()
+            getAllUserInformation()
 
             interval = setInterval(fetchChatHistoryAndStatus, 3000)
         }
@@ -39,7 +97,7 @@ function Chat({ selectedChat }) {
         return () => {
             if (interval) clearInterval(interval)
         }
-    }, [selectedChat])
+    }, [getAllUserInformation, getRoommateRequestStatus, selectedChat])
 
     useEffect(() => {
         if (chatHistory.length > 0) {
@@ -54,6 +112,10 @@ function Chat({ selectedChat }) {
         }
         prevMessageCountRef.current = messages.length
     }, [messages])
+
+
+    
+
 
     function sendMessage() {
         if (!selectedChat || text.length === 0) return
@@ -99,11 +161,15 @@ function Chat({ selectedChat }) {
         }
     }
 
+    // const scrollToBottom = () => {
+    //     if (messageAreaRef.current) {
+    //         messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight
+    //     }
+    // }
+
     const scrollToBottom = () => {
-        if (messageAreaRef.current) {
-            messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight
-        }
-    }
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     const getChatHistory = async (id) => {
         try {
@@ -127,29 +193,7 @@ function Chat({ selectedChat }) {
         }
     }
 
-    const getRoommateRequestStatus = async () => {
-        const statusData = JSON.stringify({
-            token: localStorage.getItem("token"),
-            groupchat_id: selectedChat[2],
-        })
-
-        try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getRoommateRequestStatus", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: statusData
-            })
-
-            if (!response.ok) {
-                throw new Error("Failed to fetch roommate request status")
-            }
-
-            const result = await response.json()
-            setRequestStatus(result.status)
-        } catch (error) {
-            console.error("Error fetching roommate request status: ", error)
-        }
-    }
+    
 
     const resetRequestChoice = async () => {
         try {
@@ -243,13 +287,37 @@ function Chat({ selectedChat }) {
         <div className="holdChat">
             <h5 className="chatNote">You are chatting with {name}</h5>
             <div className="messageArea" ref={messageAreaRef}>
-                {messages.map((msg, index) =>
-                    msg.sentBySelf ? (
-                        <p key={index} className="right bubble">{decodeURIComponent(msg.message)}</p>
-                    ) : (
-                        <p key={index} className="left bubble">{decodeURIComponent(msg.message)}</p>
-                    )
-                )}
+                {messages.map((msg, index) => {
+                    const isLastMessageBySender =
+                        index === messages.length - 1 || messages[index + 1].senderEmail !== msg.senderEmail;
+                    const isFirstMessageBySender =
+                        index === 0 || messages[index - 1].senderEmail !== msg.senderEmail;
+
+                    const isStacked = !isLastMessageBySender;
+
+                    return (
+                        <div key={index} className={`hold-message ${msg.sentBySelf ? "right" : ""}`}>
+                            {isFirstMessageBySender && emailToNameMap[msg.senderEmail] && (
+                                <label>
+                                    {emailToNameMap[msg.senderEmail]?.firstName}{" "}
+                                    {emailToNameMap[msg.senderEmail]?.lastName}
+                                </label>
+                            )}
+                            <div
+                                className={`${
+                                    isLastMessageBySender ? "bubble" : "bubble-rounded"
+                                } ${msg.sentBySelf ? "right" : "left"} ${
+                                    isStacked ? (msg.sentBySelf ? "stacked-right" : "stacked-left") : ""
+                                }`}
+                            >
+                                <div className="message-text">{decodeURIComponent(msg.message)}</div>
+                            </div>
+                        </div>
+                    );
+                })}
+
+                {/* Add this dummy div to anchor scroll */}
+                <div ref={messagesEndRef} />
             </div>
             <div className="messageInput">
                 <button onClick={openModal} className="chatButton">
