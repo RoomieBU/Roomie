@@ -199,4 +199,15 @@ public class AuthController {
 
         return response.toString();
     }
+
+    public static String getStatus(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+        String token = data.get("token");
+        String email = Auth.getEmailfromToken(token);
+        Dao dao = new Dao(SQLConnection.getConnection());
+        String status = dao.get(List.of("status"), email, "Users").get("status");
+        response.code = 200;
+        response.setMessage("status", status);
+        return response.toString();
+    }
 }
