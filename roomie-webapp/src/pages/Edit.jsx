@@ -15,6 +15,30 @@ function Edit({ onProfile }) {
     const [selectedUserImages, setSelectedUserImages] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [userStatusData, setUserStatusData] = useState(0)
+    
+        useEffect(() => {
+            const fetchUserStatus = async () => {
+                try {
+                    const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            token: localStorage.getItem("token")
+                        })
+                    });
+                    const data = await userStatus.json();
+                    setUserStatusData(data);
+                } catch (error) {
+                    console.error("Error fetching user status:", error);
+                }
+            };
+    
+            fetchUserStatus();
+        }, []);
+
     // Verify that the user is currently logged in and has a valid token
     useEffect(() => {
         const verifyToken = async () => {
@@ -237,7 +261,11 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                 }
             }
 
-            onProfile
+            if(userStatusData.status === "3"){
+                navigate("/profile")
+            } else {
+                onProfile()
+            }
         } catch (error) {
             setProfileError(error.message);
         }
@@ -245,7 +273,11 @@ const resizeImage = (file, maxWidth, maxHeight) => {
 
     const handleCancel = (e) => {
         e.preventDefault();  // Prevent form submission on cancel
-        onProfile();  // Call the provided onProfile callback
+
+        if(userStatusData.status === "3")
+            navigate("/profile")
+        else
+            onProfile();  // Call the provided onProfile callback
     };
 
     if (isLoading) {
@@ -260,6 +292,9 @@ const resizeImage = (file, maxWidth, maxHeight) => {
 
     return (
         <>  
+            {userStatusData.status == "3" ? 
+                <RoommateNavBar />
+            : null}
             <div className="container-fluid d-flex align-items-center justify-content-center">
                 <div className="col-12 col-md-6 col-lg-4 text-center">
                     <h1 className="fw-bold mb-4">Edit Your Profile</h1>
