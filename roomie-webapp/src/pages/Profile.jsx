@@ -105,10 +105,38 @@ function Profile({ onEditProfile }) {
         }
     }
 
+    const [userStatusData, setUserStatusData] = useState(0)
+
+    useEffect(() => {
+        const fetchUserStatus = async () => {
+            try {
+                const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        token: localStorage.getItem("token")
+                    })
+                });
+                const data = await userStatus.json();
+                setUserStatusData(data);
+                console.log("status: ", data)
+            } catch (error) {
+                console.error("Error fetching user status:", error);
+            }
+        };
+
+        fetchUserStatus();
+    }, []);
+
+
     return (
         <>  
             {/* {if roommatecontained then show the nav bar} */}
-            {/* <RoommateNavBar/> */}
+            {userStatusData.status == "3" ? 
+                <RoommateNavBar />
+            : null}
             <div className="profile-container">
                 {isLoading ? (
                     <div className="loading-container">
@@ -178,8 +206,14 @@ function Profile({ onEditProfile }) {
                                 </span>
                             </div>
 
-                            <button className="edit-profile-btn" onClick={onEditProfile}>
-                                Edit Profile
+                            <button className="edit-profile-btn" onClick={() => {
+                                if (userStatusData?.status === "3") {
+                                    navigate("/profile/edit");
+                                } else {
+                                    onEditProfile();
+                                }
+                                }}>
+                                Edit Profile    
                             </button>
                         </div>
                     </div>
