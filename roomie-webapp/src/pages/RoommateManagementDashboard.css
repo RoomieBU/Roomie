@@ -292,3 +292,7 @@ button.btn.btn-success:hover {
     background-color: #683eb5;
 }
 
+.resolved-alert {
+    background-color: #f8d7da; 
+    border-color: #f5c6cb; 
+}

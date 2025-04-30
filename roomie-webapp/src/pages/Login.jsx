@@ -30,26 +30,30 @@ function Login() {
             // Save token to local storage or context for authentication
             localStorage.setItem("token", responseData.token);
 
-
-            // Check if user is registered and redirect on response
-            const response2 = await fetch("https://roomie.ddns.net:8080/auth/isregistered", {
+            const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     token: localStorage.getItem("token")
-                }),
-            });
+                })
+            })
 
-            if (!response2.ok) {
-                navigate("/registration"); // Redirect to registration page
-            }
-            else {
-                navigate("/dashboard"); // Redirect to dashboard
-            }
+            const userStatusData = await userStatus.json();
 
-        // Catch any possible errors and display error message if any login errors occur
+            if (userStatusData.status == "0") {
+                navigate("/registration")
+            } else
+                if (userStatusData.status == "1") {
+                    navigate("/preferences")
+                } else
+                    if (userStatusData.status == "2") {
+                        navigate("/dashboard")
+                    } else
+                        if (userStatusData.status == "3") {
+                            navigate("/RoommateManagementDashboard")
+                        }
         } catch (error) {
             setLoginError(error.message);
         }

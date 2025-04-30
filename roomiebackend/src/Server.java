@@ -49,6 +49,7 @@ public class Server {
             router.addRoute("/auth/sendRegistration", AuthController::sendRegistration);
             router.addRoute("/auth/sendPreferences", AuthController::sendPreferences);
             router.addRoute("/auth/hasPreferences", AuthController::hasPreferences);
+            router.addRoute("/auth/getStatus", AuthController::getStatus);
 
             // supply list routes
             router.addRoute("/checkSupplyList", SharedSupplyController::checkAndCreateSupplyList);
@@ -56,6 +57,8 @@ public class Server {
             router.addRoute("/editItem", SharedSupplyController::editItem);
             router.addRoute("/addItem", SharedSupplyController::addItem);
 
+            // delete gcs route
+            router.addRoute("/delete/unconfirmedChats", ChatDeleteController::deleteUnconfirmedGroupchats);
 
             // Image Routes
             router.addRoute("/upload/fileSubmit", FileController::uploadFile);
@@ -65,7 +68,7 @@ public class Server {
             // Matches routes
             router.addRoute("/matches/getPotentialRoommate", MatchController::getNextMatch);
             router.addRoute("/matches/sendMatchInteraction", MatchController::sendMatchInformation);
-            router.addRoute("/matches/getChatInformation", MatchController::sendChatInformation); // <---- HERE
+            router.addRoute("/matches/getChatInformation", MatchController::sendChatInformation);
 
             router.addRoute("/matches/resetMatchInteractions", MatchController::resetMatchInteractions);
             router.addRoute("/matches/getMatchList", MatchController::sendMatchList);
