@@ -37,6 +37,7 @@
     max-width: 900px;
     place-self: center;
     margin-top: 22px;
+    color: white;
 }
 
 .rating-container {
@@ -63,6 +64,7 @@
     text-wrap: auto;
     text-wrap-style: balance;
     text-align: center;
+    color: #393939;
 }
 
 .stars {
@@ -72,6 +74,7 @@
 
 .star {
     cursor: pointer;
+    pointer-events: all;
     color: #cccccc;
     transition: color 0.2s;
 }

@@ -139,7 +139,7 @@ const RoommateRating = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className="star">
+                        <div className="stars">
                             {[1, 2, 3, 4, 5].map((value) => (
                                 <span
                                     key={value}
