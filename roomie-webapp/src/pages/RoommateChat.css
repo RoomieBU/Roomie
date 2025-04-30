@@ -107,6 +107,6 @@
     display: flex;
     flex-direction: column;
     width: max-content;
-    text-align: right;
+    text-align: left;
     border-radius: 1rem;
 }

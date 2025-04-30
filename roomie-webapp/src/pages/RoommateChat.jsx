@@ -194,7 +194,7 @@ function RoommateChat() {
                             return (
                                 <div key={index} className={`hold-message ${msg.sentBySelf ? "right" : ""}`}>
                                     {isFirstMessageBySender && emailToNameMap[msg.senderEmail] && (
-                                        <label style={{justifySelf: "right"}}>
+                                        <label>
                                             {emailToNameMap[msg.senderEmail]?.firstName}{" "}
                                             {emailToNameMap[msg.senderEmail]?.lastName}
                                         </label>

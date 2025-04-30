@@ -4,7 +4,6 @@ import RoommateNavBar from '../components/RoommateNavBar';
 
 const RoommateManagementDashboard = () => {
     const [groupchatid, setGroupchat] = useState('');
-    const [alerts, setAlerts] = useState([]);
 
     const [completeAlerts, setCompleteAlerts] = useState([]);
     const [unresolvedAlerts, setUnresolvedAlerts] = useState([])
@@ -89,9 +88,6 @@ const RoommateManagementDashboard = () => {
 
                     setCompleteAlerts(complete)
                     setUnresolvedAlerts(unresolved)
-
-                    setAlerts(data);
-                    console.log("ALERTS:", data)
                 } else {
                     console.error('Failed to fetch alerts');
                 }
