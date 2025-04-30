@@ -55,7 +55,8 @@ public class RatingController {
 
             int ratedId = userDao.getIDfromEmail(ratedEmail);
 
-            Double avg = RatingsDao.getAverageRating(ratedId); // may return null
+            Double avg = ratingsDao.getAverageRating(ratedId);
+            
             if (avg == null)
                 avg = 4.0;
 
