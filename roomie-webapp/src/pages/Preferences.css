@@ -22,6 +22,8 @@ body {
 
 .column {
     width: 100%;
+    border: 1px solid #6f42c1;
+    background-color: #cdb1f37a;
 }
 
 .genderChoice {
@@ -48,10 +50,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-bottom: 35px;
+    margin-top: -20px;
 }
 
-.genderChoice {
-    width: 300px;
+.riley, .something {
+    padding: 25px;
+}
+
+.holdStuff,
+.genderHolder {
+    padding: 10px;
 }
 
 :root {
@@ -80,4 +89,110 @@ body {
 
 .form-range::-moz-range-thumb {
     background: var(--bs-primary);
+}
+
+.riley {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    padding: 0 20px;
+}
+
+.riley h1,
+.riley p {
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.riley h1 {
+    color: #6f42c1;
+    font-family: 'DM Sans';
+    font-weight: 400 !important;
+}
+
+.riley p {
+    color: #6c757d;
+}
+
+.something {
+    width: 85%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px #0000000d;
+    background: #ffffff;
+}
+
+.holdStuff {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.column {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.genderHolder {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    border: 1px solid #6f42c1;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.genderChoice {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-check-label {
+    font-weight: bold;
+}
+
+.form-range {
+    width: 100%;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+@media (max-width: 600px) {
+    .holdStuff {
+        flex-direction: column;
+    }
 }
