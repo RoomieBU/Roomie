@@ -45,18 +45,19 @@ public class RatingController {
 
     public static String getAverageRating(Map<String, String> data, String method) {
         HTTPResponse response = new HTTPResponse();
-        Connection   conn     = SQLConnection.getConnection();
-        RatingsDao   ratingsDao = new RatingsDao(conn);
-        UserDao      userDao    = new UserDao(conn);
+        Connection conn = SQLConnection.getConnection();
+        RatingsDao ratingsDao = new RatingsDao(conn);
+        UserDao userDao = new UserDao(conn);
 
         try {
-            
+
             String ratedEmail = Auth.getEmailfromToken(data.get("token"));
 
             int ratedId = userDao.getIDfromEmail(ratedEmail);
 
-            Double avg = ratingsDao.getAverageRating(ratedId);   // may return null
-            if (avg == null) avg = 4.0;
+            Double avg = RatingsDao.getAverageRating(ratedId); // may return null
+            if (avg == null)
+                avg = 4.0;
 
             response.setMessage("average", String.format("%.2f", avg));
             response.code = 200;
@@ -68,5 +69,4 @@ public class RatingController {
         return response.toString();
     }
 
-    
 }

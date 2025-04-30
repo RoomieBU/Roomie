@@ -2,6 +2,7 @@ package Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RatingsDao extends Dao {
@@ -27,4 +28,14 @@ public class RatingsDao extends Dao {
             return false;
         }
     }
+
+    public static Double getAverageRating(int ratedUserId) throws SQLException {
+    final String sql = "SELECT AVG(rating_value) AS avg FROM UserRatings WHERE rated_user = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, ratedUserId);
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getDouble("avg") : null;   // null → “no ratings yet”
+        }
+    }
+}
 }
