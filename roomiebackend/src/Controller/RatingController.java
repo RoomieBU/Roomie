@@ -42,4 +42,31 @@ public class RatingController {
 
         return response.toString();
     }
+
+    public static String getAverageRating(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+        Connection   conn     = SQLConnection.getConnection();
+        RatingsDao   ratingsDao = new RatingsDao(conn);
+        UserDao      userDao    = new UserDao(conn);
+
+        try {
+            
+            String ratedEmail = Auth.getEmailfromToken(data.get("token"));
+
+            int ratedId = userDao.getIDfromEmail(ratedEmail);
+
+            Double avg = ratingsDao.getAverageRating(ratedId);   // may return null
+            if (avg == null) avg = 4.0;
+
+            response.setMessage("average", String.format("%.2f", avg));
+            response.code = 200;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage("message", "Unable to fetch average rating");
+            response.code = 500;
+        }
+        return response.toString();
+    }
+
+    
 }
