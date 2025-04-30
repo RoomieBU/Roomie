@@ -11,7 +11,9 @@ public class RatingsDao extends Dao {
     }
 
     public boolean insertRating(int reviewerId, int ratedId, int ratingValue, String comment) {
-        String query = "INSERT INTO UserRatings (reviewer_user, rated_user, rating_value, comment) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO UserRatings (reviewer_user, rated_user, rating_value, comment) " +
+                   "VALUES (?, ?, ?, ?) " +
+                   "ON DUPLICATE KEY UPDATE rating_value = VALUES(rating_value), comment = VALUES(comment)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, reviewerId);
