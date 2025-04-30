@@ -35,8 +35,10 @@ public class Dao {
 
         String sql = base.append(" (").append(columns).append(") VALUES (").append(placeholders).append(")").toString();
 
+        /*
         if (table != "UserSimilarities")
             System.out.println(sql);
+         */
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             int index = 1;
@@ -85,6 +87,10 @@ public class Dao {
                     // Convert "true"/"false" string to boolean for BIT(1)
                     boolean registeredValue = "true".equalsIgnoreCase(value);
                     stmt.setBoolean(index++, registeredValue);
+                }
+                else if ("status".equals(key)) {
+                    int statusValue = Integer.parseInt(entry.getValue());
+                    stmt.setInt(index++, statusValue);
                 } else {
                     stmt.setString(index++, value);
                 }

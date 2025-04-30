@@ -104,6 +104,26 @@ public class UserMatchInteractionDao extends Dao{
         return false;
     }
 
+    public void setAllUserStatus() {
+        String query = "UPDATE Users SET status = 3 WHERE email IN (    SELECT email1 FROM GroupChats WHERE confirmed = 1\n" +
+                "    UNION\n" +
+                "    SELECT email2 FROM GroupChats WHERE confirmed = 1\n" +
+                "    UNION\n" +
+                "    SELECT email3 FROM GroupChats WHERE confirmed = 1\n" +
+                "    UNION\n" +
+                "    SELECT email4 FROM GroupChats WHERE confirmed = 1\n" +
+                "    UNION\n" +
+                "    SELECT email5 FROM GroupChats WHERE confirmed = 1\n" +
+                "    UNION\n" +
+                "    SELECT email6 FROM GroupChats WHERE confirmed = 1)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.executeQuery();
+        } catch  (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean isAllAccepted(int groupchatId) {
         String countEmailsQuery = "SELECT " +
                 "((email1 IS NOT NULL) + (email2 IS NOT NULL) + (email3 IS NOT NULL) + " +
@@ -138,7 +158,6 @@ public class UserMatchInteractionDao extends Dao{
 
         return false;
     }
-
 
 
     // Also get every groupchat

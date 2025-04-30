@@ -16,6 +16,7 @@ function Profile({ onEditProfile }) {
     const [userImages, setUserImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
+    const rating = 4; // You can change this to whatever you want
 
     // Fetch user images (reusable function)
     const getUserImages = useCallback(async () => {
@@ -151,6 +152,20 @@ function Profile({ onEditProfile }) {
                             className="profile-picture-page"
                         />
 
+                        <div className="stars">
+                        <h3 className="rating-heading">Peer Rating</h3>
+                        {[1, 2, 3, 4, 5].map((value) => (
+                            <span
+                            key={value}
+                            className={`star ${value <= rating ? 'filled' : ''}`}
+                            >
+                            ★
+                            </span>
+                        ))}
+                        <hr></hr>
+                        </div>
+
+
                         <h2 className="profile-heading">Profile Information</h2>
 
                         {/* Image Carousel */}
@@ -217,6 +232,7 @@ function Profile({ onEditProfile }) {
                             </button>
                         </div>
                     </div>
+                    
                 ) : (
                     <p>{error || "No profile data available."}</p>
                 )}

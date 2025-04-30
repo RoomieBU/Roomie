@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 0px;
 }
 
 /* Profile picture */
@@ -35,7 +35,7 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 /* Heading */
@@ -43,6 +43,11 @@
     font-size: 28px;
     font-weight: bold;
     color: #333;
+}
+
+.rating-heading {
+    margin-top: 10px;
+    margin-bottom: -10px;
 }
 
 /* Image carousel */
@@ -146,3 +151,19 @@
 .edit-profile-btn:hover {
     background-color: #0056b3;
 }
+
+.stars {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.star {
+    pointer-events: none;
+    color: #cccccc;
+    transition: color 0.2s;
+}
+
+.star.filled {
+    color: #fbbf24;
+}
+

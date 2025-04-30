@@ -35,8 +35,9 @@ public class MatchingScannerController extends Thread{
 
                 // Also, check all GroupChats and see if everyone is accepted
                 for (GroupChat gc : dao.getAllGroupchats()) {
-                    if (dao.isAllAccepted(gc.getGroupchatId())) {
+                    if (dao.isAllAccepted(gc.getGroupchatId())) { // <- SEND EVERYONE TO PHASE 2
                         dao.set(Map.of("confirmed", "true"), gc.getGroupchatId(), "GroupChats");
+                        dao.setAllUserStatus();
                     }
                 }
 
