@@ -16,7 +16,7 @@ function Profile({ onEditProfile }) {
     const [userImages, setUserImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
-    const rating = 4; // You can change this to whatever you want
+    const [rating, setRating] = useState(null);
 
     // Fetch user images (reusable function)
     const getUserImages = useCallback(async () => {
@@ -131,13 +131,35 @@ function Profile({ onEditProfile }) {
         fetchUserStatus();
     }, []);
 
+    useEffect(() => {
+        const fetchAverage = async () => {
+            try {
+                const res = await fetch(
+                    "https://roomie.ddns.net:8080/rating/getAverage",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: localStorage.getItem("token") })
+                    }
+                );
+                if (!res.ok) throw new Error("Failed to fetch rating");
+                const { average } = await res.json();   // { "average":"4.25" }
+                setRating(parseFloat(average));
+            } catch (err) {
+                console.error(err);
+                setRating(0);                           // fall-back when no ratings yet
+            }
+        };
+        fetchAverage();
+    }, []);
+
 
     return (
-        <>  
+        <>
             {/* {if roommatecontained then show the nav bar} */}
-            {userStatusData.status == "3" ? 
+            {userStatusData.status == "3" ?
                 <RoommateNavBar />
-            : null}
+                : null}
             <div className="profile-container">
                 {isLoading ? (
                     <div className="loading-container">
@@ -152,18 +174,19 @@ function Profile({ onEditProfile }) {
                             className="profile-picture-page"
                         />
 
-                        <div className="stars">
-                        <h3 className="rating-heading">Peer Rating</h3>
-                        {[1, 2, 3, 4, 5].map((value) => (
-                            <span
-                            key={value}
-                            className={`star ${value <= rating ? 'filled' : ''}`}
-                            >
-                            ★
-                            </span>
-                        ))}
-                        <hr></hr>
-                        </div>
+                        {rating !== null && (
+                            <div className="stars">
+                                <h3 className="rating-heading">
+                                    Peer Rating&nbsp;{rating.toFixed(1)}
+                                </h3>
+                                {[1, 2, 3, 4, 5].map(v => (
+                                    <span key={v} className={`star ${v <= Math.round(rating) ? 'filled' : ''}`}>
+                                        ★
+                                    </span>
+                                ))}
+                                <hr />
+                            </div>
+                        )}
 
 
                         <h2 className="profile-heading">Profile Information</h2>
@@ -227,12 +250,12 @@ function Profile({ onEditProfile }) {
                                 } else {
                                     onEditProfile();
                                 }
-                                }}>
-                                Edit Profile    
+                            }}>
+                                Edit Profile
                             </button>
                         </div>
                     </div>
-                    
+
                 ) : (
                     <p>{error || "No profile data available."}</p>
                 )}

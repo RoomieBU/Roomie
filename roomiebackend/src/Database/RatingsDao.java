@@ -2,6 +2,7 @@ package Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RatingsDao extends Dao {
@@ -12,8 +13,8 @@ public class RatingsDao extends Dao {
 
     public boolean insertRating(int reviewerId, int ratedId, int ratingValue, String comment) {
         String query = "INSERT INTO UserRatings (reviewer_user, rated_user, rating_value, comment) " +
-                   "VALUES (?, ?, ?, ?) " +
-                   "ON DUPLICATE KEY UPDATE rating_value = VALUES(rating_value), comment = VALUES(comment)";
+                "VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE rating_value = VALUES(rating_value), comment = VALUES(comment)";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, reviewerId);
@@ -26,5 +27,16 @@ public class RatingsDao extends Dao {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public Double getAverageRating(int ratedUserId) throws SQLException {
+        String sql = "SELECT AVG(rating_value) AS avg FROM UserRatings WHERE rated_user = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, ratedUserId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getDouble("avg") : null;
+            }
+        }
+
     }
 }
