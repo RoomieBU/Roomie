@@ -3,10 +3,11 @@ package Database;
 import java.sql.*;
 import java.util.*;
 
-public class UserPreferencesDao {
+public class UserPreferencesDao extends Dao{
     private final Connection connection;
 
     public UserPreferencesDao(Connection connection) {
+        super(connection);
         this.connection = connection;
     }
 
