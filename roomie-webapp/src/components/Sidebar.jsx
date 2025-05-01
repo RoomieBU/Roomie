@@ -207,6 +207,11 @@ function Sidebar({ currentView, onChatSelect }) {
     }
 
     function handleGroupchatCreation() {
+        if(selectedUsers.length < 2) {
+            console.log("only one user selected")
+            return
+        }
+
         const createGroupChat = async () => {
             const body = JSON.stringify({
                 token: localStorage.getItem("token"),
@@ -283,9 +288,13 @@ function Sidebar({ currentView, onChatSelect }) {
             {activeView === "Chat" && <div className="groupchat-cluster">
                 {groupChatMode && (
                     <>
-                        <h4>Select users for your groupchat</h4>
-                        <button className="btn purpleBtn" onClick={handleGroupchatCancel}>Cancel</button>
-                        <button className="btn purpleBtn" onClick={handleGroupchatCreation}>Confirm</button>
+                        <div className="groupchat-organize">
+                            <h4 className="groupchat-instruction">Select users for your groupchat</h4>
+                            <div style={{gap: "10px", display: "flex"}}>
+                                <button className="btn purpleBtn" onClick={handleGroupchatCancel}>Cancel</button>
+                                <button className="btn purpleBtn" onClick={handleGroupchatCreation}>Confirm</button>
+                            </div>
+                        </div>
                     </>
                 )}
                 <i onClick={() => setGroupChatMode(true)} className="bi bi-chat-dots groupChatButton" />
@@ -311,7 +320,7 @@ function Sidebar({ currentView, onChatSelect }) {
                                                     alt="P"
                                                     className="profilePic"
                                                 />
-                                                <h3>{chat.firstName} {chat.lastName}</h3>
+                                                <h3 className="groupchat-name">{chat.firstName} {chat.lastName}</h3>
                                             </div>
                                         );
                                     })}

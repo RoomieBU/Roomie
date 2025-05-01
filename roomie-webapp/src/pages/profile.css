@@ -6,6 +6,7 @@
     max-width: 900px;
     margin: 0 auto;
     height:auto;
+    scrollbar-width: none;
 }
 
 /* Loading screen */
