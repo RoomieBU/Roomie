@@ -311,9 +311,6 @@ const RoommateManagementDashboard = () => {
                     <a href="/RoommateRating">
                         <div className="right-option">⭐ Rate Your Roommate<br /><span>Give your roommate a rating out of 5.</span></div>
                     </a>
-                    <a href="/RoommateReporting">
-                        <div className="right-option">🚨 Report a Roommate Issue<br /><span>Report a roommate issue and assign its priority.</span></div>
-                    </a>
                 </div>
             </main>
         </div>

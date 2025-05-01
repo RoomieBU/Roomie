@@ -9,8 +9,6 @@ body {
     width: 100%;
 }
 
-
-
 .logo {
     text-align: left !important;
     align-self: flex-start !important;
@@ -22,8 +20,6 @@ body {
     display: block !important;
     height: 40px !important;
 }
-
-
 
 .hero-section {
     color: white;
@@ -58,6 +54,7 @@ body {
     line-height: 1.6;
     font-family: 'League Spartan';
     font-weight: normal;
+    color: white;
 }
 
 .main-content {
