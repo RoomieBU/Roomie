@@ -62,7 +62,7 @@ p {
     height: max-content;
     width: max-content;
     text-align: left;
-    margin-top: 85%;
+    margin-top: 85% !important;
     margin-left: 3%;
     padding-left: 10px;
     padding-right: 10px;
@@ -72,7 +72,7 @@ p {
 
 .user_similarity_percent {
     height: max-content;
-    width: max-content;
+    width: max-content;97
     text-align: center;
     margin-top: 3%;
     margin-left: 60%;
