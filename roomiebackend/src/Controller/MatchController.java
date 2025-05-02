@@ -115,6 +115,10 @@ public class MatchController {
         Map<String, String> userData = DBUser.getData(columns, email);
         User user = getNextSimilarUser(email);
 
+        /// / when sending match, send percentage similar as well
+        double similarityScore = getSimilarity(email, user.getEmail());
+        int similarityPercentage = (int) Math.round(similarityScore*100);
+
         response.setMessage("message", "Next match found");
         response.setMessage("email", user.getEmail());
         response.setMessage("name", user.getFirstName() + " " + user.getLastName());
@@ -123,6 +127,7 @@ public class MatchController {
         response.setMessage("major", user.getMajor());
         response.setMessage("profile_picture", user.getProfilePicture());
         response.setMessage("school", user.getSchool());
+        response.setMessage("percent", ""+similarityPercentage);
         response.code = 200;
 
         return response.toString();

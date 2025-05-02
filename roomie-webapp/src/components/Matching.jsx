@@ -268,6 +268,9 @@ function Matching() {
                             className="potential-roomate-front"
                             style={{ backgroundImage: `url(${getAvatarUrl(roommate)})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                         >
+                            <div className="user_similarity_percent">
+                                <p>{roommate.percent}%</p>
+                            </div>
                             <div className="user_info">
                                 <p>{roommate.name}, {age}
                                     <br />
