@@ -149,10 +149,6 @@ function Dashboard() {
         setSelectedChat(chat);
     };
 
-    // const handleChatHistory = (chatHistory) => {
-    //     setChatHistory(chatHistory)
-    // }
-
     function showRelevantComponent(action) {
         setHideMatching(true);
         setHideDefault(true);

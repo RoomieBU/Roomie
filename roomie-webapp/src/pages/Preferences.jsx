@@ -104,10 +104,10 @@ function Preferences() {
                 <div className="holdStuff">
                     <div className="genderHolder">
                         <div className="genderChoice">
-                            <label className="form-label">Your gender</label>
+                            <label className="form-label">Your gender:</label>
                             <select
                                 className={`form-select ${errors.gender ? "is-invalid" : ""}`}
-                                {...register("gender", { required: "Preferred gender is required" })}
+                                {...register("gender", { required: "Your gender is required" })}
                             >
                                 <option value="">Select Gender</option>
                                 <option value="male">Male</option>
@@ -120,7 +120,7 @@ function Preferences() {
                         </div>
 
                         <div className="genderChoice">
-                            <label className="form-label">Preferred Gender</label>
+                            <label className="form-label">Preferred Gender:</label>
                             <select
                                 className={`form-select ${errors.preferred_gender ? "is-invalid" : ""}`}
                                 {...register("preferred_gender", { required: "Preferred gender is required" })}

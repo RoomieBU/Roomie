@@ -19,6 +19,7 @@
     padding-left: 30px;
     gap: 15px;
     display: flex;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
 }
@@ -127,7 +128,6 @@
     position: sticky;
     top: 0; /* Fixes the group chat options at the top */
     background-color: white; /* Ensure the background covers the content */
-    z-index: 10; /* Ensures the top part stays above the scrolling content */
     padding: 10px;
     border-bottom: 1px solid #ddd; /* Optional, to visually separate the sticky header */
 }   
@@ -159,4 +159,24 @@
 
 .chatBox.gSelected {
     background-color: #3f266e; /* green for selected */
+}
+
+.groupchat-instruction {
+    font-family: "DM Sans";
+}
+
+.groupchat-name {
+    font-family: 'DM Sans';
+    font-size: 2vw;
+    display: flex;
+    justify-self: center;
+    height: min-content;
+    margin-bottom: 0 !important;
+}
+
+.groupchat-organize {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

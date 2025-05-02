@@ -6,6 +6,7 @@
     max-width: 900px;
     margin: 0 auto;
     height:auto;
+    scrollbar-width: none;
 }
 
 /* Loading screen */
@@ -26,7 +27,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
+    gap: 0px;
 }
 
 /* Profile picture */
@@ -35,7 +36,7 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 /* Heading */
@@ -43,6 +44,11 @@
     font-size: 28px;
     font-weight: bold;
     color: #333;
+}
+
+.rating-heading {
+    margin-top: 10px;
+    margin-bottom: -10px;
 }
 
 /* Image carousel */
@@ -112,6 +118,7 @@
     background: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 680px;
 }
 
 .detail-item {
@@ -146,3 +153,19 @@
 .edit-profile-btn:hover {
     background-color: #0056b3;
 }
+
+.stars {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.star {
+    pointer-events: none;
+    color: #cccccc;
+    transition: color 0.2s;
+}
+
+.star.filled {
+    color: #fbbf24;
+}
+

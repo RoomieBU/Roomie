@@ -14,7 +14,6 @@ import About from './pages/About';
 import RoommateManagementDashboard from './pages/RoommateManagementDashboard';
 import roomieLogo from './assets/roomie-favicon.svg';
 import RoommateRating from './pages/RoommateRating';
-import RoommateReporting from './pages/RoommateReporting';
 import HousingOptions from "./pages/HousingOptions";
 import RoommateChat from "./pages/RoommateChat";
 import SharedSupply from "./pages/SharedSupply";
@@ -69,7 +68,6 @@ function AppWrapper() {
         <Route path="/About" element={<About />} />
         <Route path="/RoommateManagementDashboard" element={<RoommateManagementDashboard />} />
         <Route path="/RoommateRating" element={<RoommateRating />} />
-        <Route path="/RoommateReporting" element={<RoommateReporting />} />
         <Route path="/housingOptions" element={<HousingOptions/>}/>
         <Route path="/RoommateChat" element={<RoommateChat />} />
         <Route path="/SharedCalendar" element={<SharedCalendar />} />

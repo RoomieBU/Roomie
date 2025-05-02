@@ -16,6 +16,7 @@ function Profile({ onEditProfile }) {
     const [userImages, setUserImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
+    const [rating, setRating] = useState(null);
 
     // Fetch user images (reusable function)
     const getUserImages = useCallback(async () => {
@@ -105,10 +106,60 @@ function Profile({ onEditProfile }) {
         }
     }
 
+    const [userStatusData, setUserStatusData] = useState(0)
+
+    useEffect(() => {
+        const fetchUserStatus = async () => {
+            try {
+                const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        token: localStorage.getItem("token")
+                    })
+                });
+                const data = await userStatus.json();
+                setUserStatusData(data);
+                console.log("status: ", data)
+            } catch (error) {
+                console.error("Error fetching user status:", error);
+            }
+        };
+
+        fetchUserStatus();
+    }, []);
+
+    useEffect(() => {
+        const fetchAverage = async () => {
+            try {
+                const res = await fetch(
+                    "https://roomie.ddns.net:8080/rating/getAverage",
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ token: localStorage.getItem("token") })
+                    }
+                );
+                if (!res.ok) throw new Error("Failed to fetch rating");
+                const { average } = await res.json();   // { "average":"4.25" }
+                setRating(parseFloat(average));
+            } catch (err) {
+                console.error(err);
+                setRating(0);                           // fall-back when no ratings yet
+            }
+        };
+        fetchAverage();
+    }, []);
+
+
     return (
-        <>  
+        <>
             {/* {if roommatecontained then show the nav bar} */}
-            {/* <RoommateNavBar/> */}
+            {userStatusData.status == "3" ?
+                <RoommateNavBar />
+                : null}
             <div className="profile-container">
                 {isLoading ? (
                     <div className="loading-container">
@@ -122,6 +173,21 @@ function Profile({ onEditProfile }) {
                             alt="Profile"
                             className="profile-picture-page"
                         />
+
+                        {rating !== null && (
+                            <div className="stars">
+                                <h3 className="rating-heading">
+                                    Peer Rating&nbsp;{rating.toFixed(1)}
+                                </h3>
+                                {[1, 2, 3, 4, 5].map(v => (
+                                    <span key={v} className={`star ${v <= Math.round(rating) ? 'filled' : ''}`}>
+                                        ★
+                                    </span>
+                                ))}
+                                <hr />
+                            </div>
+                        )}
+
 
                         <h2 className="profile-heading">Profile Information</h2>
 
@@ -178,11 +244,18 @@ function Profile({ onEditProfile }) {
                                 </span>
                             </div>
 
-                            <button className="edit-profile-btn" onClick={onEditProfile}>
+                            <button className="edit-profile-btn" onClick={() => {
+                                if (userStatusData?.status === "3") {
+                                    navigate("/profile/edit");
+                                } else {
+                                    onEditProfile();
+                                }
+                            }}>
                                 Edit Profile
                             </button>
                         </div>
                     </div>
+
                 ) : (
                     <p>{error || "No profile data available."}</p>
                 )}

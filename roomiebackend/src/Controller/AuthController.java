@@ -50,7 +50,7 @@ public class AuthController {
         Map<String, String> query = new HashMap<>();
         query.put("email", data.get("email"));
         query.put("hashed_password", Utils.hashSHA256(data.get("password")));
-
+        query.put("status", "0");
         Dao dao = new Dao(SQLConnection.getConnection());
 
         String email = data.get("email");
@@ -153,6 +153,7 @@ public class AuthController {
         formData.put("school", data.get("school"));
         formData.put("major", data.get("major"));
         formData.put("profile_picture_url", data.get("photo"));
+        formData.put("status", "1");
 
         String userEnteredVerifyCode = data.get("code");
 
@@ -181,7 +182,7 @@ public class AuthController {
 
         UserPreferencesDao DBUser = new UserPreferencesDao(SQLConnection.getConnection());
         MatchingPriorityDao MPDao = new MatchingPriorityDao(SQLConnection.getConnection());
-
+        DBUser.set(Map.of("status", "2"), email, "Users");
         if (DBUser.createUserPreferences(data, email)) {
             MPDao.removeIfExists(email);
             response.code = 200;
@@ -197,6 +198,17 @@ public class AuthController {
         if (dao.exists(Map.of("email", email), "UserPreferences")) {
             response.code = 200;} else {response.code = 400;}
 
+        return response.toString();
+    }
+
+    public static String getStatus(Map<String, String> data, String method) {
+        HTTPResponse response = new HTTPResponse();
+        String token = data.get("token");
+        String email = Auth.getEmailfromToken(token);
+        Dao dao = new Dao(SQLConnection.getConnection());
+        String status = dao.get(List.of("status"), email, "Users").get("status");
+        response.code = 200;
+        response.setMessage("status", status);
         return response.toString();
     }
 }

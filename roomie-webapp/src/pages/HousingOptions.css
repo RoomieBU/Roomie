@@ -130,4 +130,7 @@
     display: flex;
     justify-content: center;
     text-align: center;
+    color: #6c757d;
+    font-weight: 500;
+    line-height: normal;
 }

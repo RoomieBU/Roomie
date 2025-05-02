@@ -63,8 +63,8 @@
 }
 
 .profile-picture {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
     object-fit: cover;
@@ -96,6 +96,7 @@
     background-color: #6f42c1;
     border-width: 0px;
     padding: 10px;
+    font-family: 'DM Sans';
 }
 
 .header-button:hover {
