@@ -40,6 +40,10 @@ function Login() {
                 })
             })
 
+            if (!userStatus.ok) {
+                throw new Error("Invalid token");
+            }
+
             const userStatusData = await userStatus.json();
 
             if (userStatusData.status == "0") {

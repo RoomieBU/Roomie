@@ -1,5 +1,9 @@
 package Tools;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -66,21 +70,9 @@ public class Utils {
     }
 
     public static Map<String, String> parseJson(String json) {
-        Map<String, String> map = new HashMap<>();
-
-        // Remove braces and whitespace
-        json = json.trim().replaceAll("[{}\"]", "");
-
-        // Split into key-value pairs
-        String[] pairs = json.split(",");
-
-        for (String pair : pairs) {
-            String[] entry = pair.split(":");
-            if (entry.length == 2) {
-                map.put(entry[0].trim(), entry[1].trim());
-            }
-        }
-        return map;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        return gson.fromJson(json, type);
     }
 
     public static String assembleJson(Map<String, String> data) {
