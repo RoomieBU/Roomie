@@ -86,6 +86,12 @@
     color: #ffffff;
 }
 
+/* make all non-weekend, non-neighbouring-month days dark again */
+.purple-calendar .react-calendar__tile {
+  color: #333333;
+}
+
+
 .shared-calendar-event-list {
     margin: 0.25rem 0 0;
     padding: 0;

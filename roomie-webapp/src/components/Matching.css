@@ -70,6 +70,19 @@ p {
     background-color: white;
 }
 
+.user_similarity_percent {
+    height: max-content;
+    width: max-content;
+    text-align: center;
+    margin-top: 3%;
+    margin-left: 97%;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+
 .match-button-cluster {
     width: 420px;
     display: flex;
