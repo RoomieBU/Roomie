@@ -3,6 +3,7 @@
 .about-container {
     max-width: 1200px;
     color: #333333;
+    place-self: center;
 }
 
 h1, h2, h3 {
