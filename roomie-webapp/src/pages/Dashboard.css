@@ -55,8 +55,7 @@
 
 .header {
     width: 100%;
-    height: 50px;
-    background-color: #6f42c1;
+    height: 90px;
     position: absolute;
     top: 0;
     left: 0;
@@ -88,7 +87,7 @@
     display: flex;
 }
 
-.logo {
+.dashboard-logo {
     font-weight: bold;
     color: white;
     height: auto;
@@ -96,18 +95,36 @@
     cursor: pointer;
 }
 
-.header-button {
-    background-color: #6f42c1;
+.dashboard-header-button {
     border-width: 0px;
     padding: 10px;
     font-family: 'DM Sans';
+    color: #6f42c1;
 }
 
-.header-button:hover {
-    background-color: rgba(0,0,0,0.1);
-    color: white;
+button.dashboard-header-button {
+    background-color: white;
+    font-size: 17px;
+    padding: 20px;
 }
 
+.dashboard-header-button:hover {
+    color: #7738EB;
+}
+
+.dashboard-logo {
+    padding: 20px;
+    text-align: left !important;
+    align-self: flex-start !important;
+    margin: 0;
+}
+
+.dashboard-logo img {
+    margin-left: 15px !important;
+    margin: 0 !important;
+    display: block !important;
+    height: 40px !important;
+}
 
 /* Profile Component Styles */
 .profile-container {
@@ -179,8 +196,15 @@
     margin: 20px auto;
 }
 
-.edit-profile-btn:hover {
-    background: #6a1b9a;
+.bg-white {
+    --bs-bg-opacity: 0 !important;
+    background-color: rgba(255, 255, 255, var(--bs-bg-opacity)) !important;
+}
+
+.matchBox {
+    margin-top: 40px;
+    font-family: 'DM Sans';
+    color: #6f42c1;
 }
 
 
