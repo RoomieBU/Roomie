@@ -330,11 +330,11 @@ function Sidebar({ currentView, onChatSelect }) {
                         case "Match":
                             return (
                                 <div className="matchBox">
-                                    <div style={{ display: "flex", width: "140px", justifyContent: "space-evenly" }}>
+                                    {/* <div style={{ display: "flex", width: "140px", justifyContent: "space-evenly" }}>
                                         {isMatchesVisible ? <i className="bi bi-chevron-down" /> : <i className="bi bi-chevron-right" />}
-                                        <h4 onClick={toggleMatches}>Matches</h4>
+                                        <div className="matches-h4" onClick={toggleMatches}>Matches</div>
                                     </div>
-                                    <div className="line" />
+                                    <div className="line" /> */}
                                     <div style={{
                                         height: isMatchesVisible ? "auto" : "0px",
                                         overflow: "scroll",

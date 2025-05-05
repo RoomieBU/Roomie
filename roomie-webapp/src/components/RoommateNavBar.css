@@ -8,8 +8,22 @@
     text-decoration: none;
 }
 
+.nav-links button {
+    margin-left: 20px;
+    color: #6F42C1;
+    font-size: 17px;
+    font-family: 'DM Sans';
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+}
+
 .nav-links a:hover {
     color: #7738EB;
+}
+
+.nav-links button:hover {
+    color: #7738EB
 }
 
 .dashboard-header {
@@ -17,7 +31,10 @@
     justify-content: space-between;
     align-items: center;
     padding: 0px 30px;
-    flex-wrap: wrap;
+    border-bottom: 1px solid #dddddd;
+    position: relative;
+    z-index: 899;
+    width: 100%;
 }
 
 .left-lean {
