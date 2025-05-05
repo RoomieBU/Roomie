@@ -25,6 +25,7 @@ p {
     text-align: center;
     height: 300px;
     width: 99vw !important;
+    place-self: center;
 }
 
 .hero-content2 {
