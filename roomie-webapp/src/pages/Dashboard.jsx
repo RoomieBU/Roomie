@@ -6,6 +6,7 @@ import Chat from "../components/Chat";
 import Profile from "./Profile";
 import Sidebar from "../components/Sidebar";
 import Edit from "./Edit";
+import roomieLogo from "../assets/roomie-favicon.svg"
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -182,11 +183,11 @@ function Dashboard() {
         <div>
             <header className="header">
                 <div className="action-section">
-                    <button className="header-button" onClick={() => window.location.reload()}>
-                        <h4 className="logo">Roomie.</h4>
-                    </button>
-                    <button className="header-button" onClick={() => handleViewChange("Match")}>Match.</button>
-                    <button className="header-button" onClick={() => handleViewChange("Chat")}>Chat.</button>
+                <div className="dashboard-logo">
+                    <a href="/"><img src={roomieLogo} alt="Roomie Logo" /></a>
+                </div>
+                    <button className="dashboard-header-button" onClick={() => handleViewChange("Match")}>Match.</button>
+                    <button className="dashboard-header-button" onClick={() => handleViewChange("Chat")}>Chat.</button>
                 </div>
                 <div className="profile-section">
                     <img
@@ -195,7 +196,7 @@ function Dashboard() {
                         className="profile-picture"
                         onClick={() => handleViewChange("Profile")}
                     />
-                    <button className="header-button" style={{ borderRadius: 0 }} onClick={handleLogout}>
+                    <button className="dashboard-header-button" style={{ borderRadius: 0 }} onClick={handleLogout}>
                         Log Out.
                     </button>
                 </div>
