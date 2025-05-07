@@ -150,10 +150,7 @@ public class CalendarEventDao extends Dao {
         return userId;
     }
 
-    public int getGroupChatId(String token) {
-        // get email from token
-        String email = Auth.getEmailfromToken(token);
-
+    public int getGroupChatId(String email) {
         System.out.println("[DEBUG] getGroupChatId: email from token = " + email);
 
         // query for gc
