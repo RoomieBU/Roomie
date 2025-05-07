@@ -57,6 +57,11 @@ public class Server {
             router.addRoute("/editItem", SharedSupplyController::editItem);
             router.addRoute("/addItem", SharedSupplyController::addItem);
 
+            // calendar routes
+            router.addRoute("/calendar/addEvent", CalendarController::addEvent);
+            router.addRoute("/calendar/getEvents", CalendarController::getAllEvents);
+
+
             // delete gcs route
             router.addRoute("/delete/unconfirmedChats", ChatDeleteController::deleteUnconfirmedGroupchats);
 
