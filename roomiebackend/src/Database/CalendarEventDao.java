@@ -143,9 +143,8 @@ public class CalendarEventDao extends Dao {
         try {
             UserDao userDao = new UserDao(connection);
             userId = userDao.getUserByEmail(email).getUserId();
-            userDao.closeConnection();
             System.out.println("[getUserId] Resolved userId=" + userId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.err.println("[getUserId] SQLException: " + e.getMessage());
             e.printStackTrace();
         }
@@ -159,9 +158,8 @@ public class CalendarEventDao extends Dao {
             ChatDao chatDao = new ChatDao(connection);
             List<GroupChat> gcList = chatDao.getConfirmedRoommates(email);
             groupChatId = gcList.get(0).getGroupchatId();
-            chatDao.closeConnection();
             System.out.println("[getGroupChatId] Resolved groupChatId=" + groupChatId);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.err.println("[getGroupChatId] SQLException: " + e.getMessage());
             e.printStackTrace();
         }
