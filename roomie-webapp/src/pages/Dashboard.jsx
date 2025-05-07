@@ -7,6 +7,8 @@ import Profile from "./Profile";
 import Sidebar from "../components/Sidebar";
 import Edit from "./Edit";
 
+import roomieLogo from "../assets/roomie-favicon.svg"
+
 function Dashboard() {
     const navigate = useNavigate();
     const [profilePictureUrl, setProfilePictureUrl] = useState("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Default profile picture
@@ -180,24 +182,23 @@ function Dashboard() {
 
     return (
         <div>
-            <header className="header">
-                <div className="action-section">
-                    <button className="header-button" onClick={() => window.location.reload()}>
-                        <h4 className="logo">Roomie.</h4>
-                    </button>
-                    <button className="header-button" onClick={() => handleViewChange("Match")}>Match.</button>
-                    <button className="header-button" onClick={() => handleViewChange("Chat")}>Chat.</button>
+
+            <header className="dashboard-header">
+                <div className="logo">
+                    <a><img src={roomieLogo} onClick={() => window.location.reload()} alt="Roomie Logo" /></a>
                 </div>
-                <div className="profile-section">
+                <div className="nav-links left-lean">
+                    <button onClick={() => handleViewChange("Match")}>MATCH.</button>
+                    <button onClick={() => handleViewChange("Chat")}>CHAT.</button>
+                </div>
+                <div className="nav-links">
                     <img
                         src={profilePictureUrl}
                         alt="Profile"
                         className="profile-picture"
                         onClick={() => handleViewChange("Profile")}
                     />
-                    <button className="header-button" style={{ borderRadius: 0 }} onClick={handleLogout}>
-                        Log Out.
-                    </button>
+                    <button onClick={handleLogout}>SIGN OUT.</button>
                 </div>
             </header>
 

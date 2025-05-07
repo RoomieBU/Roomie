@@ -3,6 +3,7 @@
 .about-container {
     max-width: 1200px;
     color: #333333;
+    place-self: center;
 }
 
 h1, h2, h3 {
@@ -24,6 +25,7 @@ p {
     text-align: center;
     height: 300px;
     width: 99vw !important;
+    place-self: center;
 }
 
 .hero-content2 {

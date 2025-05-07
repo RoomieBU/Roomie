@@ -120,7 +120,7 @@ public class UserMatchInteractionDao extends Dao{
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.executeQuery();
         } catch  (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

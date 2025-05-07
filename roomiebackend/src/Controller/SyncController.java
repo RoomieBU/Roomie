@@ -15,10 +15,14 @@ public class SyncController{
          * For the future: make these wait values variable and dynamic testing
          */
         while (true) {
-            Thread.sleep(1000);
-            mpc.pauseThread();
-            Thread.sleep(100);
-            mpc.resumeThread();
+            try {
+                Thread.sleep(1000);
+                mpc.pauseThread();
+                Thread.sleep(100);
+                mpc.resumeThread();
+            } catch (Exception e) {
+                // awkward moment
+            }
         }
     }
 }

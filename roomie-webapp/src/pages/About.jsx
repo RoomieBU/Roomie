@@ -24,7 +24,7 @@ const About = () => {
             id: 3,
             name: 'Matthew Yurkunas',
             img: MattImg,
-            bio: 'TBD'
+            bio: 'I am a senior computer science major with an interest in finding unique applications for software solutions and AI.'
         },
         {
             id: 4,
