@@ -60,6 +60,8 @@ public class Server {
             // calendar routes
             router.addRoute("/calendar/addEvent", CalendarController::addEvent);
             router.addRoute("/calendar/getEvents", CalendarController::getAllEvents);
+            router.addRoute("/calendar/deleteEvent", CalendarController::deleteEvent);
+
 
 
             // delete gcs route

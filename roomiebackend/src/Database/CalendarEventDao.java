@@ -4,6 +4,7 @@ import Tools.Auth;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -175,4 +176,45 @@ public class CalendarEventDao extends Dao {
         }
         return id;
     }
+
+    // in CalendarEventDao.java
+    public boolean deleteEvent(Map<String,String> data) {
+        String token = data.get("token");
+        String date  = data.get("eventDate");
+        String title = data.get("event");
+        String email = Auth.getEmailfromToken(token);
+        int uid      = getUserId(email);
+        int gc       = getGroupChatId(token);
+        String cell  = title + "|" + uid;
+
+        // fetch current
+        String current = getEvents(date, gc);
+        List<String> parts = new ArrayList<>(Arrays.asList(current.split(",")));
+        if (!parts.remove(cell)) return false;        // nothing to remove
+
+        if (parts.isEmpty()) {
+            // delete the row
+            String sql = "DELETE FROM CalendarEvent WHERE event_date=? AND group_chat_id=?";
+            try (PreparedStatement ps=connection.prepareStatement(sql)) {
+                ps.setDate(1, Date.valueOf(date)); ps.setInt(2,gc);
+                return ps.executeUpdate()==1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // update with remaining
+            String updated = String.join(",", parts);
+            String sql = "UPDATE CalendarEvent SET events=? WHERE event_date=? AND group_chat_id=?";
+            try (PreparedStatement ps=connection.prepareStatement(sql)) {
+                ps.setString(1, updated);
+                ps.setDate(2, Date.valueOf(date));
+                ps.setInt(3, gc);
+                return ps.executeUpdate()==1;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
 }
