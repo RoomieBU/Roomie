@@ -103,20 +103,20 @@ public class CalendarController {
     }
 
     public static String deleteEvent(Map<String,String> data, String method) {
-        HTTPResponse resp = new HTTPResponse();
+        HTTPResponse response = new HTTPResponse();
         String token = data.get("token"), email = Auth.getEmailfromToken(token);
         if (email==null) {
-            resp.setMessage("message","Invalid token"); return resp.toString();
+            response.setMessage("message","Invalid token"); return response.toString();
         }
         String date = data.get("eventDate"), ev = data.get("event");
         if (date==null||ev==null) {
-            resp.setMessage("message","Missing eventDate or event"); resp.code=400; return resp.toString();
+            response.setMessage("message","Missing eventDate or event"); response.code=400; return response.toString();
         }
         CalendarEventDao dao = new CalendarEventDao(SQLConnection.getConnection());
         boolean ok = dao.deleteEvent(data);
-        resp.code = ok?200:400;
-        resp.setMessage("message", ok?"Deleted":"Failed to delete");
-        return resp.toString();
+        response.code = ok?200:400;
+        response.setMessage("message", ok?"Deleted":"Failed to delete");
+        return response.toString();
     }
 
 }
