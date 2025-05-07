@@ -25,6 +25,7 @@ export default function SharedCalendar() {
         const map = {};
         data.forEach(item => {
           const key = new Date(item.eventDate).toDateString();
+          console.log(key);
           if (!item.events) return;
           // parse the CSV of “title|userId”
           map[key] = item.events
@@ -77,16 +78,56 @@ export default function SharedCalendar() {
     }
   };
 
-  // 3) Render events under each tile
-  const renderTileContent = ({ date, view }) => {
-    if (view !== 'month') return null;
-    const dayEvents = events[date.toDateString()] || [];
-    return (
-      <ul className="shared-calendar-event-list">
-        {dayEvents.map((evt, i) => <li key={i}>• {evt}</li>)}
-      </ul>
-    );
+  const handleDeleteEvent = async (date, title) => {
+    const confirmed = window.confirm(`Delete event: "${title}"?`);
+    if (!confirmed) return;
+
+    const key = date.toDateString();
+    setEvents(prev => {
+      const filtered = (prev[key] || []).filter(e => e !== title);
+      const copy = { ...prev };
+      if (filtered.length) copy[key] = filtered;
+      else delete copy[key];
+      return copy;
+    });
+
+    try {
+      const resp = await fetch('https://roomie.ddns.net:8080/calendar/deleteEvent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token: localStorage.getItem('token'),
+          eventDate: date.toISOString().slice(0, 10),
+          event: title
+        })
+      });
+      if (!resp.ok) throw new Error('Failed to delete event');
+    } catch (e) {
+      console.error(e);
+      // rollback on failure
+      setEvents(prev => ({
+        ...prev,
+        [key]: [...(prev[key] || []), title]
+      }));
+    }
   };
+
+
+  // 3) Render events under each tile
+const renderTileContent = ({ date, view }) => {
+  if (view !== 'month') return null;
+  const dayEvents = events[date.toDateString()] || [];
+  return (
+    <ul className="shared-calendar-event-list">
+      {dayEvents.map((evt, i) => (
+        <li key={i} onClick={() => handleDeleteEvent(date, evt)} title="Click to delete">
+          • {evt}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 
   return (
     <div>
