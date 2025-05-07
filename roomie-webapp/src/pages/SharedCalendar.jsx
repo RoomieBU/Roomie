@@ -24,7 +24,8 @@ export default function SharedCalendar() {
 
         const map = {};
         data.forEach(item => {
-          const key = new Date(item.eventDate).toDateString();
+          const [y, m, d] = item.eventDate.split('-').map(Number);
+          const key = new Date(y, m-1, d).toDateString();
           console.log(key);
           if (!item.events) return;
           // parse the CSV of “title|userId”
@@ -120,9 +121,17 @@ const renderTileContent = ({ date, view }) => {
   return (
     <ul className="shared-calendar-event-list">
       {dayEvents.map((evt, i) => (
-        <li key={i} onClick={() => handleDeleteEvent(date, evt)} title="Click to delete">
+        <li
+          key={i}
+          onClick={e => {
+            e.stopPropagation();
+            handleDeleteEvent(date, evt);
+          }}
+          title="Click to delete"
+        >
           • {evt}
         </li>
+
       ))}
     </ul>
   );
