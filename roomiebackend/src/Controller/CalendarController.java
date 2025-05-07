@@ -21,18 +21,25 @@ public class CalendarController {
      *   [ { "calendarId":…, "groupChatId":…, "eventDate":"YYYY-MM-DD", "events":"…" }, … ]
      */
     public static String getAllEvents(Map<String, String> data, String method) {
+        System.out.println("Called getAllEvents with method: " + method);
+        System.out.println("Incoming data: " + data);
+
         HTTPResponse response = new HTTPResponse();
 
         // authenticate
         String token = data.get("token");
+        System.out.println("Extracted token: " + token);
         String email = Auth.getEmailfromToken(token);
+        System.out.println("Authenticated email: " + email);
         if (email == null) {
+            System.out.println("Authentication failed.");
             response.setMessage("message", "Invalid token");
             return response.toString();
         }
 
         CalendarEventDao dao = new CalendarEventDao(SQLConnection.getConnection());
         List<CalendarEvent> list = dao.getAllUsersEvents(data);
+        System.out.println("Fetched " + list.size() + " calendar events.");
 
         // convert to simple DTOs / maps
         List<Map<String, String>> out = list.stream()
@@ -45,6 +52,7 @@ public class CalendarController {
                 .collect(Collectors.toList());
 
         String json = new Gson().toJson(out);
+        System.out.println("Returning JSON: " + json);
         return Utils.assembleHTTPResponse(200, json);
     }
 
@@ -54,12 +62,18 @@ public class CalendarController {
      * Returns HTTPResponse code 200 on success, 400 on failure.
      */
     public static String addEvent(Map<String, String> data, String method) {
+        System.out.println("Called addEvent with method: " + method);
+        System.out.println("Incoming data: " + data);
+
         HTTPResponse response = new HTTPResponse();
 
         // authenticate
         String token = data.get("token");
+        System.out.println("Extracted token: " + token);
         String email = Auth.getEmailfromToken(token);
+        System.out.println("Authenticated email: " + email);
         if (email == null) {
+            System.out.println("Authentication failed.");
             response.setMessage("message", "Invalid token");
             return response.toString();
         }
@@ -67,13 +81,16 @@ public class CalendarController {
         // validate inputs
         String date  = data.get("eventDate");
         String event = data.get("event");
+        System.out.println("Parsed eventDate: " + date + ", event: " + event);
         if (date == null || event == null) {
+            System.out.println("Validation failed: missing date or event.");
             response.setMessage("message", "Missing eventDate or event");
             return response.toString();
         }
 
         CalendarEventDao dao = new CalendarEventDao(SQLConnection.getConnection());
         boolean ok = dao.storeEvent(data);
+        System.out.println("storeEvent returned: " + ok);
 
         if (ok) {
             response.code = 200;
