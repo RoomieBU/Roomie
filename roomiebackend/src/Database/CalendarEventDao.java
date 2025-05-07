@@ -16,16 +16,15 @@ public class CalendarEventDao extends Dao {
 
     public boolean storeEvent(Map<String, String> data) {
         System.out.println("[storeEvent] Input data: " + data);
-        String token       = data.get("token");
-        String eventDate   = data.get("eventDate");
-        String eventTitle  = data.get("event");
-        String email       = Auth.getEmailfromToken(token);
-        System.out.println("[storeEvent] Resolved email: " + email);
+        String token = data.get("token");
+        String eventDate = data.get("eventDate");
+        String eventTitle = data.get("event");
+        String email = Auth.getEmailfromToken(token);
 
-        int userId         = getUserId(email);
-        int groupChatId    = getGroupChatId(email);
+        int userId = getUserId(email);
+        int groupChatId = getGroupChatId(email);
         System.out.println("[storeEvent] userId=" + userId + ", groupChatId=" + groupChatId);
-        String dbEvent     = eventTitle + "|" + userId;
+        String dbEvent = eventTitle + "|" + userId;
 
         boolean exists = dateHasEvents(eventDate, groupChatId);
         System.out.println("[storeEvent] dateHasEvents(" + eventDate + "," + groupChatId + ") returned " + exists);
@@ -151,18 +150,32 @@ public class CalendarEventDao extends Dao {
         return userId;
     }
 
-    public int getGroupChatId(String email) {
-        System.out.println("[getGroupChatId] email=" + email);
-        int groupChatId = -1;
-        try {
-            ChatDao chatDao = new ChatDao(connection);
-            List<GroupChat> gcList = chatDao.getConfirmedRoommates(email);
-            groupChatId = gcList.get(0).getGroupchatId();
-            System.out.println("[getGroupChatId] Resolved groupChatId=" + groupChatId);
-        } catch (Exception e) {
-            System.err.println("[getGroupChatId] SQLException: " + e.getMessage());
+    public int getGroupChatId(String token) {
+        // get email from token
+        String email = Auth.getEmailfromToken(token);
+
+        System.out.println("[DEBUG] getGroupChatId: email from token = " + email);
+
+        // query for gc
+        String query = "SELECT * FROM GroupChats WHERE (email1 = ? OR email2 = ? OR email3 = ? OR email4 = ? OR email5 = ? OR email6 = ?) AND confirmed = 1";
+        int id = -1;
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, email);
+            stmt.setString(3, email);
+            stmt.setString(4, email);
+            stmt.setString(5, email);
+            stmt.setString(6, email);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id");
+                System.out.println("[DEBUG] getGroupChatId: found group_chat_id = " + id);
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
         }
-        return groupChatId;
+        return id;
     }
 }
