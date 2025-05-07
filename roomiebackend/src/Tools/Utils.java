@@ -110,7 +110,6 @@ public class Utils {
         return String.valueOf(code);
     }
 
-    // Scales 1-5 preferences
     public static double getScaledDistance(double x,double y) {
         float dist = Math.abs( (float) x - (float) y );
         return dist / 5.0;

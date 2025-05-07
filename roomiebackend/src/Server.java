@@ -1,5 +1,6 @@
 import Controller.*;
 import Tools.Console;
+import Tools.Mail;
 import Tools.Router;
 import Tools.Utils;
 import java.io.BufferedReader;
@@ -127,7 +128,10 @@ public class Server {
                 new Thread(() -> {
                     try {
                         SyncController sc = new SyncController();
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
+                        Mail m = new Mail();
+                        m.send("rileysimmons996@gmail.com", "server error", e.getMessage());
+
                         throw new RuntimeException(e);
                     }
                 }).start();
