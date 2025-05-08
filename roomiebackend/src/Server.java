@@ -126,15 +126,18 @@ public class Server {
             if (SYNC_OPS) {
                 System.out.println("[Notice] Sync operations are active.");
                 new Thread(() -> {
-                    try {
-                        SyncController sc = new SyncController();
-                    } catch (Exception e) {
-                        Mail m = new Mail();
-                        m.send("rileysimmons996@gmail.com", "server error", e.getMessage());
+                    while (true) {
+                        try {
+                            SyncController sc = new SyncController();
+                        } catch (Exception e) {
+                            Mail m = new Mail();
+                            m.send("rileysimmons996@gmail.com", "server error", e.getMessage());
 
-                        throw new RuntimeException(e);
+                            throw new RuntimeException(e);
+                        }
                     }
                 }).start();
+
             }
 
             while (true) {
