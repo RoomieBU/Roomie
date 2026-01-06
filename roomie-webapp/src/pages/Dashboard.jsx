@@ -11,12 +11,12 @@ import roomieLogo from "../assets/roomie-favicon.svg"
 
 function Dashboard() {
     const navigate = useNavigate();
-    const [profilePictureUrl, setProfilePictureUrl] = useState("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Default profile picture
+    const [profilePictureUrl, setProfilePictureUrl] = useState("/images/defaultProfilePic.jpg"); // Default profile picture
 
     // First, check if user is in an accepted roommate group. If so, redirect them to roomie.ddns.net/roommatemanagementdashboard
     useEffect(() => {
         const checkIfConfirmed = async () => {
-            const response = await fetch("https://roomie.ddns.net:8080/matches/isUserCurrentRoommate", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/matches/isUserCurrentRoommate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -32,7 +32,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/profile/getProfile", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/getProfile`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -41,10 +41,10 @@ function Dashboard() {
                 if (!response.ok) throw new Error("Failed to fetch profile");
 
                 const data = await response.json();
-                setProfilePictureUrl(data.profile_picture_url || "https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Use default if no URL is provided
+                setProfilePictureUrl(data.profile_picture_url || "/images/defaultProfilePic.jpg"); // Use default if no URL is provided
             } catch (error) {
                 console.error("Error fetching profile:", error);
-                setProfilePictureUrl("https://roomie.ddns.net/images/defaultProfilePic.jpg"); // Fallback to default image
+                setProfilePictureUrl("/images/defaultProfilePic.jpg"); // Fallback to default image
             }
         };
 
@@ -117,7 +117,7 @@ function Dashboard() {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/verify`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") }),

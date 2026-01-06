@@ -12,7 +12,7 @@ export default function SharedCalendar() {
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const resp = await fetch('https://roomie.ddns.net:8080/calendar/getEvents', {
+        const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/getEvents`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: localStorage.getItem('token') })
@@ -56,7 +56,7 @@ export default function SharedCalendar() {
 
     // send to server
     try {
-      const resp = await fetch('https://roomie.ddns.net:8080/calendar/addEvent', {
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/addEvent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,7 +93,7 @@ export default function SharedCalendar() {
     });
 
     try {
-      const resp = await fetch('https://roomie.ddns.net:8080/calendar/deleteEvent', {
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/deleteEvent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

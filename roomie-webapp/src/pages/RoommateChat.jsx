@@ -13,7 +13,7 @@ function RoommateChat() {
     const prevMessageCountRef = useRef(0);
 
     const checkIfConfirmed = async () => {
-        const response = await fetch("https://roomie.ddns.net:8080/matches/isUserCurrentRoommate", {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/matches/isUserCurrentRoommate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -31,7 +31,7 @@ function RoommateChat() {
 
     const getChatHistory = async (id) => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getChatHistory", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat/getChatHistory`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token"), groupchat_id: id }),
@@ -50,7 +50,7 @@ function RoommateChat() {
 
     const getAllUserInformation = useCallback(async () => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getAllUserInformation", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat/getAllUserInformation`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -134,7 +134,7 @@ function RoommateChat() {
                     message: encodeURIComponent(text),
                 });
 
-                const response = await fetch("https://roomie.ddns.net:8080/chat/sendMessage", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat/sendMessage`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

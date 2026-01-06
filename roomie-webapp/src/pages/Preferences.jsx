@@ -29,7 +29,7 @@ function Preferences() {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/verify`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -76,7 +76,7 @@ function Preferences() {
             });
             console.log("Form Data:", formData);
 
-            const response = await fetch("https://roomie.ddns.net:8080/auth/sendPreferences", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/sendPreferences`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: formData,

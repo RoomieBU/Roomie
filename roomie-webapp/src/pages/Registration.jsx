@@ -84,7 +84,7 @@ function Registration() {
                 code: data.code
             });
 
-            const response = await fetch("https://roomie.ddns.net:8080/auth/sendRegistration", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/sendRegistration`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: profileData,
@@ -111,7 +111,7 @@ function Registration() {
                     isProfilePicture: "True",
                 });
 
-                const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                const fileResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/upload/fileSubmit`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: filePayload,

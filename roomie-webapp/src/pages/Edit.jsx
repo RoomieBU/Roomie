@@ -20,7 +20,7 @@ function Edit({ onProfile }) {
         useEffect(() => {
             const fetchUserStatus = async () => {
                 try {
-                    const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+                    const userStatus = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/getStatus`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -43,7 +43,7 @@ function Edit({ onProfile }) {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/auth/verify", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/verify`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -65,7 +65,7 @@ function Edit({ onProfile }) {
         const getProfile = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/profile/getProfile", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/getProfile`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -203,7 +203,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                 about_me: encodeURIComponent(data.about_me),
             });
 
-            const profileResponse = await fetch("https://roomie.ddns.net:8080/profile/editProfile", {
+            const profileResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/editProfile`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: profilePayload,
@@ -225,7 +225,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                     isProfilePicture: "True",
                 });
 
-                const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                const fileResponse = await fetch("/upload/fileSubmit", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: filePayload,
@@ -249,7 +249,7 @@ const resizeImage = (file, maxWidth, maxHeight) => {
                         isProfilePicture: "False", // For user images
                     });
 
-                    const fileResponse = await fetch("https://roomie.ddns.net:8080/upload/fileSubmit", {
+                    const fileResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/upload/fileSubmit`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: filePayload,

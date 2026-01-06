@@ -10,7 +10,7 @@ function Login() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/auth/login", {
+            const response = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,7 +30,7 @@ function Login() {
             // Save token to local storage or context for authentication
             localStorage.setItem("token", responseData.token);
 
-            const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+            const userStatus = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/getStatus`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

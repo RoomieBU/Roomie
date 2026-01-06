@@ -15,7 +15,7 @@ const SharedSupply = () => {
   const checkAndCreateSupplyList = async () => {
     try {
       const payload = { token: localStorage.getItem('token') };
-      const res = await fetch("https://roomie.ddns.net:8080/checkSupplyList", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/checkSupplyList`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -33,7 +33,7 @@ const SharedSupply = () => {
     try {
       await checkAndCreateSupplyList();
       const payload = { token: localStorage.getItem('token') };
-      const res = await fetch("https://roomie.ddns.net:8080/getItems", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getItems`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -90,7 +90,7 @@ const SharedSupply = () => {
         amount: itemToAdd.quantity
       };
 
-      const res = await fetch("https://roomie.ddns.net:8080/addItem", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/addItem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -128,7 +128,7 @@ const SharedSupply = () => {
         amount: updatedQuantity
       };
 
-      const res = await fetch("https://roomie.ddns.net:8080/editItem", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/editItem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -161,7 +161,7 @@ const SharedSupply = () => {
         amount: 0
       };
 
-      const res = await fetch("https://roomie.ddns.net:8080/editItem", {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/editItem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

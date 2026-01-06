@@ -21,7 +21,7 @@ function Profile({ onEditProfile }) {
     // Fetch user images (reusable function)
     const getUserImages = useCallback(async () => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/user/images", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/images`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -46,7 +46,7 @@ function Profile({ onEditProfile }) {
         const getProfile = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch("https://roomie.ddns.net:8080/profile/getProfile", {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/getProfile`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -83,7 +83,7 @@ function Profile({ onEditProfile }) {
         file_url = file_url.substring(file_url.lastIndexOf('/') + 1);
 
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/user/deleteImage", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/deleteImage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -111,7 +111,7 @@ function Profile({ onEditProfile }) {
     useEffect(() => {
         const fetchUserStatus = async () => {
             try {
-                const userStatus = await fetch("https://roomie.ddns.net:8080/auth/getStatus", {
+                const userStatus = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/getStatus`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -135,7 +135,7 @@ function Profile({ onEditProfile }) {
         const fetchAverage = async () => {
             try {
                 const res = await fetch(
-                    "https://roomie.ddns.net:8080/rating/getAverage",
+                    `${process.env.REACT_APP_BACKEND_URL}/rating/getAverage`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

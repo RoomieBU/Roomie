@@ -11,6 +11,7 @@ const RoommateReporting = () => {
     useEffect(() => {
         // Fetch group chat members from the backend
         fetch('/api/getGroupChatMembers') // Replace with your actual API endpoint
+        // ^ I'm gonna take a good guess this doesn't work
             .then(response => response.json())
             .then(data => {
                 // Filter out empty or null names

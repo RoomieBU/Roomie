@@ -16,7 +16,7 @@ const RoommateRating = () => {
     // Get what groupchats the user is part of
     const fetchUserEmail = async () => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/profile/getUserEmail", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/profile/getUserEmail`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -33,7 +33,7 @@ const RoommateRating = () => {
     const fetchChats = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/chat/getConfirmedRoommates", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat/getConfirmedRoommates`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") })
@@ -82,7 +82,7 @@ const RoommateRating = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("https://roomie.ddns.net:8080/rating/submit", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/rating/submit`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

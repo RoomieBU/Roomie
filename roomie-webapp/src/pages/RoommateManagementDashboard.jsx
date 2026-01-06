@@ -22,7 +22,7 @@ const RoommateManagementDashboard = () => {
 
     useEffect(() => {
         const checkIfConfirmed = async () => {
-            const response = await fetch("https://roomie.ddns.net:8080/matches/isUserCurrentRoommate", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/matches/isUserCurrentRoommate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -40,7 +40,7 @@ const RoommateManagementDashboard = () => {
     // Auto-delete unconfirmed group chats on page load
     useEffect(() => {
         const deleteUnconfirmedChats = async () => {
-            const response = await fetch("https://roomie.ddns.net:8080/delete/unconfirmedChats", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/delete/unconfirmedChats`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token: localStorage.getItem("token") }),
@@ -66,7 +66,7 @@ const RoommateManagementDashboard = () => {
 
         const fetchAlerts = async () => {
             try {
-                const response = await fetch('https://roomie.ddns.net:8080/alert/getAllAlerts', {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/alert/getAllAlerts`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ groupchat_id: groupchatid })
@@ -103,7 +103,7 @@ const RoommateManagementDashboard = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('https://roomie.ddns.net:8080/alert/addAlert', {
+            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/alert/addAlert`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form)
@@ -129,7 +129,7 @@ const RoommateManagementDashboard = () => {
         console.log(alertId)
 
         try {
-            const response = await fetch('https://roomie.ddns.net:8080/alert/updateAlertStatus', {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/alert/updateAlertStatus`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({status: alertStatus, id: alertId})
